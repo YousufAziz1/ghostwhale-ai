@@ -19,8 +19,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+# lib/ <-- REMOVED because it conflicts with frontend/src/lib
+# lib64/ <-- REMOVED
 parts/
 sdist/
 var/
