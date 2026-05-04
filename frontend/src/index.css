@@ -1,0 +1,266 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+/* ── Design System Tokens ──────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg-base:       #060608;
+  --bg-surface:    #0d0d12;
+  --bg-elevated:   #111118;
+  --bg-card:       #13131c;
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-active: rgba(0, 255, 136, 0.3);
+  --border-cyan:   rgba(0, 212, 255, 0.3);
+
+  /* Brand — Cyberpunk terminal palette */
+  --accent:        #00ff88;   /* neon green */
+  --accent-2:      #00d4ff;   /* electric cyan */
+  --accent-3:      #ff6b35;   /* alert orange */
+  --accent-red:    #ff4466;   /* sell red */
+  --accent-yellow: #ffd700;   /* hold yellow */
+  --accent-glow:   rgba(0, 255, 136, 0.15);
+  --cyan-glow:     rgba(0, 212, 255, 0.15);
+
+  /* Text */
+  --text-primary:  #e8e8f0;
+  --text-muted:    #5a5a70;
+  --text-faint:    #2a2a3a;
+  --text-green:    #00ff88;
+  --text-cyan:     #00d4ff;
+
+  /* Status */
+  --success:       #00ff88;
+  --danger:        #ff4466;
+  --warning:       #ffd700;
+}
+
+/* ── Base Reset ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scan-line Overlay ──────────────────────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 136, 0.015) 2px,
+    rgba(0, 255, 136, 0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-surface); }
+::-webkit-scrollbar-thumb { background: rgba(0, 255, 136, 0.3); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ── Typography ─────────────────────────────────────────────────────────── */
+.font-display { font-family: 'Syne', sans-serif; }
+.font-mono    { font-family: 'JetBrains Mono', monospace; }
+.font-body    { font-family: 'DM Sans', sans-serif; }
+
+/* ── Background Animations ──────────────────────────────────────────────── */
+
+/* Animated grid */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(0, 255, 136, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 136, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: gridPan 30s linear infinite;
+}
+@keyframes gridPan {
+  from { background-position: 0 0; }
+  to   { background-position: 40px 40px; }
+}
+
+/* Ambient orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  animation: orbFloat 10s ease-in-out infinite;
+}
+.orb-green {
+  width: 600px; height: 600px;
+  background: rgba(0, 255, 136, 0.06);
+  top: -200px; left: -150px;
+}
+.orb-cyan {
+  width: 400px; height: 400px;
+  background: rgba(0, 212, 255, 0.06);
+  bottom: -100px; right: -100px;
+  animation-delay: -5s;
+}
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(40px, -50px) scale(1.08); }
+  66%       { transform: translate(-20px, 30px) scale(0.95); }
+}
+
+/* ── Page Load Animation ────────────────────────────────────────────────── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: fadeSlideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both; }
+.delay-1 { animation-delay: 60ms; }
+.delay-2 { animation-delay: 120ms; }
+.delay-3 { animation-delay: 180ms; }
+.delay-4 { animation-delay: 240ms; }
+.delay-5 { animation-delay: 300ms; }
+
+/* ── Gradient Text ──────────────────────────────────────────────────────── */
+.text-gradient-green {
+  background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Card Styles ────────────────────────────────────────────────────────── */
+.card {
+  background: rgba(19, 19, 28, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card:hover {
+  border-color: rgba(0, 255, 136, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px var(--accent-glow);
+}
+.card-cyan:hover {
+  border-color: var(--border-cyan);
+  box-shadow: 0 0 30px var(--cyan-glow);
+}
+
+/* ── Glow Effects ───────────────────────────────────────────────────────── */
+.glow-green { box-shadow: 0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow); }
+.glow-cyan  { box-shadow: 0 0 20px var(--cyan-glow),  0 0 40px var(--cyan-glow); }
+
+/* ── Pulse Animations ───────────────────────────────────────────────────── */
+@keyframes pulseGreen {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--accent); }
+  50%       { opacity: 0.7; box-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent-glow); }
+}
+.pulse-green { animation: pulseGreen 2s ease-in-out infinite; }
+
+@keyframes pulseCyan {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+.pulse-cyan { animation: pulseCyan 1.5s ease-in-out infinite; }
+
+/* ── Live Dot ───────────────────────────────────────────────────────────── */
+.live-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulseGreen 1.5s ease-in-out infinite;
+}
+
+/* ── Terminal Text ──────────────────────────────────────────────────────── */
+.terminal-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ── Badge Styles ───────────────────────────────────────────────────────── */
+.badge-buy    { background: rgba(0,255,136,0.12); color: #00ff88; border: 1px solid rgba(0,255,136,0.3); }
+.badge-sell   { background: rgba(255,68,102,0.12); color: #ff4466; border: 1px solid rgba(255,68,102,0.3); }
+.badge-hold   { background: rgba(255,215,0,0.12);  color: #ffd700; border: 1px solid rgba(255,215,0,0.3); }
+.badge-transfer { background: rgba(0,212,255,0.10); color: #00d4ff; border: 1px solid rgba(0,212,255,0.2); }
+
+/* ── Scrollable Feed ────────────────────────────────────────────────────── */
+.feed-scroll {
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+.feed-scroll::-webkit-scrollbar { width: 2px; }
+
+/* ── Slide-in Animation for Feed Items ─────────────────────────────────── */
+@keyframes slideInTop {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.slide-in { animation: slideInTop 0.4s cubic-bezier(0.4, 0, 0.2, 1) both; }
+
+/* ── Progress Bar ───────────────────────────────────────────────────────── */
+.progress-bar {
+  height: 2px;
+  border-radius: 2px;
+  background: var(--border-subtle);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Border Spin (rotating glow border) ─────────────────────────────────── */
+.border-spin-wrapper {
+  position: relative;
+  border-radius: 12px;
+  background: transparent;
+  overflow: hidden;
+}
+.border-spin-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: conic-gradient(from 0deg, transparent 70%, var(--accent) 90%, transparent);
+  animation: borderSpin 6s linear infinite;
+  z-index: 0;
+  opacity: 0.8;
+}
+.border-spin-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  background: rgba(19, 19, 28, 0.8);
+  backdrop-filter: blur(16px);
+  border-radius: 11px;
+  z-index: 1;
+}
+.border-spin-wrapper > * { position: relative; z-index: 2; }
+@keyframes borderSpin { to { transform: rotate(360deg); } }
+
+/* ── Ticker Marquee ─────────────────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-track { animation: marquee 30s linear infinite; }
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ── Confidence Ring ─────────────────────────────────────────────────────── */
+.confidence-ring { transform: rotate(-90deg); }
+.confidence-ring-fill {
+  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+  stroke-linecap: round;
+}
