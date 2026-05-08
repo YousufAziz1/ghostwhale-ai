@@ -185,7 +185,8 @@ async def scan_recent_blocks(num_blocks: int = SCAN_BLOCK_DEPTH) -> list[WhaleEv
     events: list[WhaleEvent] = []
 
     try:
-        latest: int = w3.eth.block_number
+        # Offset by 3 blocks to avoid "invalid block range" on load-balanced public RPCs
+        latest: int = w3.eth.block_number - 3
     except Exception as exc:
         logger.error("RPC block_number failed: %s", exc)
         return events

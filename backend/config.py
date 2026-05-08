@@ -81,7 +81,7 @@ TRUSTED_TX_COUNT_MIN: int = 50           # Wallets with 50+ txs get age bonus
 
 # ─── Scanning ─────────────────────────────────────────────────────────────────
 SCAN_INTERVAL_SECONDS: int = 15          # Poll every 15s
-SCAN_BLOCK_DEPTH: int = 3               # Look back N blocks each poll
+SCAN_BLOCK_DEPTH: int = 10              # Look back N blocks each poll
 MAX_SEEN_TXS_CACHE: int = 10_000        # Dedup cache size
 
 # ─── Trade Execution ──────────────────────────────────────────────────────────
