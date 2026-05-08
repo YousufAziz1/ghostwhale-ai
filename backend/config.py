@@ -60,7 +60,7 @@ MOCK_PRICES_USD: dict[str, float] = {
 }
 
 # ─── Whale Detection Thresholds ───────────────────────────────────────────────
-WHALE_THRESHOLD_USD: float = float(os.getenv("WHALE_THRESHOLD_USD", "500"))
+WHALE_THRESHOLD_USD: float = float(os.getenv("WHALE_THRESHOLD_USD", "10000"))
 # Minimum native MNT value (wei) to consider a tx for native transfer tracking
 WHALE_THRESHOLD_MNT: int = int(45_000 / 1.10 * 1e18)  # ~$50k in MNT wei
 
