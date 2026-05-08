@@ -4,7 +4,12 @@ import type { Signal, WhaleEvent, Trade, AgentStats, AgentIdentity, PnLPoint } f
 const BASE = import.meta.env.VITE_API_URL || '/api'
 
 async function apiFetch<T>(path: string): Promise<T> {
-  const res = await fetch(`${BASE}${path}`)
+  let baseUrl = BASE
+  // Auto-append /api if the user provided a raw domain in Vercel env vars
+  if (baseUrl.startsWith('http') && !baseUrl.endsWith('/api')) {
+    baseUrl = `${baseUrl}/api`
+  }
+  const res = await fetch(`${baseUrl}${path}`)
   if (!res.ok) throw new Error(`API ${path} → ${res.status}`)
   return res.json() as Promise<T>
 }
