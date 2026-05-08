@@ -229,9 +229,9 @@ export default function App() {
       <div className="relative z-10 flex flex-col h-screen">
 
         {/* ── Header ────────────────────────────────────────────────────── */}
-        <div className="flex items-center justify-between pr-4 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-          <div className="flex-1"><LiveTicker isConnected={isConnected} latestBlock={latestBlock} /></div>
-          <div className="flex items-center gap-6">
+        <div className="flex items-center justify-between pr-4 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] w-full">
+          <div className="flex-1 min-w-0"><LiveTicker isConnected={isConnected} latestBlock={latestBlock} /></div>
+          <div className="flex items-center gap-6 shrink-0 z-50">
             {!isDemoMode && (
               <button 
                 onClick={() => setIsDemoMode(true)}

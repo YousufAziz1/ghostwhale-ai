@@ -62,7 +62,7 @@ export default function LiveTicker({ isConnected, latestBlock }: LiveTickerProps
   return (
     <header
       id="live-ticker"
-      className="relative flex items-center h-10 border-b border-[var(--border-subtle)] overflow-hidden bg-[var(--bg-surface)]"
+      className="relative flex items-center h-10 overflow-hidden bg-[var(--bg-surface)]"
     >
       {/* Left status bar */}
       <div className="flex items-center gap-2 px-4 shrink-0 border-r border-[var(--border-subtle)] h-full bg-[var(--bg-card)]">
