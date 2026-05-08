@@ -3,7 +3,7 @@ import { TrendingUp } from 'lucide-react'
 
 export default function ProfitableTrades({ trades }: { trades: Trade[] }) {
   // Filter for settled trades and sort by PnL
-  const settled = trades.filter(t => t.status === 'SETTLED' && t.pnl_usd !== undefined && t.pnl_usd > 0)
+  const settled = trades.filter(t => t.settled === 1 && t.pnl_usd !== null && t.pnl_usd > 0)
     .sort((a, b) => (b.pnl_usd || 0) - (a.pnl_usd || 0))
     .slice(0, 5)
 
@@ -26,7 +26,7 @@ export default function ProfitableTrades({ trades }: { trades: Trade[] }) {
             {settled.map(t => {
               const pnl = t.pnl_usd || 0
               // Calculate a mock percentage for hackathon wow-factor
-              const mockPct = ((pnl / (t.amount_usd || 1000)) * 100).toFixed(1)
+              const mockPct = ((pnl / (t.size_usd || 1000)) * 100).toFixed(1)
               return (
                 <div key={t.id} className="flex items-center justify-between p-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)] animate-pop-in">
                   <div className="flex items-center gap-2">
@@ -35,7 +35,7 @@ export default function ProfitableTrades({ trades }: { trades: Trade[] }) {
                     </div>
                     <div className="flex flex-col">
                       <span className="font-mono text-xs text-[var(--text-primary)]">{t.token} Buy</span>
-                      <span className="font-mono text-[9px] text-[var(--text-muted)]">Vol: ${t.amount_usd.toFixed(0)}</span>
+                      <span className="font-mono text-[9px] text-[var(--text-muted)]">Vol: ${t.size_usd.toFixed(0)}</span>
                     </div>
                   </div>
                   <div className="flex flex-col items-end">

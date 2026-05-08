@@ -184,21 +184,27 @@ export default function App() {
             token,
             amount_usd: amount,
             amount_raw: '0',
-            action: isBuy ? 'buy' : 'sell',
+            action: (isBuy ? 'buy' : 'sell') as 'buy' | 'sell',
             block_number: 999999,
             wallet_score: 0.8 + Math.random() * 0.2,
             timestamp: new Date().toISOString()
           }].slice(-50),
           trades: [...prev.trades, {
             id: Math.random(),
+            signal_id: Math.random().toString(),
+            tx_hash: null,
             token,
-            direction: isBuy ? 'LONG' : 'SHORT',
-            amount_usd: amount * 0.1, // 10% trade size
+            direction: (isBuy ? 'BUY' : 'SELL') as 'BUY' | 'SELL',
+            size_usd: amount * 0.1, // 10% trade size
             entry_price: 100,
             exit_price: 112,
             pnl_usd: (amount * 0.1) * (0.05 + Math.random() * 0.1), // 5-15% profit
-            status: 'SETTLED',
-            timestamp: new Date().toISOString()
+            pnl_pct: 0.1,
+            mock: 1,
+            settled: 1,
+            status: 'mock' as 'mock',
+            timestamp: new Date().toISOString(),
+            settled_at: new Date().toISOString()
           }].slice(-50)
         }
       })
