@@ -16,12 +16,14 @@
 
   /* Brand — Cyberpunk terminal palette */
   --accent:        #00ff88;   /* neon green */
-  --accent-2:      #00d4ff;   /* electric cyan */
-  --accent-3:      #ff6b35;   /* alert orange */
-  --accent-red:    #ff4466;   /* sell red */
+  --accent-2:      #00d4ff;   /* neon blue */
+  --accent-3:      #b026ff;   /* glowing purple */
+  --accent-red:    #ff1e56;   /* danger red */
   --accent-yellow: #ffd700;   /* hold yellow */
   --accent-glow:   rgba(0, 255, 136, 0.15);
   --cyan-glow:     rgba(0, 212, 255, 0.15);
+  --purple-glow:   rgba(176, 38, 255, 0.15);
+  --red-glow:      rgba(255, 30, 86, 0.15);
 
   /* Text */
   --text-primary:  #e8e8f0;
@@ -263,4 +265,51 @@ body::after {
 .confidence-ring-fill {
   transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
   stroke-linecap: round;
+}
+
+/* UI Overhaul Animations */
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.9) translateY(10px); }
+  50% { transform: scale(1.02) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.animate-pop-in {
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes flashRed {
+  0%, 100% { border-color: var(--border-subtle); box-shadow: none; }
+  50% { border-color: var(--accent-red); box-shadow: 0 0 15px var(--red-glow); }
+}
+
+.animate-flash-red {
+  animation: flashRed 1s ease-in-out;
+}
+
+@keyframes flashGreen {
+  0%, 100% { border-color: var(--border-subtle); box-shadow: none; }
+  50% { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+}
+
+.animate-flash-green {
+  animation: flashGreen 1s ease-in-out;
+}
+
+@keyframes typingBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-typing-cursor {
+  animation: typingBlink 1s step-end infinite;
+}
+
+@keyframes blinkEye {
+  0%, 96%, 98% { transform: scaleY(1); }
+  97% { transform: scaleY(0.1); }
+}
+
+.animate-blink-eye {
+  animation: blinkEye 4s infinite;
 }

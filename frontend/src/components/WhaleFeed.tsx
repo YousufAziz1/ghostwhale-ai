@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { ExternalLink, Zap } from 'lucide-react'
 import type { WhaleEvent } from '@/types'
 import { formatUSD, truncateAddr, timeAgo, mantleExplorerTx } from '@/lib/api'
+import { audio } from '@/lib/audio'
 
 interface WhaleFeedProps {
   events: WhaleEvent[]

@@ -7,7 +7,11 @@ import WhaleFeed from '@/components/WhaleFeed'
 import SignalCard from '@/components/SignalCard'
 import AgentIdentityCard from '@/components/AgentIdentity'
 import PnLChart from '@/components/PnLChart'
-import DecisionLog from '@/components/DecisionLog'
+import NetworkMap from '@/components/NetworkMap'
+import AIReasoningEngine from '@/components/AIReasoningEngine'
+import ProfitableTrades from '@/components/ProfitableTrades'
+import AIAvatar from '@/components/AIAvatar'
+import { audio } from '@/lib/audio'
 
 // ── App State ──────────────────────────────────────────────────────────────
 interface AppState {
@@ -39,6 +43,10 @@ export default function App() {
     signals: true, whales: true, trades: true,
     stats: true, identity: true, pnl: true,
   })
+
+  // ── Hackathon Demo State ──────────────────────────────────────────────
+  const [isDemoMode, setIsDemoMode] = useState(false)
+  const [demoLogs, setDemoLogs] = useState<{id:string,time:string,text:string,color:string}[]>([])
 
   // ── Fetch helpers ─────────────────────────────────────────────────────
   const fetchSignals = useCallback(async () => {
@@ -131,9 +139,78 @@ export default function App() {
     }
   }, [fetchSignals, fetchWhales, fetchTrades, fetchStats, fetchIdentity, fetchPnL, fetchHealth])
 
+  // ── Demo Simulation Logic ─────────────────────────────────────────────
+  useEffect(() => {
+    if (!isDemoMode) return
+    audio.init()
+    
+    // Inject mock logs
+    const logStrings = [
+      "Wallet 0x7cC... accumulated 240K mETH in 3 hours.",
+      "Liquidity thin on Merchant Moe pool.",
+      "High correlation with previous whale pumps.",
+      "AI predicts breakout probability: 87%",
+      "Executing sub-second entry to minimize slippage.",
+      "Targeting +12% exit."
+    ]
+    
+    let i = 0
+    const logIv = setInterval(() => {
+      audio.playType()
+      const log = logStrings[i % logStrings.length]
+      setDemoLogs(prev => [...prev, {
+        id: Math.random().toString(),
+        time: new Date().toLocaleTimeString(),
+        text: log,
+        color: log.includes('buy') || log.includes('accumulate') ? 'var(--accent)' : 'var(--accent-2)'
+      }].slice(-20))
+      i++
+    }, 2000)
+
+    // Inject mock whales and trades
+    const dataIv = setInterval(() => {
+      setState(prev => {
+        const isBuy = Math.random() > 0.5
+        const token = Math.random() > 0.5 ? 'mETH' : 'USDT'
+        const amount = 150000 + Math.random() * 500000
+        
+        return {
+          ...prev,
+          whaleEvents: [...prev.whaleEvents, {
+            id: Math.random(),
+            tx_hash: '0x' + Math.random().toString(16).slice(2),
+            from_wallet: '0x' + Math.random().toString(16).slice(2, 10),
+            to_wallet: '0x...',
+            token,
+            amount_usd: amount,
+            amount_raw: '0',
+            action: isBuy ? 'buy' : 'sell',
+            block_number: 999999,
+            wallet_score: 0.8 + Math.random() * 0.2,
+            timestamp: new Date().toISOString()
+          }].slice(-50),
+          trades: [...prev.trades, {
+            id: Math.random(),
+            token,
+            direction: isBuy ? 'LONG' : 'SHORT',
+            amount_usd: amount * 0.1, // 10% trade size
+            entry_price: 100,
+            exit_price: 112,
+            pnl_usd: (amount * 0.1) * (0.05 + Math.random() * 0.1), // 5-15% profit
+            status: 'SETTLED',
+            timestamp: new Date().toISOString()
+          }].slice(-50)
+        }
+      })
+    }, 1500)
+
+    return () => { clearInterval(logIv); clearInterval(dataIv) }
+  }, [isDemoMode])
+
   const latestSignal = state.signals[0] ?? null
   const isConnected  = state.rpcStatus?.connected ?? false
   const latestBlock  = state.rpcStatus?.latest_block
+  const avatarStatus = isDemoMode ? 'alert' : loading.whales ? 'scanning' : 'idle'
 
   return (
     <div className="relative min-h-screen bg-[var(--bg-base)] overflow-hidden">
@@ -145,73 +222,64 @@ export default function App() {
       {/* Layout */}
       <div className="relative z-10 flex flex-col h-screen">
 
-        {/* ── Top ticker ────────────────────────────────────────────────── */}
-        <LiveTicker isConnected={isConnected} latestBlock={latestBlock} />
+        {/* ── Header ────────────────────────────────────────────────────── */}
+        <div className="flex items-center justify-between pr-4 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+          <div className="flex-1"><LiveTicker isConnected={isConnected} latestBlock={latestBlock} /></div>
+          <div className="flex items-center gap-6">
+            {!isDemoMode && (
+              <button 
+                onClick={() => setIsDemoMode(true)}
+                className="font-mono text-[10px] font-bold px-3 py-1.5 rounded bg-[var(--accent-red)] text-white hover:shadow-[0_0_15px_var(--red-glow)] transition-all animate-pulse"
+              >
+                ▶ RUN LIVE SIMULATION
+              </button>
+            )}
+            <AIAvatar status={avatarStatus} />
+          </div>
+        </div>
 
-        {/* ── Main content ──────────────────────────────────────────────── */}
+        {/* ── Main content grid ─────────────────────────────────────────── */}
         <div className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-[280px_1fr_300px] gap-0 divide-x divide-[var(--border-subtle)]">
 
-          {/* ── LEFT column: Agent Identity + PnL Chart ─────────────────── */}
+          {/* ── LEFT column: Identity, Signal, PnL ──────────────────────── */}
           <aside className="hidden lg:flex flex-col gap-0 overflow-y-auto bg-[var(--bg-surface)] divide-y divide-[var(--border-subtle)]">
-            <div className="p-3 animate-in">
-              <AgentIdentityCard
-                identity={state.identity}
-                stats={state.stats}
-                loading={loading.identity}
-              />
-            </div>
-            <div className="p-3 animate-in delay-2">
-              <PnLChart data={state.pnlSeries} loading={loading.pnl} />
-            </div>
-
-            {/* Quick stats footer */}
-            {state.stats && (
-              <div className="p-3 animate-in delay-3">
-                <div className="card-cyan card p-3 grid grid-cols-3 gap-2 text-center">
-                  {[
-                    { label: 'BUY',  val: state.stats.buy_signals,  cls: 'text-[var(--accent)]' },
-                    { label: 'SELL', val: state.stats.sell_signals, cls: 'text-[var(--accent-red)]' },
-                    { label: 'HOLD', val: state.stats.hold_signals, cls: 'text-[var(--accent-yellow)]' },
-                  ].map(({ label, val, cls }) => (
-                    <div key={label}>
-                      <div className={`font-mono font-bold text-lg ${cls}`}>{val}</div>
-                      <div className="font-mono text-[9px] text-[var(--text-muted)]">{label}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <div className="p-3 animate-in"><AgentIdentityCard identity={state.identity} stats={state.stats} loading={loading.identity} /></div>
+            <div className="p-3 animate-in delay-1"><SignalCard signal={latestSignal} loading={loading.signals} /></div>
+            <div className="p-3 animate-in delay-2 flex-1"><PnLChart data={state.pnlSeries} loading={loading.pnl} /></div>
           </aside>
 
-          {/* ── CENTER column: Whale Feed ─────────────────────────────────── */}
-          <main className="flex flex-col overflow-hidden animate-in delay-1">
-            {/* Section label */}
-            <div className="px-4 py-2 bg-[var(--bg-surface)] border-b border-[var(--border-subtle)]">
-              <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-widest">
-                🔍 Live On-Chain Movements · Mantle Network
-              </span>
+          {/* ── CENTER column: Map & Feed ───────────────────────────────── */}
+          <main className="flex flex-col overflow-hidden animate-in delay-1 bg-[var(--bg-base)]">
+            <div className="h-1/2 p-4 border-b border-[var(--border-subtle)]">
+              <NetworkMap events={state.whaleEvents} />
             </div>
-            <WhaleFeed events={state.whaleEvents} loading={loading.whales} />
+            <div className="h-1/2 flex flex-col relative">
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent opacity-20" />
+              <WhaleFeed events={state.whaleEvents} loading={loading.whales} />
+            </div>
           </main>
 
-          {/* ── RIGHT column: Signal Card + Decision Log ─────────────────── */}
+          {/* ── RIGHT column: AI Brain & Trades ─────────────────────────── */}
           <aside className="hidden lg:flex flex-col overflow-hidden bg-[var(--bg-surface)] divide-y divide-[var(--border-subtle)]">
-            <div className="p-3 animate-in delay-2">
-              <SignalCard signal={latestSignal} loading={loading.signals} />
+            <div className="flex-1 p-3 animate-in delay-2">
+              <AIReasoningEngine logs={demoLogs} />
             </div>
-            <div className="flex-1 overflow-hidden animate-in delay-3">
-              <DecisionLog trades={state.trades} loading={loading.trades} />
+            <div className="h-1/3 p-3 animate-in delay-3">
+              <ProfitableTrades trades={state.trades} />
             </div>
           </aside>
         </div>
 
-        {/* ── Mobile: stacked layout for small screens ───────────────────── */}
+        {/* ── Mobile: stacked layout ────────────────────────────────────── */}
         <div className="lg:hidden flex flex-col gap-3 p-3 overflow-y-auto flex-1">
+          <AIAvatar status={avatarStatus} />
           <AgentIdentityCard identity={state.identity} stats={state.stats} loading={loading.identity} />
+          <NetworkMap events={state.whaleEvents} />
           <SignalCard signal={latestSignal} loading={loading.signals} />
           <WhaleFeed events={state.whaleEvents} loading={loading.whales} />
+          <AIReasoningEngine logs={demoLogs} />
+          <ProfitableTrades trades={state.trades} />
           <PnLChart data={state.pnlSeries} loading={loading.pnl} />
-          <DecisionLog trades={state.trades} loading={loading.trades} />
         </div>
       </div>
     </div>
