@@ -60,7 +60,7 @@ MOCK_PRICES_USD: dict[str, float] = {
 }
 
 # ─── Whale Detection Thresholds ───────────────────────────────────────────────
-WHALE_THRESHOLD_USD: float = float(os.getenv("WHALE_THRESHOLD_USD", "50000"))
+WHALE_THRESHOLD_USD: float = float(os.getenv("WHALE_THRESHOLD_USD", "500"))
 # Minimum native MNT value (wei) to consider a tx for native transfer tracking
 WHALE_THRESHOLD_MNT: int = int(45_000 / 1.10 * 1e18)  # ~$50k in MNT wei
 
@@ -85,7 +85,7 @@ SCAN_BLOCK_DEPTH: int = 3               # Look back N blocks each poll
 MAX_SEEN_TXS_CACHE: int = 10_000        # Dedup cache size
 
 # ─── Trade Execution ──────────────────────────────────────────────────────────
-MOCK_MODE: bool = os.getenv("MOCK_MODE", "true").lower() == "true"
+MOCK_MODE: bool = os.getenv("MOCK_MODE", "false").lower() == "true"
 SLIPPAGE_BPS: int = 50                  # 0.5% slippage tolerance
 MOCK_EXIT_DELAY_SECONDS: int = 1800     # Simulate exit after 30 min
 
