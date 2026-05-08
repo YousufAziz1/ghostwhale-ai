@@ -1,7 +1,7 @@
 // GhostWhale AI — API helpers
 import type { Signal, WhaleEvent, Trade, AgentStats, AgentIdentity, PnLPoint } from '@/types'
 
-const BASE = '/api'
+const BASE = import.meta.env.VITE_API_URL || '/api'
 
 async function apiFetch<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`)
