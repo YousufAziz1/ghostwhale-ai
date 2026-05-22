@@ -122,7 +122,7 @@ export default function App() {
   const [statusPhrase, setStatusPhrase] = useState(STATUS_PHRASES[0])
   const [whaleFlash, setWhaleFlash] = useState(false)
   const logIdxRef = useRef(0)
-  const alertTimer = useRef<ReturnType<typeof setTimeout>>()
+  const alertTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   // ── Rotating status phrase ────────────────────────────────────────────────
   useEffect(() => {
