@@ -1,95 +1,129 @@
-import { useEffect, useRef, useState } from 'react'
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 
-interface TickerToken {
-  symbol: string
-  price: number
-  change24h: number
+interface Ticker {
+  symbol: string; price: number; change: number; spark: number[]
 }
 
-const MOCK_TICKERS: TickerToken[] = [
-  { symbol: 'MNT',  price: 1.10,    change24h:  2.4 },
-  { symbol: 'mETH', price: 3812.50, change24h: -0.8 },
-  { symbol: 'USDT', price: 1.0001,  change24h:  0.01 },
-  { symbol: 'USDY', price: 1.0534,  change24h:  0.12 },
-  { symbol: 'USDC', price: 0.9998,  change24h: -0.02 },
-  { symbol: 'WETH', price: 3812.50, change24h: -0.8 },
+const SEED: Ticker[] = [
+  { symbol: 'BTC',  price: 68_240,  change:  2.14, spark: [62,65,63,68,64,67,68] },
+  { symbol: 'ETH',  price: 3_812,   change: -0.82, spark: [38,37,39,38,36,37,38] },
+  { symbol: 'MNT',  price: 1.08,    change:  3.40, spark: [0.95,1.0,0.98,1.05,1.02,1.06,1.08] },
+  { symbol: 'mETH', price: 3_814,   change: -0.78, spark: [38,37,39,38,36,37,38] },
+  { symbol: 'AGNI', price: 0.0412,  change:  5.20, spark: [0.036,0.038,0.04,0.039,0.041,0.042,0.041] },
+  { symbol: 'MOE',  price: 0.00823, change: -1.30, spark: [0.009,0.0085,0.0082,0.0083,0.0081,0.0082,0.0082] },
+  { symbol: 'USDT', price: 1.0001,  change:  0.01, spark: [1,1,1,1,1,1,1] },
+  { symbol: 'USDY', price: 1.054,   change:  0.12, spark: [1.05,1.051,1.052,1.053,1.052,1.053,1.054] },
 ]
 
-function TickerItem({ token }: { token: TickerToken }) {
-  const isUp   = token.change24h > 0
-  const isDown = token.change24h < 0
-
+function MiniSparkline({ data, color }: { data: number[]; color: string }) {
+  const min = Math.min(...data)
+  const max = Math.max(...data)
+  const range = max - min || 1
+  const w = 36, h = 16
+  const pts = data.map((v, i) => `${(i / (data.length - 1)) * w},${h - ((v - min) / range) * h}`).join(' ')
   return (
-    <div className="flex items-center gap-3 px-6 border-r border-[var(--border-subtle)] shrink-0">
-      <span className="font-mono text-xs text-[var(--text-muted)] tracking-wider">{token.symbol}</span>
-      <span className="font-mono text-sm text-[var(--text-primary)] font-medium">
-        ${token.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
+      <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5"
+        style={{ filter: `drop-shadow(0 0 3px ${color})` }} strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function TickerItem({ t }: { t: Ticker }) {
+  const isUp = t.change >= 0
+  const color = isUp ? 'var(--green)' : 'var(--red)'
+  return (
+    <div className="flex items-center gap-3 px-5 shrink-0"
+      style={{ borderRight: '1px solid var(--border)' }}>
+      <span className="font-mono text-[10px] font-bold tracking-widest" style={{ color: 'var(--text-muted)' }}>
+        {t.symbol}
       </span>
-      <span className={`flex items-center gap-1 font-mono text-xs ${isUp ? 'text-[var(--accent)]' : isDown ? 'text-[var(--accent-red)]' : 'text-[var(--text-muted)]'}`}>
-        {isUp ? <TrendingUp size={10} /> : isDown ? <TrendingDown size={10} /> : <Minus size={10} />}
-        {token.change24h >= 0 ? '+' : ''}{token.change24h.toFixed(2)}%
+      <span className="font-orbitron text-[11px] font-bold" style={{ color: 'var(--text-primary)' }}>
+        ${t.price.toLocaleString('en-US', { minimumFractionDigits: t.price < 1 ? 4 : 2, maximumFractionDigits: t.price < 1 ? 4 : 2 })}
       </span>
+      <span className="font-mono text-[9px] font-bold" style={{ color }}>
+        {isUp ? '▲' : '▼'} {Math.abs(t.change).toFixed(2)}%
+      </span>
+      <MiniSparkline data={t.spark} color={color} />
     </div>
   )
 }
 
-interface LiveTickerProps {
-  isConnected: boolean
-  latestBlock?: number
-}
-
-export default function LiveTicker({ isConnected, latestBlock }: LiveTickerProps) {
-  const [tickers, setTickers] = useState<TickerToken[]>(MOCK_TICKERS)
+export default function LiveTicker({ isConnected, latestBlock }: { isConnected: boolean; latestBlock?: number }) {
+  const [tickers, setTickers] = useState<Ticker[]>(SEED)
   const [time, setTime] = useState(new Date())
 
-  // Simulate small price movements every 5 seconds
   useEffect(() => {
     const iv = setInterval(() => {
-      setTickers(prev => prev.map(t => ({
-        ...t,
-        price: t.price * (1 + (Math.random() - 0.499) * 0.001),
-        change24h: t.change24h + (Math.random() - 0.5) * 0.05,
-      })))
+      setTickers(prev => prev.map(t => {
+        const delta = (Math.random() - 0.498) * t.price * 0.001
+        const newPrice = t.price + delta
+        return {
+          ...t,
+          price: newPrice,
+          change: t.change + (Math.random() - 0.5) * 0.04,
+          spark: [...t.spark.slice(1), newPrice],
+        }
+      }))
       setTime(new Date())
-    }, 5000)
+    }, 3000)
     return () => clearInterval(iv)
   }, [])
 
-  // Duplicate for seamless loop
   const doubled = [...tickers, ...tickers]
 
   return (
-    <header
-      id="live-ticker"
-      className="relative flex items-center h-10 overflow-hidden bg-[var(--bg-surface)]"
+    <div
+      className="flex items-center h-10 w-full overflow-hidden"
+      style={{ background: 'var(--bg-surface)' }}
     >
-      {/* Left status bar */}
-      <div className="flex items-center gap-2 px-4 shrink-0 border-r border-[var(--border-subtle)] h-full bg-[var(--bg-card)]">
-        <div className={`live-dot ${isConnected ? '' : 'opacity-30'}`} />
-        <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-widest uppercase">
-          {isConnected ? 'LIVE' : 'OFFLINE'}
+      {/* Left: Logo + status */}
+      <div
+        className="flex items-center gap-3 px-4 shrink-0 h-full"
+        style={{ borderRight: '1px solid var(--border)', minWidth: 200 }}
+      >
+        <span className="font-orbitron text-[11px] font-bold tracking-wider text-gradient">
+          GHOSTWHALE
         </span>
+        <div className="flex items-center gap-1.5">
+          <div className="live-dot" style={{ width: 6, height: 6 }} />
+          <span className="font-mono text-[8px]" style={{ color: 'var(--red)' }}>LIVE</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <motion.div
+            className="w-1.5 h-1.5 rounded-full"
+            style={{ background: isConnected ? 'var(--green)' : 'var(--text-muted)' }}
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          <span className="font-mono text-[8px]" style={{ color: 'var(--text-muted)' }}>
+            Mantle
+          </span>
+        </div>
       </div>
 
       {/* Scrolling ticker */}
       <div className="flex-1 overflow-hidden">
-        <div className="marquee-track flex whitespace-nowrap">
-          {doubled.map((t, i) => <TickerItem key={`${t.symbol}-${i}`} token={t} />)}
+        <div className="marquee-track flex items-center h-10">
+          {doubled.map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
         </div>
       </div>
 
       {/* Right: block + time */}
-      <div className="shrink-0 flex items-center gap-4 px-4 border-l border-[var(--border-subtle)] h-full bg-[var(--bg-card)]">
+      <div
+        className="flex items-center gap-4 px-4 shrink-0 h-full"
+        style={{ borderLeft: '1px solid var(--border)' }}
+      >
         {latestBlock && (
-          <span className="font-mono text-[10px] text-[var(--accent)] tracking-wider">
+          <span className="font-mono text-[9px]" style={{ color: 'var(--cyan)' }}>
             #{latestBlock.toLocaleString()}
           </span>
         )}
-        <span className="font-mono text-[10px] text-[var(--text-muted)]">
+        <span className="font-mono text-[9px]" style={{ color: 'var(--text-muted)' }}>
           {time.toUTCString().slice(17, 25)} UTC
         </span>
       </div>
-    </header>
+    </div>
   )
 }
