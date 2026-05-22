@@ -313,3 +313,29 @@ body::after {
 .animate-blink-eye {
   animation: blinkEye 4s infinite;
 }
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(255,30,86,0.4); }
+  50%       { box-shadow: 0 0 40px rgba(255,30,86,0.8), 0 0 60px rgba(176,38,255,0.4); }
+}
+
+/* ── Gradient Text ──────────────────────────────────────────────────────── */
+.text-gradient-green {
+  background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Dot background for center ─────────────────────────────────────────── */
+.bg-dots {
+  background-image: radial-gradient(rgba(0,212,255,0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ── Mesh background ────────────────────────────────────────────────────── */
+.bg-mesh {
+  background:
+    radial-gradient(ellipse 70% 60% at 20% 20%, rgba(108,99,255,0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 80% 80%, rgba(0,212,255,0.08) 0%, transparent 60%);
+}
