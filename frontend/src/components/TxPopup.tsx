@@ -67,12 +67,12 @@ export default function TxPopup({ trade }: TxPopupProps) {
             <div className="pt-2 mt-2 flex items-center justify-between" style={{ borderTop: '1px dashed rgba(16,185,129,0.2)' }}>
               <span className="font-mono text-[9px] text-[var(--text-muted)]">HASH</span>
               <a 
-                href={mantleExplorerTx(trade.tx_hash)}
+                href={mantleExplorerTx(trade.tx_hash || '0x0000000000000000000000000000000000000000')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-mono text-[9px] flex items-center gap-1 text-emerald-400 hover:text-emerald-300 transition-colors"
               >
-                {truncateAddr(trade.tx_hash)} <ExternalLink size={8} />
+                {truncateAddr(trade.tx_hash || '0x0000000000000000000000000000000000000000')} <ExternalLink size={8} />
               </a>
             </div>
           </div>
