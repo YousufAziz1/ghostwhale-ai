@@ -210,88 +210,72 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
         </div>
       </div>
 
-      {/* Portfolio Distribution */}
+      {/* Current AI Position */}
       <div className="mx-4 mb-8 shrink-0">
-         <div className="flex items-center gap-2 mb-4">
-          <span className="font-orbitron text-[10px] font-bold tracking-widest" style={{ color: 'var(--purple)' }}>
-            PORTFOLIO DISTRIBUTION
+        <div className="flex items-center gap-2 mb-4">
+          <motion.div className="w-2 h-2 rounded-full" style={{ background: 'var(--green)' }} animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }} />
+          <span className="font-orbitron text-[10px] font-bold tracking-widest text-[var(--green)]">
+            CURRENT AI POSITION
           </span>
         </div>
-        <div className="space-y-4">
-           {[
-             { token: 'mETH', pct: 45, color: 'var(--cyan)' },
-             { token: 'USDC', pct: 30, color: 'var(--green)' },
-             { token: 'WMNT', pct: 25, color: 'var(--purple)' }
-           ].map(t => (
-             <div key={t.token}>
-                <div className="flex justify-between text-[11px] font-mono mb-2">
-                   <span style={{ color: 'var(--text-primary)' }}>{t.token}</span>
-                   <span style={{ color: t.color }}>{t.pct}%</span>
-                </div>
-                <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
-                  <motion.div className="h-full rounded-full" style={{ background: t.color, width: `${t.pct}%` }} />
-                </div>
-             </div>
-           ))}
+        <div className="rounded-xl p-4 relative overflow-hidden" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.3)', boxShadow: '0 0 20px rgba(16,185,129,0.05)' }}>
+          <div className="absolute inset-0 bg-mesh opacity-20 pointer-events-none" />
+          <div className="relative z-10 flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] text-[var(--text-muted)]">PAIR</span>
+              <span className="font-orbitron text-[12px] font-bold text-white">mETH / USDC</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] text-[var(--text-muted)]">ACTION</span>
+              <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: 'rgba(16,185,129,0.2)', color: 'var(--green)', border: '1px solid rgba(16,185,129,0.4)' }}>LONG</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] text-[var(--text-muted)]">ENTRY</span>
+              <span className="font-mono text-[11px] text-[var(--cyan)]">$3,812.50</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] text-[var(--text-muted)]">TARGET</span>
+              <span className="font-mono text-[11px] text-[var(--green)]">$4,269.00</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] text-[var(--text-muted)]">STOP LOSS</span>
+              <span className="font-mono text-[11px] text-[var(--red)]">$3,697.00</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] text-[var(--text-muted)]">CONFIDENCE</span>
+              <span className="font-mono text-[11px] font-bold text-[var(--green)]">92%</span>
+            </div>
+            <div className="mt-2 pt-3 border-t border-[rgba(16,185,129,0.2)] flex items-center justify-center">
+              <span className="font-orbitron text-[10px] font-bold tracking-widest text-[var(--green)] animate-pulse">
+                [ EXECUTING ]
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Risk Assessment */}
+      {/* Active Whale Targets */}
       <div className="mx-4 mb-8 shrink-0">
-         <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-4">
+          <Target size={12} className="text-[var(--red)]" />
           <span className="font-orbitron text-[10px] font-bold tracking-widest text-[var(--red)]">
-            RISK ASSESSMENT MATRIX
+            ACTIVE WHALE TARGETS
           </span>
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="p-3 rounded-xl" style={{ background: 'rgba(255,59,92,0.05)', border: '1px solid rgba(255,59,92,0.1)' }}>
-            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">MARKET VOLATILITY</div>
-            <div className="font-mono text-[11px] font-bold text-[var(--red)]">ELEVATED (84%)</div>
-          </div>
-          <div className="p-3 rounded-xl" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)' }}>
-            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">SMART CONTRACT</div>
-            <div className="font-mono text-[11px] font-bold text-[var(--green)]">MINIMAL (12%)</div>
-          </div>
-          <div className="p-3 rounded-xl" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)' }}>
-            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">LIQUIDITY DEPTH</div>
-            <div className="font-mono text-[11px] font-bold text-[var(--green)]">OPTIMAL (94%)</div>
-          </div>
-          <div className="p-3 rounded-xl" style={{ background: 'rgba(255,204,21,0.05)', border: '1px solid rgba(255,204,21,0.1)' }}>
-            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">NETWORK CONGESTION</div>
-            <div className="font-mono text-[11px] font-bold text-[var(--warning)]">MODERATE (45%)</div>
-          </div>
-        </div>
-      </div>
-
-      {/* System Compute */}
-      <div className="mx-4 mb-6 shrink-0">
-         <div className="flex items-center justify-between mb-4">
-           <div className="flex items-center gap-2">
-            <span className="font-orbitron text-[10px] font-bold tracking-widest text-[var(--text-muted)]">
-              COMPUTE RESOURCES
-            </span>
-           </div>
-           <span className="font-mono text-[10px] text-[var(--cyan)] animate-pulse">SYNCED</span>
-        </div>
-        <div className="space-y-4">
-           <div>
-             <div className="flex justify-between items-center text-[11px] font-mono mb-2">
-                <span className="text-[var(--text-muted)]">GPU ALLOCATION</span>
-                <span className="text-[var(--text-primary)]">94%</span>
-             </div>
-             <div className="w-full h-1.5 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
-               <div className="h-full bg-[var(--cyan)] w-[94%]" />
-             </div>
-           </div>
-           <div>
-             <div className="flex justify-between items-center text-[11px] font-mono mb-2">
-                <span className="text-[var(--text-muted)]">MEMORY BUFFER</span>
-                <span className="text-[var(--text-primary)]">64%</span>
-             </div>
-             <div className="w-full h-1.5 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
-               <div className="h-full bg-[var(--purple)] w-[64%]" />
-             </div>
-           </div>
+        <div className="space-y-3">
+          {[
+            { addr: '0x7cc...29d', score: '94%', color: 'var(--red)' },
+            { addr: '0xF3a...11c', score: '88%', color: 'var(--warning)' },
+            { addr: '0x91d...2aa', score: '79%', color: 'var(--cyan)' },
+          ].map((w, i) => (
+            <div key={i} className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <div className="flex items-center gap-3">
+                <div className="w-1.5 h-1.5 rounded-full" style={{ background: w.color, boxShadow: `0 0 8px ${w.color}` }} />
+                <span className="font-mono text-[11px] text-[var(--text-primary)]">{w.addr}</span>
+              </div>
+              <span className="font-mono text-[11px] font-bold" style={{ color: w.color }}>{w.score}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
