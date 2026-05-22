@@ -372,7 +372,7 @@ export default function App() {
                   audio.playAlarm()
                   startDemo()
                 }}
-                className="font-orbitron text-[10px] font-bold px-4 py-1.5 rounded-lg shrink-0 btn-glow"
+                className="font-orbitron text-[10px] font-bold px-5 py-2 rounded-full shrink-0 btn-glow flex items-center gap-2"
                 style={{
                   background: 'rgba(255,59,92,0.15)',
                   color: '#FF3B5C',
@@ -383,7 +383,8 @@ export default function App() {
                 animate={{ boxShadow: ['0 0 10px rgba(255,59,92,0.2)', '0 0 20px rgba(255,59,92,0.5)', '0 0 10px rgba(255,59,92,0.2)'] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                ▶ ACTIVATE GHOST MODE
+                <span>▶</span>
+                <span>ACTIVATE GHOST MODE</span>
               </motion.button>
             ) : (
               <motion.button
