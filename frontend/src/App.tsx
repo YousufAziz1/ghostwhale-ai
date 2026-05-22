@@ -383,7 +383,9 @@ export default function App() {
                 animate={{ boxShadow: ['0 0 10px rgba(255,59,92,0.2)', '0 0 20px rgba(255,59,92,0.5)', '0 0 10px rgba(255,59,92,0.2)'] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                <span>▶</span>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none" style={{ marginTop: '1px' }}>
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
                 <span>ACTIVATE GHOST MODE</span>
               </motion.button>
             ) : (
