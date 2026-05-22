@@ -218,7 +218,11 @@ export default function App() {
   const triggerAlert = useCallback((event: WhaleEvent) => {
     setAlertEvent(event)
     setWhaleFlash(true)
-    audio.playPing()
+    if (event.amount_usd > 400000) {
+      audio.playAlarm()
+    } else {
+      audio.playPing()
+    }
     clearTimeout(alertTimer.current)
     alertTimer.current = setTimeout(() => {
       setAlertEvent(null)
@@ -285,6 +289,7 @@ export default function App() {
 
       // Trigger big whale alert for large events
       if (whale.amount_usd > 200_000) triggerAlert(whale)
+      if (trade.pnl_usd && trade.pnl_usd > 2000) audio.playSuccess()
     }, 2000)
     return () => clearInterval(dataIv)
   }, [isDemoMode, triggerAlert])
@@ -342,19 +347,23 @@ export default function App() {
             {/* Demo button */}
             {!isDemoMode ? (
               <motion.button
-                id="demo-mode-btn"
-                onClick={startDemo}
-                className="font-orbitron text-[9px] font-bold px-4 py-1.5 rounded-lg text-white shrink-0"
-                style={{
-                  background: 'linear-gradient(135deg, var(--red) 0%, var(--purple) 100%)',
-                  boxShadow: '0 0 20px rgba(255,59,92,0.4)',
+                onClick={() => {
+                  audio.init()
+                  audio.playAlarm()
+                  startDemo()
                 }}
-                whileHover={{ scale: 1.05, boxShadow: '0 0 35px rgba(255,59,92,0.7)' }}
-                whileTap={{ scale: 0.96 }}
-                animate={{ boxShadow: ['0 0 20px rgba(255,59,92,0.4)', '0 0 40px rgba(255,59,92,0.7)', '0 0 20px rgba(255,59,92,0.4)'] }}
+                className="font-orbitron text-[10px] font-bold px-4 py-1.5 rounded-lg shrink-0 btn-glow"
+                style={{
+                  background: 'rgba(255,59,92,0.15)',
+                  color: '#FF3B5C',
+                  border: '1px solid rgba(255,59,92,0.4)',
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                animate={{ boxShadow: ['0 0 10px rgba(255,59,92,0.2)', '0 0 20px rgba(255,59,92,0.5)', '0 0 10px rgba(255,59,92,0.2)'] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                ▶ LIVE SIMULATION
+                ▶ ACTIVATE GHOST MODE
               </motion.button>
             ) : (
               <div className="flex items-center gap-2 px-3 py-1 rounded-lg"
@@ -423,15 +432,20 @@ export default function App() {
 
             {/* PnL chart + trades — bottom 45% */}
             <div className="shrink-0 flex flex-col overflow-hidden" style={{ height: '45%' }}>
-              <div className="px-4 py-2 shrink-0"
-                style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,0,0,0.3)' }}>
-                <span className="font-orbitron text-[8px] font-bold tracking-widest"
-                  style={{ color: 'var(--green)' }}>
-                  ▲ PROFITABLE TRADES
-                </span>
+              <div className="flex-1 min-h-0 overflow-hidden relative" style={{ borderBottom: '1px solid var(--border)' }}>
+                <PnLChart data={state.pnlSeries} />
               </div>
-              <div className="flex-1 min-h-0 overflow-hidden">
-                <ProfitableTrades trades={state.trades} />
+              <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
+                <div className="px-4 py-2 shrink-0"
+                  style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,0,0,0.3)' }}>
+                  <span className="font-orbitron text-[8px] font-bold tracking-widest"
+                    style={{ color: 'var(--green)' }}>
+                    ▲ PROFITABLE TRADES
+                  </span>
+                </div>
+                <div className="flex-1 min-h-0 overflow-hidden">
+                  <ProfitableTrades trades={state.trades} />
+                </div>
               </div>
             </div>
           </aside>

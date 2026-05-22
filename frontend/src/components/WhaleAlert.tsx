@@ -11,6 +11,7 @@ interface WhaleAlertProps {
 export default function WhaleAlert({ event, onDismiss }: WhaleAlertProps) {
   const isBuy = event?.action === 'buy' || event?.action === 'lp_add'
   const confidence = event ? Math.round(event.wallet_score * 100) : 0
+  const isMassive = event ? event.amount_usd > 400000 : false
 
   return (
     <AnimatePresence>
@@ -21,15 +22,16 @@ export default function WhaleAlert({ event, onDismiss }: WhaleAlertProps) {
           animate={{ x: 0, opacity: 1, scale: 1 }}
           exit={{ x: 80, opacity: 0, scale: 0.95 }}
           transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-          className="absolute top-4 right-4 w-72 z-50 rounded-xl overflow-hidden cursor-pointer"
+          className={`absolute z-50 rounded-xl overflow-hidden cursor-pointer ${isMassive ? 'w-96 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2' : 'top-4 right-4 w-72'}`}
           style={{
             background: isBuy
               ? 'linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(0,245,255,0.05) 100%)'
               : 'linear-gradient(135deg, rgba(255,59,92,0.1) 0%, rgba(124,58,237,0.05) 100%)',
             border: `1px solid ${isBuy ? 'rgba(16,185,129,0.4)' : 'rgba(255,59,92,0.4)'}`,
             boxShadow: isBuy
-              ? '0 0 40px rgba(16,185,129,0.15), 0 0 1px rgba(16,185,129,0.5)'
-              : '0 0 40px rgba(255,59,92,0.15), 0 0 1px rgba(255,59,92,0.5)',
+              ? `0 0 ${isMassive ? '100px' : '40px'} rgba(16,185,129,0.2), 0 0 1px rgba(16,185,129,0.5)`
+              : `0 0 ${isMassive ? '100px' : '40px'} rgba(255,59,92,0.2), 0 0 1px rgba(255,59,92,0.5)`,
+            backdropFilter: 'blur(20px)',
           }}
           onClick={onDismiss}
         >

@@ -1,83 +1,105 @@
-// A simple Web Audio API synthesizer for cinematic UI sounds
-// No external assets required.
+// Futuristic Web Audio API Sound Effects
 
-let ctx: AudioContext | null = null
-
-function getContext() {
-  if (!ctx) {
-    ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
-  }
-  return ctx
-}
+let audioCtx: AudioContext | null = null
 
 export const audio = {
-  init() {
-    // Must be called on user interaction
-    const actx = getContext()
-    if (actx.state === 'suspended') actx.resume()
+  init: () => {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume()
+    }
   },
 
-  playPing() {
-    try {
-      const actx = getContext()
-      const osc = actx.createOscillator()
-      const gain = actx.createGain()
-      
+  playPing: () => {
+    if (!audioCtx) return
+    const osc = audioCtx.createOscillator()
+    const gain = audioCtx.createGain()
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(880, audioCtx.currentTime) // A5
+    osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.1)
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3)
+    osc.connect(gain)
+    gain.connect(audioCtx.destination)
+    osc.start()
+    osc.stop(audioCtx.currentTime + 0.3)
+  },
+
+  playType: () => {
+    if (!audioCtx) return
+    const osc = audioCtx.createOscillator()
+    const gain = audioCtx.createGain()
+    osc.type = 'square'
+    osc.frequency.setValueAtTime(150 + Math.random() * 50, audioCtx.currentTime)
+    gain.gain.setValueAtTime(0.02, audioCtx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05)
+    
+    // High-pass filter for typewriter click sound
+    const filter = audioCtx.createBiquadFilter()
+    filter.type = 'highpass'
+    filter.frequency.value = 2000
+
+    osc.connect(filter)
+    filter.connect(gain)
+    gain.connect(audioCtx.destination)
+    osc.start()
+    osc.stop(audioCtx.currentTime + 0.05)
+  },
+
+  playAlarm: () => {
+    if (!audioCtx) return
+    // Massive Whale Alarm (Low synth horn)
+    const osc = audioCtx.createOscillator()
+    const osc2 = audioCtx.createOscillator()
+    const gain = audioCtx.createGain()
+    
+    osc.type = 'sawtooth'
+    osc.frequency.setValueAtTime(110, audioCtx.currentTime) // A2
+    osc.frequency.linearRampToValueAtTime(108, audioCtx.currentTime + 0.8)
+
+    osc2.type = 'square'
+    osc2.frequency.setValueAtTime(110.5, audioCtx.currentTime)
+    
+    gain.gain.setValueAtTime(0, audioCtx.currentTime)
+    gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.1)
+    gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.6)
+    gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.8)
+
+    // Filter to make it sound like a cinematic horn
+    const filter = audioCtx.createBiquadFilter()
+    filter.type = 'lowpass'
+    filter.frequency.setValueAtTime(400, audioCtx.currentTime)
+    filter.frequency.linearRampToValueAtTime(2000, audioCtx.currentTime + 0.4)
+
+    osc.connect(filter)
+    osc2.connect(filter)
+    filter.connect(gain)
+    gain.connect(audioCtx.destination)
+    
+    osc.start()
+    osc2.start()
+    osc.stop(audioCtx.currentTime + 0.8)
+    osc2.stop(audioCtx.currentTime + 0.8)
+  },
+
+  playSuccess: () => {
+    if (!audioCtx) return
+    // Trade closed successfully chime
+    const freqs = [523.25, 659.25, 1046.50] // C5, E5, C6
+    freqs.forEach((freq, i) => {
+      const osc = audioCtx.createOscillator()
+      const gain = audioCtx.createGain()
       osc.type = 'sine'
-      osc.frequency.setValueAtTime(880, actx.currentTime) // A5
-      osc.frequency.exponentialRampToValueAtTime(440, actx.currentTime + 0.5)
-
-      gain.gain.setValueAtTime(0.3, actx.currentTime)
-      gain.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.8)
-
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1)
+      gain.gain.setValueAtTime(0, audioCtx.currentTime + i * 0.1)
+      gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + i * 0.1 + 0.05)
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.1 + 0.5)
       osc.connect(gain)
-      gain.connect(actx.destination)
-
-      osc.start()
-      osc.stop(actx.currentTime + 1)
-    } catch {}
-  },
-
-  playAlert() {
-    try {
-      const actx = getContext()
-      const osc = actx.createOscillator()
-      const gain = actx.createGain()
-      
-      osc.type = 'square'
-      osc.frequency.setValueAtTime(220, actx.currentTime) // A3
-      osc.frequency.setValueAtTime(330, actx.currentTime + 0.1) // E4
-      osc.frequency.setValueAtTime(220, actx.currentTime + 0.2) // A3
-
-      gain.gain.setValueAtTime(0.2, actx.currentTime)
-      gain.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.4)
-
-      osc.connect(gain)
-      gain.connect(actx.destination)
-
-      osc.start()
-      osc.stop(actx.currentTime + 0.5)
-    } catch {}
-  },
-
-  playType() {
-    try {
-      const actx = getContext()
-      const osc = actx.createOscillator()
-      const gain = actx.createGain()
-      
-      // High frequency click
-      osc.type = 'triangle'
-      osc.frequency.setValueAtTime(3000 + Math.random() * 1000, actx.currentTime)
-
-      gain.gain.setValueAtTime(0.05, actx.currentTime)
-      gain.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.05)
-
-      osc.connect(gain)
-      gain.connect(actx.destination)
-
-      osc.start()
-      osc.stop(actx.currentTime + 0.05)
-    } catch {}
+      gain.connect(audioCtx.destination)
+      osc.start(audioCtx.currentTime + i * 0.1)
+      osc.stop(audioCtx.currentTime + i * 0.1 + 0.5)
+    })
   }
 }
