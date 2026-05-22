@@ -20,12 +20,12 @@ function MiniSparkline({ data, color }: { data: number[]; color: string }) {
   const min = Math.min(...data)
   const max = Math.max(...data)
   const range = max - min || 1
-  const w = 80, h = 24
+  const w = 36, h = 16
   const pts = data.map((v, i) => `${(i / (data.length - 1)) * w},${h - ((v - min) / range) * h}`).join(' ')
   return (
-    <svg width="100%" height={h} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none">
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
       <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5"
-        style={{ filter: `drop-shadow(0 0 4px ${color})` }} strokeLinecap="round" strokeLinejoin="round" />
+        style={{ filter: `drop-shadow(0 0 3px ${color})` }} strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -34,18 +34,18 @@ function TickerItem({ t }: { t: Ticker }) {
   const isUp = t.change >= 0
   const color = isUp ? 'var(--green)' : 'var(--red)'
   return (
-    <div className="flex flex-col justify-between h-full w-full px-4 py-2 shrink-0 border-r border-[rgba(255,255,255,0.05)] last:border-0">
-      <div className="flex items-center justify-between w-full">
-        <span className="font-orbitron text-[10px] font-bold" style={{ color: 'var(--text-primary)' }}>
-          {t.symbol}/USDT
-        </span>
-        <span className="font-mono text-[10px] font-bold" style={{ color }}>
-          {isUp ? '+' : ''}{t.change.toFixed(1)}%
-        </span>
-      </div>
-      <div className="mt-1 flex items-end justify-center w-full">
-        <MiniSparkline data={t.spark} color={color} />
-      </div>
+    <div className="flex items-center gap-3 px-5 shrink-0"
+      style={{ borderRight: '1px solid var(--border)' }}>
+      <span className="font-mono text-[10px] font-bold tracking-widest" style={{ color: 'var(--text-muted)' }}>
+        {t.symbol}
+      </span>
+      <span className="font-orbitron text-[11px] font-bold" style={{ color: 'var(--text-primary)' }}>
+        ${t.price.toLocaleString('en-US', { minimumFractionDigits: t.price < 1 ? 4 : 2, maximumFractionDigits: t.price < 1 ? 4 : 2 })}
+      </span>
+      <span className="font-mono text-[9px] font-bold" style={{ color }}>
+        {isUp ? '▲' : '▼'} {Math.abs(t.change).toFixed(2)}%
+      </span>
+      <MiniSparkline data={t.spark} color={color} />
     </div>
   )
 }
@@ -75,9 +75,53 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
 
   return (
     <div
-      className="flex items-center h-full w-full overflow-hidden justify-around px-2"
+      className="flex items-center h-10 w-full overflow-hidden"
+      style={{ background: 'var(--bg-surface)' }}
     >
-      {SEED.slice(0, 5).map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
+      {/* Left: Logo + status */}
+      <div
+        className="flex items-center gap-3 px-4 shrink-0 h-full"
+        style={{ borderRight: '1px solid var(--border)', minWidth: 200 }}
+      >
+        <span className="font-orbitron text-[11px] font-bold tracking-wider text-gradient">
+          GHOSTWHALE
+        </span>
+        <div className="flex items-center gap-1.5">
+          <div className="live-dot" style={{ width: 6, height: 6 }} />
+          <span className="font-mono text-[8px]" style={{ color: 'var(--red)' }}>LIVE</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <motion.div
+            className="w-1.5 h-1.5 rounded-full"
+            style={{ background: isConnected ? 'var(--green)' : 'var(--text-muted)' }}
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          <span className="font-mono text-[8px]" style={{ color: 'var(--text-muted)' }}>
+            Mantle
+          </span>
+        </div>
+      </div>
+
+      {/* Tokens Row */}
+      <div className="flex-1 flex items-center gap-4 px-4 overflow-hidden">
+        {SEED.slice(0, 5).map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
+      </div>
+
+      {/* Right: block + time */}
+      <div
+        className="flex items-center gap-4 px-4 shrink-0 h-full"
+        style={{ borderLeft: '1px solid var(--border)' }}
+      >
+        {latestBlock && (
+          <span className="font-mono text-[9px]" style={{ color: 'var(--cyan)' }}>
+            #{latestBlock.toLocaleString()}
+          </span>
+        )}
+        <span className="font-mono text-[9px]" style={{ color: 'var(--text-muted)' }}>
+          {time.toUTCString().slice(17, 25)} UTC
+        </span>
+      </div>
     </div>
   )
 }

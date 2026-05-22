@@ -335,38 +335,36 @@ export default function App() {
       <div className="relative z-10 flex flex-col h-screen">
 
         {/* ── Top Header ─────────────────────────────────────────────────── */}
-        <div className="shrink-0 flex items-center w-full px-4 pt-4 gap-4" style={{ height: '76px' }}>
-          
-          {/* 1. Logo Block */}
-          <div className="flex items-center gap-3 px-6 h-full rounded-xl" style={{ border: '1px solid rgba(0,245,255,0.15)', background: 'var(--bg-surface)', boxShadow: '0 0 30px rgba(0,0,0,0.5)' }}>
-             <div className="w-8 h-8 rounded-lg flex items-center justify-center border border-[var(--cyan)] bg-[rgba(0,245,255,0.1)] text-white shadow-[0_0_15px_var(--cyan-glow)]">
-               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--cyan)' }}><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-12h4v8h-4z"/></svg> {/* Dummy icon, can use whale icon */}
-             </div>
-             <span className="font-orbitron text-lg font-bold tracking-widest text-[var(--cyan)]">
-               GHOSTWHALE
-             </span>
-          </div>
-
-          {/* 2. Tokens Block */}
-          <div className="flex-1 h-full rounded-xl overflow-hidden" style={{ border: '1px solid rgba(0,245,255,0.15)', background: 'var(--bg-surface)', boxShadow: '0 0 30px rgba(0,0,0,0.5)' }}>
+        <div className="shrink-0 flex items-center w-full" style={{ borderBottom: '1px solid var(--border)' }}>
+          <div className="flex-1 min-w-0 flex items-center">
             <LiveTicker isConnected={isConnected} latestBlock={latestBlock} />
-          </div>
-          {/* 3. Status Block */}
-          <div className="flex flex-col justify-center px-6 h-full rounded-xl shrink-0" style={{ border: '1px solid rgba(0,245,255,0.15)', background: 'var(--bg-surface)', boxShadow: '0 0 30px rgba(0,0,0,0.5)' }}>
-             <div className="flex items-center gap-1.5 mb-1">
-                <motion.div className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--green)' }} animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity }} />
-                <span className="font-mono text-[9px]" style={{ color: 'var(--text-muted)' }}>LIVE</span>
-                <span className="font-mono text-[9px]" style={{ color: 'var(--text-primary)' }}>12ms RPC</span>
-             </div>
-             <div className="flex flex-col">
-               <span className="font-orbitron text-lg font-bold" style={{ color: 'var(--cyan)' }}>95%</span>
-               <span className="font-mono text-[8px]" style={{ color: 'var(--text-muted)' }}>AI CONFIDENCE</span>
-             </div>
+            <div className="hidden 2xl:block px-6">
+              <p className="font-mono text-[9px] text-[var(--cyan)] opacity-80 leading-tight border-l border-[var(--cyan)]/30 pl-3">
+                GhostWhale is an autonomous AI hunter that scans Mantle in real-time, tracks smart capital,
+                <br />predicts whale intent, and executes transparent AI-driven trades before retail detects movement.
+              </p>
+            </div>
           </div>
 
-          {/* 4. Button Block */}
+          {/* Right header controls */}
+          <div
+            className="flex items-center gap-4 px-4 shrink-0 h-10"
+            style={{ borderLeft: '1px solid var(--border)' }}
+          >
+            {/* AI latency */}
+            <div className="flex items-center gap-1.5">
+              <span className="font-mono text-[8px]" style={{ color: 'var(--text-muted)' }}>LATENCY</span>
+              <span className="font-mono text-[9px] font-bold" style={{ color: 'var(--green)' }}>
+                {(Math.random() * 12 + 4).toFixed(0)}ms
+              </span>
+            </div>
+            {/* Confidence */}
+            <div className="flex items-center gap-1.5">
+              <span className="font-mono text-[8px]" style={{ color: 'var(--text-muted)' }}>CONF</span>
+              <span className="font-mono text-[9px] font-bold" style={{ color: 'var(--cyan)' }}>92%</span>
+            </div>
 
-          <div className="shrink-0 h-full">
+            {/* Demo button */}
             {!isDemoMode ? (
               <motion.button
                 onClick={() => {
@@ -374,30 +372,25 @@ export default function App() {
                   audio.playAlarm()
                   startDemo()
                 }}
-                className="font-orbitron text-[12px] font-bold px-8 h-full rounded-xl uppercase tracking-widest relative"
+                className="font-orbitron text-[10px] font-bold px-4 py-1.5 rounded-lg shrink-0 btn-glow"
                 style={{
-                  background: 'var(--cyan)',
-                  color: 'black',
-                  border: '2px solid transparent',
+                  background: 'rgba(255,59,92,0.15)',
+                  color: '#FF3B5C',
+                  border: '1px solid rgba(255,59,92,0.4)',
                 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                animate={{ 
-                  boxShadow: ['0 0 10px rgba(124,58,237,0.5)', '0 0 30px rgba(124,58,237,0.8)', '0 0 10px rgba(124,58,237,0.5)'],
-                  borderColor: ['rgba(124,58,237,0.8)', 'rgba(0,245,255,0.8)', 'rgba(124,58,237,0.8)']
-                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                animate={{ boxShadow: ['0 0 10px rgba(255,59,92,0.2)', '0 0 20px rgba(255,59,92,0.5)', '0 0 10px rgba(255,59,92,0.2)'] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                ACTIVATE
-                <br/>
-                GHOST MODE
+                ▶ ACTIVATE GHOST MODE
               </motion.button>
             ) : (
-              <div className="flex items-center justify-center gap-2 px-8 h-full rounded-xl"
-                style={{ background: 'rgba(255,59,92,0.12)', border: '1px solid rgba(255,59,92,0.5)' }}>
+              <div className="flex items-center gap-2 px-3 py-1 rounded-lg"
+                style={{ background: 'rgba(255,59,92,0.12)', border: '1px solid rgba(255,59,92,0.35)' }}>
                 <motion.span className="w-2 h-2 rounded-full" style={{ background: 'var(--red)' }}
                   animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
-                <span className="font-orbitron text-[12px] font-bold" style={{ color: 'var(--red)' }}>
+                <span className="font-orbitron text-[8px] font-bold" style={{ color: 'var(--red)' }}>
                   SIMULATION ACTIVE
                 </span>
               </div>
