@@ -153,8 +153,8 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
         <StatRow icon={Shield}     label="STANDARD"    value={identity?.standard ?? 'ERC-8004'} color="var(--cyan)" />
       </div>
 
-      {/* ERC-8004 Identity badge */}
-      <div className="mx-4 mb-4 rounded-xl overflow-hidden"
+    {/* ERC-8004 Identity badge */}
+      <div className="mx-4 mb-5 rounded-xl overflow-hidden shrink-0"
         style={{ border: '1px solid rgba(124,58,237,0.3)' }}>
         <div className="px-3 py-2"
           style={{ background: 'rgba(124,58,237,0.08)', borderBottom: '1px solid rgba(124,58,237,0.15)' }}>
@@ -174,6 +174,65 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
               <span className="font-mono text-[9px] font-bold" style={{ color: 'rgba(124,58,237,0.9)' }}>{v}</span>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Active Sub-Networks */}
+      <div className="mx-4 mb-5 shrink-0">
+        <div className="flex items-center gap-2 mb-2.5">
+          <motion.div className="w-1.5 h-1.5 bg-[var(--cyan)] rounded-full" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }} />
+          <span className="font-orbitron text-[8px] font-bold tracking-widest" style={{ color: 'var(--cyan)' }}>
+            NEURAL SUB-NETWORKS
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { label: 'RPC NODE', ping: '12ms' },
+            { label: 'NLP CORE', ping: '8ms' },
+            { label: 'MEMPOOL', ping: '24ms' },
+            { label: 'EXECUTION', ping: '15ms' }
+          ].map((n, i) => (
+            <div key={i} className="rounded-lg p-2" style={{ background: 'rgba(0,245,255,0.03)', border: '1px solid rgba(0,245,255,0.1)' }}>
+              <div className="flex justify-between items-center mb-1.5">
+                <span className="font-mono text-[8px]" style={{ color: 'var(--text-muted)' }}>{n.label}</span>
+                <span className="font-mono text-[7px]" style={{ color: 'var(--green)' }}>{n.ping}</span>
+              </div>
+              <div className="w-full bg-[rgba(0,245,255,0.1)] h-0.5 rounded-full overflow-hidden">
+                <motion.div 
+                  className="h-full bg-[var(--cyan)]" 
+                  initial={{ width: '40%' }}
+                  animate={{ width: ['40%', '80%', '50%', '90%', '40%'] }}
+                  transition={{ duration: 3 + i, repeat: Infinity, ease: 'linear' }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Portfolio Distribution */}
+      <div className="mx-4 mb-6 shrink-0">
+         <div className="flex items-center gap-2 mb-2.5">
+          <span className="font-orbitron text-[8px] font-bold tracking-widest" style={{ color: 'var(--purple)' }}>
+            PORTFOLIO DISTRIBUTION
+          </span>
+        </div>
+        <div className="space-y-3">
+           {[
+             { token: 'mETH', pct: 45, color: 'var(--cyan)' },
+             { token: 'USDC', pct: 30, color: 'var(--green)' },
+             { token: 'WMNT', pct: 25, color: 'var(--purple)' }
+           ].map(t => (
+             <div key={t.token}>
+                <div className="flex justify-between text-[9px] font-mono mb-1">
+                   <span style={{ color: 'var(--text-primary)' }}>{t.token}</span>
+                   <span style={{ color: t.color }}>{t.pct}%</span>
+                </div>
+                <div className="w-full h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                  <motion.div className="h-full rounded-full" style={{ background: t.color, width: `${t.pct}%` }} />
+                </div>
+             </div>
+           ))}
         </div>
       </div>
     </div>
