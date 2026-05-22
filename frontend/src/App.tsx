@@ -105,21 +105,42 @@ const INITIAL_PNL: PnLPoint[] = (() => {
 })()
 
 const MOCK_STATS: AgentStats = {
-  total_pnl_usd: 12450.45,
   total_signals: 142,
-  total_trades: 87,
-  win_rate: 68.4,
-  active_positions: 4,
-  last_updated: new Date().toISOString()
+  acted_on: 87,
+  avg_confidence: 88.5,
+  buy_signals: 90,
+  sell_signals: 42,
+  hold_signals: 10,
+  settled_trades: 87,
+  winning_trades: 60,
+  win_rate_pct: 68.9,
+  total_pnl_usd: 12450.45,
+  best_trade_usd: 2150.00,
+  worst_trade_usd: -450.00,
+  reputation_score: 840
 }
 
 const MOCK_IDENTITY: AgentIdentity = {
   name: "GHOSTWHALE",
   version: "AI-001",
-  address: "0xGHOST...WHALE",
-  reputation: 840,
-  trust_score: 94,
-  networks_active: ["Mantle Mainnet"]
+  description: "Autonomous trading organism",
+  image_url: "",
+  created_at: new Date().toISOString(),
+  network: "Mantle Mainnet",
+  chain_id: 5000,
+  mode: 'MOCK',
+  standard: "ERC-8004",
+  token_id: 1,
+  nft_address: "0xGHOST...WHALE",
+  explorer_url: null,
+  reputation_score: 840,
+  win_rate_pct: 68.9,
+  total_signals: 142,
+  total_pnl_usd: 12450.45,
+  best_trade_usd: 2150.00,
+  settled_trades: 87,
+  winning_trades: 60,
+  fetched_at: new Date().toISOString()
 }
 
 // ── App ─────────────────────────────────────────────────────────────────────
@@ -376,7 +397,7 @@ export default function App() {
 
             {/* AI Core Orb — top 44% */}
             <div className="shrink-0 p-4 relative" style={{ height: '44%' }}>
-              <AICore active={isDemoMode} whaleCount={state.whaleEvents.length} />
+              <AICore active={isDemoMode} whaleCount={state.whaleEvents.length} events={state.whaleEvents} />
             </div>
 
             {/* Divider */}
