@@ -235,6 +235,61 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
            ))}
         </div>
       </div>
+
+      {/* Risk Assessment */}
+      <div className="mx-4 mb-5 shrink-0">
+         <div className="flex items-center gap-2 mb-2.5">
+          <span className="font-orbitron text-[8px] font-bold tracking-widest text-[var(--red)]">
+            RISK ASSESSMENT MATRIX
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="p-2 rounded-lg" style={{ background: 'rgba(255,59,92,0.05)', border: '1px solid rgba(255,59,92,0.1)' }}>
+            <div className="font-mono text-[7px] text-[var(--text-muted)] mb-1">MARKET VOLATILITY</div>
+            <div className="font-mono text-[9px] font-bold text-[var(--red)]">ELEVATED (84%)</div>
+          </div>
+          <div className="p-2 rounded-lg" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)' }}>
+            <div className="font-mono text-[7px] text-[var(--text-muted)] mb-1">SMART CONTRACT</div>
+            <div className="font-mono text-[9px] font-bold text-[var(--green)]">MINIMAL (12%)</div>
+          </div>
+          <div className="p-2 rounded-lg" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)' }}>
+            <div className="font-mono text-[7px] text-[var(--text-muted)] mb-1">LIQUIDITY DEPTH</div>
+            <div className="font-mono text-[9px] font-bold text-[var(--green)]">OPTIMAL (94%)</div>
+          </div>
+          <div className="p-2 rounded-lg" style={{ background: 'rgba(255,204,21,0.05)', border: '1px solid rgba(255,204,21,0.1)' }}>
+            <div className="font-mono text-[7px] text-[var(--text-muted)] mb-1">NETWORK CONGESTION</div>
+            <div className="font-mono text-[9px] font-bold text-[var(--warning)]">MODERATE (45%)</div>
+          </div>
+        </div>
+      </div>
+
+      {/* System Compute */}
+      <div className="mx-4 mb-6 shrink-0">
+         <div className="flex items-center justify-between mb-2.5">
+           <div className="flex items-center gap-2">
+            <span className="font-orbitron text-[8px] font-bold tracking-widest text-[var(--text-muted)]">
+              COMPUTE RESOURCES
+            </span>
+           </div>
+           <span className="font-mono text-[8px] text-[var(--cyan)] animate-pulse">SYNCED</span>
+        </div>
+        <div className="space-y-2">
+           <div className="flex justify-between items-center text-[9px] font-mono">
+              <span className="text-[var(--text-muted)]">GPU ALLOCATION</span>
+              <span className="text-[var(--text-primary)]">94%</span>
+           </div>
+           <div className="w-full h-0.5 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
+             <div className="h-full bg-[var(--cyan)] w-[94%]" />
+           </div>
+           <div className="flex justify-between items-center text-[9px] font-mono mt-2">
+              <span className="text-[var(--text-muted)]">MEMORY BUFFER</span>
+              <span className="text-[var(--text-primary)]">64%</span>
+           </div>
+           <div className="w-full h-0.5 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
+             <div className="h-full bg-[var(--purple)] w-[64%]" />
+           </div>
+        </div>
+      </div>
     </div>
   )
 }
