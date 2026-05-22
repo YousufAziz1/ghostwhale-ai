@@ -191,7 +191,7 @@ export default function App() {
   const fetchIdentity = useCallback(async () => {
     try { 
       const d = await api.identity(); 
-      if (d && d.reputation > 0) setState(prev => ({...prev, identity: d})) 
+      if (d && d.reputation_score > 0) setState(prev => ({...prev, identity: d})) 
     } catch {}
   }, [])
   const fetchPnL = useCallback(async () => {
