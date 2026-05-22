@@ -104,6 +104,24 @@ const INITIAL_PNL: PnLPoint[] = (() => {
   })
 })()
 
+const MOCK_STATS: AgentStats = {
+  total_pnl_usd: 12450.45,
+  total_signals: 142,
+  total_trades: 87,
+  win_rate: 68.4,
+  active_positions: 4,
+  last_updated: new Date().toISOString()
+}
+
+const MOCK_IDENTITY: AgentIdentity = {
+  name: "GHOSTWHALE",
+  version: "AI-001",
+  address: "0xGHOST...WHALE",
+  reputation: 840,
+  trust_score: 94,
+  networks_active: ["Mantle Mainnet"]
+}
+
 // ── App ─────────────────────────────────────────────────────────────────────
 interface AppState {
   signals: Signal[]; whaleEvents: WhaleEvent[]; trades: Trade[]
@@ -114,10 +132,14 @@ interface AppState {
 export default function App() {
   const [state, setState] = useState<AppState>({
     signals: [], whaleEvents: INITIAL_WHALES, trades: INITIAL_TRADES,
-    stats: null, identity: null, pnlSeries: INITIAL_PNL, rpcStatus: null,
+    stats: MOCK_STATS, identity: MOCK_IDENTITY, pnlSeries: INITIAL_PNL, rpcStatus: null,
   })
   const [isDemoMode, setIsDemoMode] = useState(false)
-  const [logs, setLogs]             = useState<LogEntry[]>([])
+  const [logs, setLogs]             = useState<LogEntry[]>([{
+    id: 'init1', time: new Date().toLocaleTimeString(), text: 'System boot sequence initiated...', color: 'var(--cyan)', type: 'info'
+  }, {
+    id: 'init2', time: new Date().toLocaleTimeString(), text: 'Initializing neural scan across Mantle Network...', color: 'var(--purple)', type: 'scan'
+  }])
   const [alertEvent, setAlertEvent] = useState<WhaleEvent | null>(null)
   const [statusPhrase, setStatusPhrase] = useState(STATUS_PHRASES[0])
   const [whaleFlash, setWhaleFlash] = useState(false)
@@ -140,10 +162,16 @@ export default function App() {
     try { const d = await api.trades(50); if (d.length > 0) setState(prev => ({...prev, trades: d})) } catch {}
   }, [])
   const fetchStats = useCallback(async () => {
-    try { const d = await api.stats(); setState(prev => ({...prev, stats: d})) } catch {}
+    try { 
+      const d = await api.stats(); 
+      if (d && d.total_signals > 0) setState(prev => ({...prev, stats: d})) 
+    } catch {}
   }, [])
   const fetchIdentity = useCallback(async () => {
-    try { const d = await api.identity(); setState(prev => ({...prev, identity: d})) } catch {}
+    try { 
+      const d = await api.identity(); 
+      if (d && d.reputation > 0) setState(prev => ({...prev, identity: d})) 
+    } catch {}
   }, [])
   const fetchPnL = useCallback(async () => {
     try { const d = await api.pnlTimeseries(); if (d.length > 0) setState(prev => ({...prev, pnlSeries: d})) } catch {}
