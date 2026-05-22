@@ -177,19 +177,29 @@ export default function App() {
     }, 6000)
   }, [])
 
-  // ── Demo / Simulation ─────────────────────────────────────────────────────
+  // ── Demo / Simulation & AI Thoughts ───────────────────────────────────────
   const startDemo = useCallback(() => {
     setIsDemoMode(true)
     audio.init()
-  }, [])
+    
+    // Cinematic wake-up: trigger massive alerts immediately
+    const wakeUpTokens = [...DEMO_TOKENS].sort(() => 0.5 - Math.random()).slice(0, 3)
+    wakeUpTokens.forEach((token, i) => {
+      setTimeout(() => {
+        const whale = makeMockWhale(token)
+        whale.amount_usd = 500_000 + Math.random() * 1_500_000 // Huge amounts for demo
+        triggerAlert(whale)
+        setState(prev => ({ ...prev, whaleEvents: [whale, ...prev.whaleEvents].slice(0, 60) }))
+      }, 300 + i * 1800)
+    })
+  }, [triggerAlert])
 
+  // Stream AI thoughts continuously (faster when demo is active)
   useEffect(() => {
-    if (!isDemoMode) return
-
     const logIv = setInterval(() => {
       const idx = logIdxRef.current % REASONING_SCRIPTS.length
       const script = REASONING_SCRIPTS[idx]
-      audio.playType()
+      if (isDemoMode) audio.playType()
       const entry: LogEntry = {
         id: Math.random().toString(),
         time: new Date().toLocaleTimeString(),
@@ -199,8 +209,13 @@ export default function App() {
       }
       setLogs(prev => [...prev, entry].slice(-30))
       logIdxRef.current++
-    }, 1700)
+    }, isDemoMode ? 1700 : 3800)
+    return () => clearInterval(logIv)
+  }, [isDemoMode])
 
+  // Data flooding in demo mode
+  useEffect(() => {
+    if (!isDemoMode) return
     const dataIv = setInterval(() => {
       const token = DEMO_TOKENS[Math.floor(Math.random() * DEMO_TOKENS.length)]
       const amount = 60_000 + Math.random() * 700_000
@@ -222,8 +237,7 @@ export default function App() {
       // Trigger big whale alert for large events
       if (whale.amount_usd > 200_000) triggerAlert(whale)
     }, 2000)
-
-    return () => { clearInterval(logIv); clearInterval(dataIv) }
+    return () => clearInterval(dataIv)
   }, [isDemoMode, triggerAlert])
 
   const isConnected = state.rpcStatus?.connected ?? false

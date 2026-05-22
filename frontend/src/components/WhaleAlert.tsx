@@ -145,6 +145,33 @@ export default function WhaleAlert({ event, onDismiss }: WhaleAlertProps) {
                 />
               </div>
             </div>
+
+            {/* AI Reasoning (Hackathon gold) */}
+            <div className="pt-2 mt-2" style={{ borderTop: `1px dashed ${isBuy ? 'rgba(16,185,129,0.3)' : 'rgba(255,59,92,0.3)'}` }}>
+              <span className="font-orbitron text-[9px] font-bold tracking-widest mb-1.5 block" style={{ color: 'var(--text-primary)' }}>
+                AI REASONING:
+              </span>
+              <ul className="space-y-1">
+                <li className="flex items-start gap-1.5">
+                  <span style={{ color: isBuy ? '#10B981' : '#FF3B5C' }}>•</span>
+                  <span className="font-mono text-[9px] leading-tight text-[var(--text-muted)]">
+                    Whale accumulated 3 times in 24h
+                  </span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <span style={{ color: isBuy ? '#10B981' : '#FF3B5C' }}>•</span>
+                  <span className="font-mono text-[9px] leading-tight text-[var(--text-muted)]">
+                    Liquidity imbalance: {isBuy ? 'bid' : 'ask'} side thin
+                  </span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <span style={{ color: isBuy ? '#10B981' : '#FF3B5C' }}>•</span>
+                  <span className="font-mono text-[9px] leading-tight text-[var(--text-muted)]">
+                    Historical breakout match: {confidence - 3}%
+                  </span>
+                </li>
+              </ul>
+            </div>
           </div>
         </motion.div>
       )}

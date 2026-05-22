@@ -113,11 +113,16 @@ body::after {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 100% 80% at 50% 0%, rgba(124, 58, 237, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 10% 50%, rgba(0, 245, 255, 0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 90% 70%, rgba(59, 130, 246, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 80% at 50% 0%, rgba(124, 58, 237, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 10% 50%, rgba(0, 245, 255, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 70%, rgba(59, 130, 246, 0.1) 0%, transparent 60%),
     var(--bg-base);
+  animation: ambientFog 15s ease-in-out infinite alternate;
   pointer-events: none;
+}
+@keyframes ambientFog {
+  0% { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.05); }
 }
 
 /* ━━ Grid background ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -125,15 +130,19 @@ body::after {
   position: fixed;
   inset: 0;
   background-image:
-    linear-gradient(rgba(0, 245, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 245, 255, 0.025) 1px, transparent 1px);
+    linear-gradient(rgba(0, 245, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 245, 255, 0.04) 1px, transparent 1px);
   background-size: 50px 50px;
-  animation: gridPan 40s linear infinite;
+  animation: gridPan 40s linear infinite, gridPulse 10s ease-in-out infinite alternate;
   pointer-events: none;
 }
 @keyframes gridPan {
   from { background-position: 0 0; }
   to   { background-position: 50px 50px; }
+}
+@keyframes gridPulse {
+  0% { opacity: 0.4; }
+  100% { opacity: 0.8; }
 }
 
 /* ━━ Glass panels ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
