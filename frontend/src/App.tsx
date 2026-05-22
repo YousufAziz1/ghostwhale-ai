@@ -386,14 +386,23 @@ export default function App() {
                 ▶ ACTIVATE GHOST MODE
               </motion.button>
             ) : (
-              <div className="flex items-center gap-2 px-3 py-1 rounded-lg"
-                style={{ background: 'rgba(255,59,92,0.12)', border: '1px solid rgba(255,59,92,0.35)' }}>
+              <motion.button
+                onClick={() => {
+                  setIsDemoMode(false)
+                  audio.init()
+                  audio.playPing()
+                }}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg cursor-pointer"
+                style={{ background: 'rgba(255,59,92,0.12)', border: '1px solid rgba(255,59,92,0.35)' }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <motion.span className="w-2 h-2 rounded-full" style={{ background: 'var(--red)' }}
                   animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
                 <span className="font-orbitron text-[8px] font-bold" style={{ color: 'var(--red)' }}>
                   SIMULATION ACTIVE
                 </span>
-              </div>
+              </motion.button>
             )}
           </div>
         </div>
