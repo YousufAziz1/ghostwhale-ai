@@ -12,6 +12,7 @@ import WhaleAlert    from '@/components/WhaleAlert'
 import ThoughtStream from '@/components/ThoughtStream'
 import AgentStatsPanel from '@/components/AgentStatsPanel'
 import ProfitableTrades from '@/components/ProfitableTrades'
+import TxPopup from '@/components/TxPopup'
 
 // ── Seed demo data — UI is NEVER blank ─────────────────────────────────────
 const DEMO_TOKENS = ['mETH', 'WMNT', 'AGNI', 'MOE', 'USDY', 'USDC']
@@ -164,8 +165,10 @@ export default function App() {
   const [alertEvent, setAlertEvent] = useState<WhaleEvent | null>(null)
   const [statusPhrase, setStatusPhrase] = useState(STATUS_PHRASES[0])
   const [whaleFlash, setWhaleFlash] = useState(false)
+  const [txPopupEvent, setTxPopupEvent] = useState<Trade | null>(null)
   const logIdxRef = useRef(0)
   const alertTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const txTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   // ── Rotating status phrase ────────────────────────────────────────────────
   useEffect(() => {
@@ -294,6 +297,13 @@ export default function App() {
       // Trigger big whale alert for large events
       if (whale.amount_usd > 200_000) triggerAlert(whale)
       if (trade.pnl_usd && trade.pnl_usd > 2000) audio.playSuccess()
+      
+      // Randomly pop up the transaction confirmation
+      if (Math.random() > 0.8) {
+        setTxPopupEvent(trade)
+        clearTimeout(txTimer.current)
+        txTimer.current = setTimeout(() => setTxPopupEvent(null), 4000)
+      }
     }, 2000)
     return () => clearInterval(dataIv)
   }, [isDemoMode, triggerAlert])
@@ -413,6 +423,9 @@ export default function App() {
           <main className="flex flex-col overflow-hidden relative" style={{ background: 'var(--bg-base)' }}>
             {/* Whale popup alert */}
             <WhaleAlert event={alertEvent} onDismiss={() => setAlertEvent(null)} />
+            
+            {/* Real TX confirmation popup */}
+            <TxPopup trade={txPopupEvent} />
 
             {/* AI Core Orb — top 44% */}
             <div className="shrink-0 p-4 relative" style={{ height: '44%' }}>
