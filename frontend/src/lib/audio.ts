@@ -102,5 +102,24 @@ export const audio = {
       osc.start(ctx.currentTime + i * 0.1)
       osc.stop(ctx.currentTime + i * 0.1 + 0.5)
     })
+  },
+
+  speak: (text: string) => {
+    if (!('speechSynthesis' in window)) return
+    
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel()
+
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.rate = 1.1 // Slightly faster
+    utterance.pitch = 0.8 // Deeper, robotic
+    utterance.volume = 0.8
+    
+    // Try to find an English robotic/male voice
+    const voices = window.speechSynthesis.getVoices()
+    const preferredVoice = voices.find(v => v.name.includes('Google UK English Male') || v.name.includes('Zira') || v.name.includes('David'))
+    if (preferredVoice) utterance.voice = preferredVoice
+
+    window.speechSynthesis.speak(utterance)
   }
 }

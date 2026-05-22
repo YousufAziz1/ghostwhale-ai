@@ -220,6 +220,7 @@ export default function App() {
     setWhaleFlash(true)
     if (event.amount_usd > 400000) {
       audio.playAlarm()
+      audio.speak(`Massive ${event.action === 'buy' ? 'accumulation' : 'dump'} detected on ${event.token}.`)
     } else {
       audio.playPing()
     }
@@ -235,15 +236,18 @@ export default function App() {
     setIsDemoMode(true)
     audio.init()
     
+    // Dramatic AI Voice Wake Up
+    audio.speak("Ghost mode activated. Autonomous AI hunting protocol engaged. Scanning Mantle network for whale accumulation.")
+    
     // Cinematic wake-up: trigger massive alerts immediately
     const wakeUpTokens = [...DEMO_TOKENS].sort(() => 0.5 - Math.random()).slice(0, 3)
     wakeUpTokens.forEach((token, i) => {
       setTimeout(() => {
         const whale = makeMockWhale(token)
-        whale.amount_usd = 500_000 + Math.random() * 1_500_000 // Huge amounts for demo
+        whale.amount_usd = 2_000_000 + Math.random() * 5_000_000 // Huge amounts for demo
         triggerAlert(whale)
         setState(prev => ({ ...prev, whaleEvents: [whale, ...prev.whaleEvents].slice(0, 60) }))
-      }, 300 + i * 1800)
+      }, 500 + i * 2500)
     })
   }, [triggerAlert])
 
@@ -322,8 +326,14 @@ export default function App() {
 
         {/* ── Top Header ─────────────────────────────────────────────────── */}
         <div className="shrink-0 flex items-center w-full" style={{ borderBottom: '1px solid var(--border)' }}>
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 flex items-center">
             <LiveTicker isConnected={isConnected} latestBlock={latestBlock} />
+            <div className="hidden 2xl:block px-6">
+              <p className="font-mono text-[9px] text-[var(--cyan)] opacity-80 leading-tight border-l border-[var(--cyan)]/30 pl-3">
+                GhostWhale is an autonomous AI hunter that scans Mantle in real-time, tracks smart capital,
+                <br />predicts whale intent, and executes transparent AI-driven trades before retail detects movement.
+              </p>
+            </div>
           </div>
 
           {/* Right header controls */}

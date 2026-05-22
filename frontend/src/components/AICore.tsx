@@ -257,11 +257,14 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
 
         {/* Connection lines: node → center */}
         {nodePositions.map((pos, i) => (
-          <line key={i} x1={pos.x} y1={pos.y} x2={cx} y2={cy}
+          <motion.line key={i} x1={pos.x} y1={pos.y} x2={cx} y2={cy}
             stroke={ORBIT_NODES[i].color}
-            strokeWidth="0.5"
-            strokeDasharray="2 8"
-            opacity="0.25" />
+            strokeWidth={active ? "1" : "0.5"}
+            strokeDasharray="4 8"
+            opacity={active ? "0.6" : "0.25"}
+            animate={active ? { strokeDashoffset: [0, -24] } : {}}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+          />
         ))}
 
         {/* Orbiting wallet nodes */}
