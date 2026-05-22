@@ -178,26 +178,26 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* Active Sub-Networks */}
-      <div className="mx-4 mb-5 shrink-0">
-        <div className="flex items-center gap-2 mb-2.5">
-          <motion.div className="w-1.5 h-1.5 bg-[var(--cyan)] rounded-full" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }} />
-          <span className="font-orbitron text-[8px] font-bold tracking-widest" style={{ color: 'var(--cyan)' }}>
+      <div className="mx-4 mb-8 shrink-0">
+        <div className="flex items-center gap-2 mb-4">
+          <motion.div className="w-2 h-2 bg-[var(--cyan)] rounded-full" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }} />
+          <span className="font-orbitron text-[10px] font-bold tracking-widest" style={{ color: 'var(--cyan)' }}>
             NEURAL SUB-NETWORKS
           </span>
         </div>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-3">
           {[
             { label: 'RPC NODE', ping: '12ms' },
             { label: 'NLP CORE', ping: '8ms' },
             { label: 'MEMPOOL', ping: '24ms' },
             { label: 'EXECUTION', ping: '15ms' }
           ].map((n, i) => (
-            <div key={i} className="rounded-lg p-2" style={{ background: 'rgba(0,245,255,0.03)', border: '1px solid rgba(0,245,255,0.1)' }}>
-              <div className="flex justify-between items-center mb-1.5">
-                <span className="font-mono text-[8px]" style={{ color: 'var(--text-muted)' }}>{n.label}</span>
-                <span className="font-mono text-[7px]" style={{ color: 'var(--green)' }}>{n.ping}</span>
+            <div key={i} className="rounded-xl p-3" style={{ background: 'rgba(0,245,255,0.03)', border: '1px solid rgba(0,245,255,0.1)' }}>
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-mono text-[9px]" style={{ color: 'var(--text-muted)' }}>{n.label}</span>
+                <span className="font-mono text-[9px]" style={{ color: 'var(--green)' }}>{n.ping}</span>
               </div>
-              <div className="w-full bg-[rgba(0,245,255,0.1)] h-0.5 rounded-full overflow-hidden">
+              <div className="w-full bg-[rgba(0,245,255,0.1)] h-1 rounded-full overflow-hidden">
                 <motion.div 
                   className="h-full bg-[var(--cyan)]" 
                   initial={{ width: '40%' }}
@@ -211,24 +211,24 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* Portfolio Distribution */}
-      <div className="mx-4 mb-6 shrink-0">
-         <div className="flex items-center gap-2 mb-2.5">
-          <span className="font-orbitron text-[8px] font-bold tracking-widest" style={{ color: 'var(--purple)' }}>
+      <div className="mx-4 mb-8 shrink-0">
+         <div className="flex items-center gap-2 mb-4">
+          <span className="font-orbitron text-[10px] font-bold tracking-widest" style={{ color: 'var(--purple)' }}>
             PORTFOLIO DISTRIBUTION
           </span>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-4">
            {[
              { token: 'mETH', pct: 45, color: 'var(--cyan)' },
              { token: 'USDC', pct: 30, color: 'var(--green)' },
              { token: 'WMNT', pct: 25, color: 'var(--purple)' }
            ].map(t => (
              <div key={t.token}>
-                <div className="flex justify-between text-[9px] font-mono mb-1">
+                <div className="flex justify-between text-[11px] font-mono mb-2">
                    <span style={{ color: 'var(--text-primary)' }}>{t.token}</span>
                    <span style={{ color: t.color }}>{t.pct}%</span>
                 </div>
-                <div className="w-full h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
                   <motion.div className="h-full rounded-full" style={{ background: t.color, width: `${t.pct}%` }} />
                 </div>
              </div>
@@ -237,56 +237,60 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* Risk Assessment */}
-      <div className="mx-4 mb-5 shrink-0">
-         <div className="flex items-center gap-2 mb-2.5">
-          <span className="font-orbitron text-[8px] font-bold tracking-widest text-[var(--red)]">
+      <div className="mx-4 mb-8 shrink-0">
+         <div className="flex items-center gap-2 mb-4">
+          <span className="font-orbitron text-[10px] font-bold tracking-widest text-[var(--red)]">
             RISK ASSESSMENT MATRIX
           </span>
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          <div className="p-2 rounded-lg" style={{ background: 'rgba(255,59,92,0.05)', border: '1px solid rgba(255,59,92,0.1)' }}>
-            <div className="font-mono text-[7px] text-[var(--text-muted)] mb-1">MARKET VOLATILITY</div>
-            <div className="font-mono text-[9px] font-bold text-[var(--red)]">ELEVATED (84%)</div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="p-3 rounded-xl" style={{ background: 'rgba(255,59,92,0.05)', border: '1px solid rgba(255,59,92,0.1)' }}>
+            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">MARKET VOLATILITY</div>
+            <div className="font-mono text-[11px] font-bold text-[var(--red)]">ELEVATED (84%)</div>
           </div>
-          <div className="p-2 rounded-lg" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)' }}>
-            <div className="font-mono text-[7px] text-[var(--text-muted)] mb-1">SMART CONTRACT</div>
-            <div className="font-mono text-[9px] font-bold text-[var(--green)]">MINIMAL (12%)</div>
+          <div className="p-3 rounded-xl" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)' }}>
+            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">SMART CONTRACT</div>
+            <div className="font-mono text-[11px] font-bold text-[var(--green)]">MINIMAL (12%)</div>
           </div>
-          <div className="p-2 rounded-lg" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)' }}>
-            <div className="font-mono text-[7px] text-[var(--text-muted)] mb-1">LIQUIDITY DEPTH</div>
-            <div className="font-mono text-[9px] font-bold text-[var(--green)]">OPTIMAL (94%)</div>
+          <div className="p-3 rounded-xl" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)' }}>
+            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">LIQUIDITY DEPTH</div>
+            <div className="font-mono text-[11px] font-bold text-[var(--green)]">OPTIMAL (94%)</div>
           </div>
-          <div className="p-2 rounded-lg" style={{ background: 'rgba(255,204,21,0.05)', border: '1px solid rgba(255,204,21,0.1)' }}>
-            <div className="font-mono text-[7px] text-[var(--text-muted)] mb-1">NETWORK CONGESTION</div>
-            <div className="font-mono text-[9px] font-bold text-[var(--warning)]">MODERATE (45%)</div>
+          <div className="p-3 rounded-xl" style={{ background: 'rgba(255,204,21,0.05)', border: '1px solid rgba(255,204,21,0.1)' }}>
+            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">NETWORK CONGESTION</div>
+            <div className="font-mono text-[11px] font-bold text-[var(--warning)]">MODERATE (45%)</div>
           </div>
         </div>
       </div>
 
       {/* System Compute */}
       <div className="mx-4 mb-6 shrink-0">
-         <div className="flex items-center justify-between mb-2.5">
+         <div className="flex items-center justify-between mb-4">
            <div className="flex items-center gap-2">
-            <span className="font-orbitron text-[8px] font-bold tracking-widest text-[var(--text-muted)]">
+            <span className="font-orbitron text-[10px] font-bold tracking-widest text-[var(--text-muted)]">
               COMPUTE RESOURCES
             </span>
            </div>
-           <span className="font-mono text-[8px] text-[var(--cyan)] animate-pulse">SYNCED</span>
+           <span className="font-mono text-[10px] text-[var(--cyan)] animate-pulse">SYNCED</span>
         </div>
-        <div className="space-y-2">
-           <div className="flex justify-between items-center text-[9px] font-mono">
-              <span className="text-[var(--text-muted)]">GPU ALLOCATION</span>
-              <span className="text-[var(--text-primary)]">94%</span>
+        <div className="space-y-4">
+           <div>
+             <div className="flex justify-between items-center text-[11px] font-mono mb-2">
+                <span className="text-[var(--text-muted)]">GPU ALLOCATION</span>
+                <span className="text-[var(--text-primary)]">94%</span>
+             </div>
+             <div className="w-full h-1.5 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
+               <div className="h-full bg-[var(--cyan)] w-[94%]" />
+             </div>
            </div>
-           <div className="w-full h-0.5 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
-             <div className="h-full bg-[var(--cyan)] w-[94%]" />
-           </div>
-           <div className="flex justify-between items-center text-[9px] font-mono mt-2">
-              <span className="text-[var(--text-muted)]">MEMORY BUFFER</span>
-              <span className="text-[var(--text-primary)]">64%</span>
-           </div>
-           <div className="w-full h-0.5 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
-             <div className="h-full bg-[var(--purple)] w-[64%]" />
+           <div>
+             <div className="flex justify-between items-center text-[11px] font-mono mb-2">
+                <span className="text-[var(--text-muted)]">MEMORY BUFFER</span>
+                <span className="text-[var(--text-primary)]">64%</span>
+             </div>
+             <div className="w-full h-1.5 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
+               <div className="h-full bg-[var(--purple)] w-[64%]" />
+             </div>
            </div>
         </div>
       </div>
