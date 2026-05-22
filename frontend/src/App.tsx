@@ -433,7 +433,7 @@ export default function App() {
             {/* PnL chart + trades — bottom 45% */}
             <div className="shrink-0 flex flex-col overflow-hidden" style={{ height: '45%' }}>
               <div className="flex-1 min-h-0 overflow-hidden relative" style={{ borderBottom: '1px solid var(--border)' }}>
-                <PnLChart data={state.pnlSeries} />
+                <PnLChart data={state.pnlSeries} loading={false} />
               </div>
               <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
                 <div className="px-4 py-2 shrink-0"

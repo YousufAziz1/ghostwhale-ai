@@ -86,20 +86,21 @@ export const audio = {
 
   playSuccess: () => {
     if (!audioCtx) return
+    const ctx = audioCtx
     // Trade closed successfully chime
     const freqs = [523.25, 659.25, 1046.50] // C5, E5, C6
     freqs.forEach((freq, i) => {
-      const osc = audioCtx.createOscillator()
-      const gain = audioCtx.createGain()
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
       osc.type = 'sine'
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1)
-      gain.gain.setValueAtTime(0, audioCtx.currentTime + i * 0.1)
-      gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + i * 0.1 + 0.05)
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.1 + 0.5)
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.1)
+      gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.1)
+      gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + i * 0.1 + 0.05)
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.1 + 0.5)
       osc.connect(gain)
-      gain.connect(audioCtx.destination)
-      osc.start(audioCtx.currentTime + i * 0.1)
-      osc.stop(audioCtx.currentTime + i * 0.1 + 0.5)
+      gain.connect(ctx.destination)
+      osc.start(ctx.currentTime + i * 0.1)
+      osc.stop(ctx.currentTime + i * 0.1 + 0.5)
     })
   }
 }
