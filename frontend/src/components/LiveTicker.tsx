@@ -103,11 +103,9 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
         </div>
       </div>
 
-      {/* Scrolling ticker */}
-      <div className="flex-1 overflow-hidden">
-        <div className="marquee-track flex items-center h-10">
-          {doubled.map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
-        </div>
+      {/* Tokens Row */}
+      <div className="flex-1 flex items-center gap-4 px-4 overflow-hidden">
+        {SEED.slice(0, 5).map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
       </div>
 
       {/* Right: block + time */}

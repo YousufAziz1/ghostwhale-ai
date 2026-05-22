@@ -400,16 +400,15 @@ export default function App() {
 
         {/* ── Main 3-column grid ──────────────────────────────────────────── */}
         <div
-          className="flex-1 overflow-hidden grid"
+          className="flex-1 overflow-hidden grid gap-4 p-4"
           style={{
-            gridTemplateColumns: '260px 1fr 280px',
-            borderTop: 'none',
+            gridTemplateColumns: '280px 1fr 300px',
           }}
         >
           {/* ── LEFT: Agent stats ──────────────────────────────────────── */}
           <aside
-            className="overflow-hidden flex flex-col"
-            style={{ borderRight: '1px solid var(--border)', background: 'var(--bg-surface)' }}
+            className="overflow-hidden flex flex-col rounded-xl"
+            style={{ border: '1px solid rgba(0,245,255,0.15)', background: 'var(--bg-surface)', boxShadow: '0 0 30px rgba(0,0,0,0.5)' }}
           >
             <AgentStatsPanel
               identity={state.identity}
@@ -420,7 +419,7 @@ export default function App() {
           </aside>
 
           {/* ── CENTER: AI Core + Whale Feed ───────────────────────────── */}
-          <main className="flex flex-col overflow-hidden relative" style={{ background: 'var(--bg-base)' }}>
+          <main className="flex flex-col overflow-hidden relative rounded-xl" style={{ border: '1px solid rgba(0,245,255,0.15)', background: 'var(--bg-base)', boxShadow: '0 0 30px rgba(0,0,0,0.5)' }}>
             {/* Whale popup alert */}
             <WhaleAlert event={alertEvent} onDismiss={() => setAlertEvent(null)} />
             
@@ -444,8 +443,8 @@ export default function App() {
 
           {/* ── RIGHT: Thought stream + Trades ────────────────────────── */}
           <aside
-            className="flex flex-col overflow-hidden"
-            style={{ borderLeft: '1px solid var(--border)', background: 'var(--bg-surface)' }}
+            className="flex flex-col overflow-hidden rounded-xl"
+            style={{ border: '1px solid rgba(0,245,255,0.15)', background: 'var(--bg-surface)', boxShadow: '0 0 30px rgba(0,0,0,0.5)' }}
           >
             {/* AI Thought Stream — top 55% */}
             <div className="flex-1 min-h-0 overflow-hidden"

@@ -168,7 +168,7 @@ export default function WhaleFeed({ events, loading }: WhaleFeedProps) {
       </div>
 
       {/* Feed body */}
-      <div ref={containerRef} className="feed-scroll flex-1 p-3 flex flex-col gap-2 overflow-y-auto">
+      <div ref={containerRef} className="feed-scroll flex-1 p-3 grid grid-cols-2 xl:grid-cols-3 gap-3 overflow-y-auto auto-rows-max items-start">
         {events.length === 0 ? (
           <EmptyState />
         ) : (

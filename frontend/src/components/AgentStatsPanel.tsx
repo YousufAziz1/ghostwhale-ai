@@ -210,6 +210,59 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
         </div>
       </div>
 
+      {/* Portfolio Distribution */}
+      <div className="mx-4 mb-8 shrink-0">
+         <div className="flex items-center gap-2 mb-4">
+          <span className="font-orbitron text-[10px] font-bold tracking-widest" style={{ color: 'var(--purple)' }}>
+            PORTFOLIO DISTRIBUTION
+          </span>
+        </div>
+        <div className="space-y-4">
+           {[
+             { token: 'mETH', pct: 45, color: 'var(--cyan)' },
+             { token: 'USDC', pct: 30, color: 'var(--green)' },
+             { token: 'WMNT', pct: 25, color: 'var(--purple)' }
+           ].map(t => (
+             <div key={t.token}>
+                <div className="flex justify-between text-[11px] font-mono mb-2">
+                   <span style={{ color: 'var(--text-primary)' }}>{t.token}</span>
+                   <span style={{ color: t.color }}>{t.pct}%</span>
+                </div>
+                <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                  <motion.div className="h-full rounded-full" style={{ background: t.color, width: `${t.pct}%` }} />
+                </div>
+             </div>
+           ))}
+        </div>
+      </div>
+
+      {/* Risk Assessment */}
+      <div className="mx-4 mb-8 shrink-0">
+         <div className="flex items-center gap-2 mb-4">
+          <span className="font-orbitron text-[10px] font-bold tracking-widest text-[var(--red)]">
+            RISK ASSESSMENT MATRIX
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="p-3 rounded-xl" style={{ background: 'rgba(255,59,92,0.05)', border: '1px solid rgba(255,59,92,0.1)' }}>
+            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">MARKET VOLATILITY</div>
+            <div className="font-mono text-[11px] font-bold text-[var(--red)]">ELEVATED (84%)</div>
+          </div>
+          <div className="p-3 rounded-xl" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)' }}>
+            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">SMART CONTRACT</div>
+            <div className="font-mono text-[11px] font-bold text-[var(--green)]">MINIMAL (12%)</div>
+          </div>
+          <div className="p-3 rounded-xl" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)' }}>
+            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">LIQUIDITY DEPTH</div>
+            <div className="font-mono text-[11px] font-bold text-[var(--green)]">OPTIMAL (94%)</div>
+          </div>
+          <div className="p-3 rounded-xl" style={{ background: 'rgba(255,204,21,0.05)', border: '1px solid rgba(255,204,21,0.1)' }}>
+            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">NETWORK CONGESTION</div>
+            <div className="font-mono text-[11px] font-bold text-[var(--warning)]">MODERATE (45%)</div>
+          </div>
+        </div>
+      </div>
+
       {/* Current AI Position */}
       <div className="mx-4 mb-8 shrink-0">
         <div className="flex items-center gap-2 mb-4">
