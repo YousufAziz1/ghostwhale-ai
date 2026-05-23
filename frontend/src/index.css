@@ -376,3 +376,83 @@ body::after {
   transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
   stroke-linecap: round;
 }
+
+/* ━━ Risk matrix cells ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.risk-matrix-cell {
+  height: 6px;
+  width: 8px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+.risk-matrix-cell.green {
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green-glow);
+}
+.risk-matrix-cell.yellow {
+  background: var(--amber);
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+}
+.risk-matrix-cell.orange {
+  background: #F97316;
+  box-shadow: 0 0 6px rgba(249, 115, 22, 0.4);
+}
+.risk-matrix-cell.red {
+  background: var(--red);
+  box-shadow: 0 0 6px var(--red-glow);
+}
+
+/* ━━ Target priority badges ━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.badge-priority-high {
+  background: rgba(255, 59, 92, 0.15);
+  color: var(--red);
+  border: 1px solid rgba(255, 59, 92, 0.35);
+  box-shadow: 0 0 8px var(--red-dim);
+}
+.badge-priority-medium {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--amber);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.badge-priority-low {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--blue);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+/* ━━ Circular progress stats ━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.circular-progress-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ━━ Redesigned card elements ━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.whale-card-custom {
+  background: rgba(8, 11, 26, 0.6);
+  border: 1px solid rgba(0, 245, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+.whale-card-custom:hover {
+  border-color: rgba(0, 245, 255, 0.25);
+  box-shadow: 0 8px 30px rgba(0, 245, 255, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+/* ━━ Warning banner ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.center-warning-banner {
+  background: rgba(255, 59, 92, 0.15);
+  border-top: 2px solid var(--red);
+  border-bottom: 2px solid var(--red);
+  box-shadow: 0 0 40px rgba(255, 59, 92, 0.2), inset 0 0 20px rgba(255, 59, 92, 0.15);
+  animation: bannerPulse 2s ease-in-out infinite;
+}
+@keyframes bannerPulse {
+  0%, 100% { border-color: rgba(255, 59, 92, 0.6); box-shadow: 0 0 45px rgba(255, 59, 92, 0.2); }
+  50% { border-color: rgba(255, 59, 92, 1); box-shadow: 0 0 65px rgba(255, 59, 92, 0.35); }
+}
+

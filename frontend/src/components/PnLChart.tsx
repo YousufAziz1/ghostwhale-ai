@@ -54,21 +54,21 @@ export default function PnLChart({ data, loading }: PnLChartProps) {
   const totalPnL = data.length > 0 ? data[data.length - 1].cumulative_pnl_usd : 0
 
   return (
-    <section id="pnl-chart" className="card flex flex-col gap-3 p-4">
+    <section id="pnl-chart" className="flex flex-col h-full bg-[var(--bg-surface)] p-3">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <span className="font-display font-semibold text-sm text-[var(--text-primary)]">
-          Mock P&L
+      <div className="flex items-center justify-between shrink-0 mb-1.5">
+        <span className="font-orbitron font-bold text-[9px] text-[var(--cyan)] tracking-widest">
+          MOCK PNL CHART
         </span>
         {data.length > 0 && (
-          <span className={`font-mono font-bold text-sm ${totalPnL >= 0 ? 'text-[var(--accent)]' : 'text-[var(--accent-red)]'}`}>
+          <span className={`font-mono font-bold text-[10px] ${totalPnL >= 0 ? 'text-[var(--green)]' : 'text-[var(--red)]'}`}>
             {totalPnL >= 0 ? '+' : ''}{formatUSD(totalPnL)}
           </span>
         )}
       </div>
 
       {/* Chart */}
-      <div style={{ width: '100%', height: 144 }}>
+      <div className="flex-1 min-h-0" style={{ width: '100%', height: 85 }}>
         {loading && data.length === 0 ? (
           <div className="h-full bg-[var(--border-subtle)] animate-pulse rounded-lg" />
         ) : data.length === 0 ? (
@@ -125,9 +125,9 @@ export default function PnLChart({ data, loading }: PnLChartProps) {
         )}
       </div>
 
-      <div className="flex justify-between font-mono text-[10px] text-[var(--text-faint)]">
+      <div className="flex justify-between font-mono text-[8px] text-[var(--text-muted)] mt-1 select-none">
         <span>Settled: {data.length} trades</span>
-        <span>MOCK MODE</span>
+        <span>MOCK POSITIONING</span>
       </div>
     </section>
   )

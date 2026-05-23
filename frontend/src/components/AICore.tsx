@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from 'react'
-import { motion, useAnimationFrame } from 'framer-motion'
+import { motion, useAnimationFrame, AnimatePresence } from 'framer-motion'
 import type { WhaleEvent } from '@/types'
 
 interface Particle { x: number; y: number; vx: number; vy: number; life: number; maxLife: number; color: string }
@@ -353,22 +353,44 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
         ))}
       </svg>
 
-      {/* Label overlay */}
-      <div
-        className="absolute top-2 left-3 flex items-center gap-2"
-        style={{ pointerEvents: 'none' }}
-      >
-        <motion.div
-          className="w-1.5 h-1.5 rounded-full"
-          style={{ background: locked ? '#FF3B5C' : '#7C3AED', boxShadow: `0 0 8px ${locked ? '#FF3B5C' : '#7C3AED'}` }}
-          animate={{ opacity: [0.4, 1, 0.4] }}
-          transition={{ duration: 1.2, repeat: Infinity }}
-        />
-        <span className="font-orbitron text-[8px] tracking-widest font-bold"
-          style={{ color: locked ? '#FF3B5C' : 'rgba(124,58,237,0.8)' }}>
-          {locked ? 'TARGET ACQUIRED · ' : 'MANTLE NETWORK · '}{ORBIT_NODES.length} NODES TRACKED
-        </span>
+      {/* Title Overlays */}
+      <div className="absolute top-2 left-3 flex flex-col gap-0.5 pointer-events-none select-none">
+        <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)]">
+          CENTER PANEL
+        </div>
+        <div className="flex items-center gap-1.5">
+          <motion.div
+            className="w-1 h-1 rounded-full animate-pulse"
+            style={{ background: locked ? 'var(--red)' : 'var(--cyan)', boxShadow: `0 0 6px ${locked ? 'var(--red)' : 'var(--cyan)'}` }}
+          />
+          <span className="font-orbitron text-[7px] font-bold tracking-widest" style={{ color: locked ? 'var(--red)' : 'rgba(0,245,255,0.5)' }}>
+            {locked ? 'TARGET ACQUIRED' : 'AI ACTIVE SCANNING'}
+          </span>
+        </div>
       </div>
+
+      <div className="absolute top-2 right-3 font-mono text-[8px] text-[var(--text-muted)] pointer-events-none select-none">
+        WALLET ADDRESSES: SCANNING ACTIVE
+      </div>
+
+      {/* Flashing Warning Banner */}
+      <AnimatePresence>
+        {locked && (
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none z-20">
+            <motion.div
+              initial={{ scale: 0.82, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.82, opacity: 0 }}
+              className="center-warning-banner w-full py-3.5 flex items-center justify-center gap-3"
+            >
+              <span className="text-[16px] animate-bounce">⚠️</span>
+              <span className="font-orbitron font-extrabold text-[12px] tracking-[0.25em] text-white" style={{ textShadow: '0 0 10px var(--red)' }}>
+                HIGH VALUE WHALE DETECTED
+              </span>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

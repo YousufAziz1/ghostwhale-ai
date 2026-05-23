@@ -13,6 +13,9 @@ import ThoughtStream from '@/components/ThoughtStream'
 import AgentStatsPanel from '@/components/AgentStatsPanel'
 import ProfitableTrades from '@/components/ProfitableTrades'
 import TxPopup from '@/components/TxPopup'
+import NeuralReasoningLogs from '@/components/NeuralReasoningLogs'
+import TradeExecutionFeed from '@/components/TradeExecutionFeed'
+import SmartMoneyAnalysis from '@/components/SmartMoneyAnalysis'
 
 // ── Seed demo data — UI is NEVER blank ─────────────────────────────────────
 const DEMO_TOKENS = ['mETH', 'WMNT', 'AGNI', 'MOE', 'USDY', 'USDC']
@@ -440,30 +443,45 @@ export default function App() {
           </main>
 
           {/* ── RIGHT: Thought stream + Trades ────────────────────────── */}
-          <aside className="flex flex-col rounded-xl border border-[rgba(0,245,255,0.15)] bg-[var(--bg-surface)] shadow-[0_0_30px_rgba(0,0,0,0.5)] h-[600px] lg:h-full overflow-hidden">
-            {/* AI Thought Stream — top 55% */}
-            <div className="flex-1 min-h-0 overflow-hidden"
-              style={{ borderBottom: '1px solid var(--border)' }}>
+          <aside className="flex flex-col rounded-xl border border-[rgba(0,245,255,0.15)] bg-[var(--bg-surface)] shadow-[0_0_30px_rgba(0,0,0,0.5)] h-[950px] lg:h-full overflow-hidden shrink-0">
+            {/* 1. AI Thought Stream */}
+            <div className="shrink-0 overflow-hidden" style={{ height: '17%', borderBottom: '1px solid var(--border)' }}>
               <ThoughtStream logs={logs} />
             </div>
 
-            {/* PnL chart + trades — bottom 45% */}
-            <div className="shrink-0 flex flex-col overflow-hidden" style={{ height: '45%' }}>
-              <div className="flex-1 min-h-0 overflow-hidden relative" style={{ borderBottom: '1px solid var(--border)' }}>
-                <PnLChart data={state.pnlSeries} loading={false} />
+            {/* 2. Neural Reasoning Logs */}
+            <div className="shrink-0 overflow-hidden" style={{ height: '11%', borderBottom: '1px solid var(--border)' }}>
+              <NeuralReasoningLogs />
+            </div>
+
+            {/* 3. Trade Execution Feed */}
+            <div className="shrink-0 overflow-hidden" style={{ height: '13%', borderBottom: '1px solid var(--border)' }}>
+              <TradeExecutionFeed />
+            </div>
+
+            {/* 4. Smart Money Analysis */}
+            <div className="shrink-0 overflow-hidden" style={{ height: '10%', borderBottom: '1px solid var(--border)' }}>
+              <SmartMoneyAnalysis />
+            </div>
+
+            {/* 5. AI Signal Generation */}
+            <div className="shrink-0 overflow-hidden flex flex-col justify-center bg-[var(--bg-surface)] p-3" style={{ height: '8%', borderBottom: '1px solid var(--border)' }}>
+              <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--cyan)] mb-1 select-none">
+                AI SIGNAL GENERATION
               </div>
-              <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
-                <div className="px-4 py-2 shrink-0"
-                  style={{ borderBottom: '1px solid var(--border)', background: 'rgba(0,0,0,0.3)' }}>
-                  <span className="font-orbitron text-[8px] font-bold tracking-widest"
-                    style={{ color: 'var(--green)' }}>
-                    ▲ PROFITABLE TRADES
-                  </span>
-                </div>
-                <div className="flex-1 min-h-0 overflow-hidden">
-                  <ProfitableTrades trades={state.trades} />
-                </div>
-              </div>
+              <p className="font-mono text-[8px] text-slate-400 leading-normal select-none">
+                Realtime signals generated from mempool scans. Execution latency: 15ms.
+              </p>
+            </div>
+
+            {/* 6. Mock P&L Chart */}
+            <div className="shrink-0 overflow-hidden relative" style={{ height: '21%', borderBottom: '1px solid var(--border)' }}>
+              <PnLChart data={state.pnlSeries} loading={false} />
+            </div>
+
+            {/* 7. Top Profitable Trades */}
+            <div className="flex-1 min-h-0 overflow-hidden">
+              <ProfitableTrades trades={state.trades} />
             </div>
           </aside>
         </div>

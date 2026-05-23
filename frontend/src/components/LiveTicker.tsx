@@ -50,6 +50,24 @@ function TickerItem({ t }: { t: Ticker }) {
   )
 }
 
+const WhaleLogo = () => (
+  <svg
+    className="w-5 h-5 text-[var(--cyan)] mr-1"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={{ filter: 'drop-shadow(0 0 6px rgba(0, 245, 255, 0.6))' }}
+  >
+    <path d="M2 10c2-1 4-1.5 6-1.5 5 0 9 2.5 11 4.5h2c1 0 1.5-.5 1.5-1.5s-.8-2-2-2h-2c-2-2-5-3.5-8.5-3.5C5 6 3 7.5 2 10z" />
+    <path d="M8 8.5C12 8.5 16 11 18 13c-2 2-6 4.5-10 4.5-4 0-6.5-2.5-6.5-5.5 0-2 1.5-3.5 3.5-3.5" />
+    <path d="M10 13c-1.5.5-2 1.5-2.5 3 .5-.5 1.5-.5 2.5-.5" />
+    <circle cx="5.5" cy="11.5" r="0.75" fill="currentColor" />
+  </svg>
+)
+
 export default function LiveTicker({ isConnected, latestBlock }: { isConnected: boolean; latestBlock?: number }) {
   const [tickers, setTickers] = useState<Ticker[]>(SEED)
   const [time, setTime] = useState(new Date())
@@ -71,54 +89,38 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
     return () => clearInterval(iv)
   }, [])
 
-  const doubled = [...tickers, ...tickers]
-
   return (
     <div
       className="flex items-center h-10 w-full overflow-hidden"
       style={{ background: 'var(--bg-surface)' }}
     >
-      {/* Left: Logo + status */}
+      {/* Left: Logo */}
       <div
-        className="flex items-center gap-3 px-4 shrink-0 h-full"
-        style={{ borderRight: '1px solid var(--border)', minWidth: 200 }}
+        className="flex items-center gap-2.5 px-4 shrink-0 h-full"
+        style={{ borderRight: '1px solid var(--border)' }}
       >
-        <span className="font-orbitron text-[11px] font-bold tracking-wider text-gradient">
+        <WhaleLogo />
+        <span className="font-orbitron text-[12px] font-extrabold tracking-widest text-gradient">
           GHOSTWHALE
         </span>
-        <div className="flex items-center gap-1.5">
-          <div className="live-dot" style={{ width: 6, height: 6 }} />
-          <span className="font-mono text-[8px]" style={{ color: 'var(--red)' }}>LIVE</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <motion.div
-            className="w-1.5 h-1.5 rounded-full"
-            style={{ background: isConnected ? 'var(--green)' : 'var(--text-muted)' }}
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
-          <span className="font-mono text-[8px]" style={{ color: 'var(--text-muted)' }}>
-            Mantle
-          </span>
-        </div>
       </div>
 
       {/* Tokens Row */}
-      <div className="hidden md:flex flex-1 items-center gap-4 px-4 overflow-hidden">
-        {SEED.slice(0, 5).map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
+      <div className="hidden md:flex flex-1 items-center gap-0 overflow-hidden h-full">
+        {tickers.slice(0, 5).map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
       </div>
 
       {/* Right: block + time */}
       <div
-        className="hidden sm:flex items-center gap-4 px-4 shrink-0 h-full"
-        style={{ borderLeft: '1px solid var(--border)' }}
+        className="hidden sm:flex items-center gap-4 px-4 shrink-0 h-full font-mono text-[9px]"
+        style={{ borderLeft: '1px solid var(--border)', color: 'var(--text-muted)' }}
       >
         {latestBlock && (
-          <span className="font-mono text-[9px]" style={{ color: 'var(--cyan)' }}>
+          <span style={{ color: 'var(--cyan)' }} className="font-bold">
             #{latestBlock.toLocaleString()}
           </span>
         )}
-        <span className="font-mono text-[9px]" style={{ color: 'var(--text-muted)' }}>
+        <span>
           {time.toUTCString().slice(17, 25)} UTC
         </span>
       </div>

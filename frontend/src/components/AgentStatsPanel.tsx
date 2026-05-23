@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion'
 import type { AgentIdentity, AgentStats } from '@/types'
-import { Shield, Zap, Activity, TrendingUp, Target } from 'lucide-react'
-import { formatUSD } from '@/lib/api'
+import { formatUSD, truncateAddr } from '@/lib/api'
 
 interface AgentStatsProps {
   identity: AgentIdentity | null
@@ -10,327 +9,253 @@ interface AgentStatsProps {
   statusPhrase: string
 }
 
-function GlowGauge({ value, max, color, label, size = 80 }: {
-  value: number; max: number; color: string; label: string; size?: number
-}) {
-  const pct = Math.min(value / max, 1)
-  const R = size / 2 - 8
-  const circ = 2 * Math.PI * R * 0.75 // 270 degree arc
-  const offset = circ * (1 - pct)
-  const stroke = size < 80 ? 3 : 4
+function PortfolioCircle({ token, pct, color }: { token: string; pct: number; color: string }) {
+  const size = 44
+  const R = size / 2 - 3
+  const circ = 2 * Math.PI * R
+  const strokeDashoffset = circ * (1 - pct / 100)
 
   return (
-    <div className="flex flex-col items-center gap-1">
-      <div className="relative" style={{ width: size, height: size * 0.75 }}>
-        <svg width={size} height={size} style={{ position: 'absolute', top: 0, left: 0 }}>
-          {/* Track */}
+    <div className="flex flex-col items-center gap-1.5">
+      <div className="relative" style={{ width: size, height: size }}>
+        <svg width={size} height={size} className="transform -rotate-90">
+          <circle cx={size / 2} cy={size / 2} r={R} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="2.5" />
           <circle
             cx={size / 2} cy={size / 2} r={R}
             fill="none"
-            stroke="rgba(255,255,255,0.05)"
-            strokeWidth={stroke}
-            strokeDasharray={`${circ} ${2 * Math.PI * R}`}
-            strokeDashoffset={0}
-            strokeLinecap="round"
-            transform={`rotate(135 ${size / 2} ${size / 2})`}
-          />
-          {/* Fill */}
-          <motion.circle
-            cx={size / 2} cy={size / 2} r={R}
-            fill="none"
             stroke={color}
-            strokeWidth={stroke}
-            strokeDasharray={`${circ} ${2 * Math.PI * R}`}
+            strokeWidth="2.5"
+            strokeDasharray={circ}
+            strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
-            transform={`rotate(135 ${size / 2} ${size / 2})`}
-            initial={{ strokeDashoffset: circ }}
-            animate={{ strokeDashoffset: offset }}
-            transition={{ duration: 1.5, ease: 'easeOut' }}
-            style={{ filter: `drop-shadow(0 0 6px ${color})` }}
+            style={{ filter: `drop-shadow(0 0 3px ${color}88)` }}
           />
         </svg>
-        {/* Value text */}
-        <div
-          className="absolute inset-0 flex flex-col items-center justify-center"
-          style={{ paddingTop: size * 0.12 }}
-        >
-          <span className="font-orbitron font-bold" style={{ color, fontSize: size < 80 ? 11 : 14 }}>
-            {Math.round(value * (max <= 1 ? 100 : 1))}
-            {max <= 1 ? '%' : ''}
-          </span>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="font-orbitron font-bold text-[8px] text-white">{pct}%</span>
         </div>
       </div>
-      <span className="font-mono text-[8px] tracking-wider" style={{ color: 'var(--text-muted)' }}>
-        {label}
-      </span>
+      <span className="font-mono text-[8px] tracking-wider text-[var(--text-muted)] font-bold">{token}</span>
     </div>
   )
 }
 
-function StatRow({ icon: Icon, label, value, color = 'var(--text-primary)' }: {
-  icon: React.ElementType; label: string; value: string; color?: string
-}) {
+function RiskMatrixRow({ label, score }: { label: string; score: number }) {
   return (
-    <div className="flex items-center justify-between py-2"
-      style={{ borderBottom: '1px solid var(--border)' }}>
-      <div className="flex items-center gap-2">
-        <Icon size={10} color="var(--text-muted)" />
-        <span className="font-mono text-[9px]" style={{ color: 'var(--text-muted)' }}>{label}</span>
+    <div className="flex items-center justify-between text-[8px] font-mono py-0.5">
+      <span className="text-[var(--text-muted)] w-10 uppercase font-bold">{label}</span>
+      <div className="flex gap-0.5">
+        {Array.from({ length: 12 }).map((_, idx) => {
+          const val = idx + 1
+          const isActive = val <= score
+          let colorClass = ''
+          if (isActive) {
+            if (val <= 4) colorClass = 'green'
+            else if (val <= 8) colorClass = 'yellow'
+            else if (val <= 10) colorClass = 'orange'
+            else colorClass = 'red'
+          }
+          return <div key={idx} className={`risk-matrix-cell ${colorClass}`} style={{ width: '8px', height: '6px' }} />
+        })}
       </div>
-      <span className="font-mono text-[10px] font-bold" style={{ color }}>{value}</span>
     </div>
   )
 }
 
 export default function AgentStatsPanel({ identity, stats, loading, statusPhrase }: AgentStatsProps) {
-  const repScore = identity?.reputation_score ?? stats?.reputation_score ?? 620
-  const winRate  = identity?.win_rate_pct ?? stats?.win_rate_pct ?? 67.4
+  const repScore = identity?.reputation_score ?? stats?.reputation_score ?? 840
+  const winRate  = identity?.win_rate_pct ?? stats?.win_rate_pct ?? 68.9
   const totalPnL = identity?.total_pnl_usd ?? stats?.total_pnl_usd ?? 0
   const signals  = identity?.total_signals ?? stats?.total_signals ?? 0
   const settled  = identity?.settled_trades ?? stats?.settled_trades ?? 0
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto gap-0">
-      {/* Agent Header */}
+    <div className="flex flex-col h-full overflow-y-auto gap-0 bg-[var(--bg-surface)] font-sans select-none scrollbar-thin">
+      
+      {/* ── DIAGNOSTICS PANEL ────────────────────────────────────────── */}
       <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
-        <div className="flex items-center gap-3 mb-3">
-          <motion.div
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0"
+        <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3 uppercase">
+          DIAGNOSTICS PANEL
+        </div>
+
+        {/* AI status and reputation boxes side-by-side */}
+        <div className="grid grid-cols-2 gap-3 mb-3">
+          <div 
+            className="rounded-lg p-2 flex flex-col justify-between h-12"
             style={{
-              background: 'linear-gradient(135deg, rgba(0,245,255,0.15) 0%, rgba(124,58,237,0.15) 100%)',
-              border: '1px solid rgba(0,245,255,0.3)',
-              boxShadow: '0 0 20px rgba(0,245,255,0.1)',
+              background: 'rgba(124,58,237,0.03)',
+              border: '1px solid rgba(124,58,237,0.3)',
+              boxShadow: '0 0 10px rgba(124,58,237,0.06)'
             }}
-            animate={{ boxShadow: ['0 0 15px rgba(0,245,255,0.1)', '0 0 30px rgba(0,245,255,0.25)', '0 0 15px rgba(0,245,255,0.1)'] }}
-            transition={{ duration: 3, repeat: Infinity }}
           >
-            🐋
-          </motion.div>
-          <div>
-            <div className="font-orbitron font-bold text-sm text-gradient">GHOSTWHALE</div>
-            <div className="font-orbitron text-[8px] tracking-widest" style={{ color: 'var(--text-muted)' }}>
-              AI AGENT · ERC-8004
+            <span className="font-mono text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">AI AGENT STATUS:</span>
+            <span className="font-orbitron text-[9px] font-black text-[#A78BFA] animate-pulse">HUNTING (ACTIVE)</span>
+          </div>
+
+          <div 
+            className="rounded-lg p-2 flex flex-col justify-between h-12"
+            style={{
+              background: 'rgba(0,245,255,0.03)',
+              border: '1px solid rgba(0,245,255,0.3)',
+              boxShadow: '0 0 10px rgba(0,245,255,0.06)'
+            }}
+          >
+            <span className="font-mono text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">REP SCORE:</span>
+            <span className="font-orbitron text-[9px] font-black text-[var(--cyan)]">
+              {Math.round(repScore / 10)}/100
+            </span>
+          </div>
+        </div>
+
+        {/* Stats 2-column grid */}
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-3">
+          <div className="flex flex-col">
+            <span className="font-mono text-[8px] text-[var(--text-muted)] font-bold">WIN RATE</span>
+            <span className="font-orbitron text-[12px] font-bold text-white">{winRate.toFixed(1)}%</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="font-mono text-[8px] text-[var(--text-muted)] font-bold">TOTAL PNL</span>
+            <span className={`font-orbitron text-[12px] font-bold ${totalPnL >= 0 ? 'text-[var(--green)]' : 'text-[var(--red)]'}`}>
+              {totalPnL >= 0 ? '+' : ''}{formatUSD(totalPnL)}
+            </span>
+          </div>
+          <div className="flex flex-col">
+            <span className="font-mono text-[8px] text-[var(--text-muted)] font-bold">SIGNALS GENERATED</span>
+            <span className="font-orbitron text-[12px] font-bold text-white">{signals.toLocaleString()}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="font-mono text-[8px] text-[var(--text-muted)] font-bold">EXECUTED TRADES</span>
+            <span className="font-orbitron text-[12px] font-bold text-white">{settled.toLocaleString()}</span>
+          </div>
+        </div>
+
+        {/* ERC-8004 Identity */}
+        <div className="flex items-center justify-between text-[8px] font-mono pt-2" style={{ borderTop: '1px dashed var(--border)' }}>
+          <span className="text-[var(--text-muted)] font-bold">ERC-8004 IDENTITY</span>
+          <span className="text-[var(--cyan)] font-bold tracking-wider">
+            {identity?.nft_address ? truncateAddr(identity.nft_address) : '0xIdentity...B123'}
+          </span>
+        </div>
+      </div>
+
+      {/* ── NEURAL SUB-NETWORKS ─────────────────────────────────────── */}
+      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
+          NEURAL SUB-NETWORKS
+        </div>
+        <div className="space-y-2">
+          {[
+            { name: 'MarketFlow_AI_01', active: true },
+            { name: 'Volume_Sentry_03', active: true },
+          ].map((sub, i) => (
+            <div key={i} className="flex items-center justify-between text-[9px] font-mono">
+              <span className="text-[var(--text-primary)]">{sub.name}</span>
+              <div className="flex items-center gap-1">
+                <span className="text-[var(--text-muted)] mr-1">Status</span>
+                <div className="flex gap-0.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--green)] shadow-[0_0_4px_var(--green)]" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--green)] shadow-[0_0_4px_var(--green)]" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--green)] shadow-[0_0_4px_var(--green)]" />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-
-        {/* Status phrase */}
-        <div
-          className="rounded-lg px-3 py-2"
-          style={{
-            background: 'rgba(0,245,255,0.04)',
-            border: '1px solid rgba(0,245,255,0.1)',
-          }}
-        >
-          <div className="flex items-center gap-2 mb-1">
-            <div className="live-dot" style={{ width: 6, height: 6 }} />
-            <span className="font-mono text-[8px]" style={{ color: 'rgba(0,245,255,0.6)' }}>STATUS</span>
-          </div>
-          <motion.p
-            key={statusPhrase}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="font-mono text-[9px] leading-relaxed"
-            style={{ color: 'var(--cyan)' }}
-          >
-            {statusPhrase}
-          </motion.p>
+          ))}
         </div>
       </div>
 
-      {/* Gauges */}
-      <div className="p-4 grid grid-cols-2 gap-3 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
-        <GlowGauge value={repScore} max={1000} color="var(--cyan)"   label="REP SCORE" size={84} />
-        <GlowGauge value={winRate}  max={100}  color="var(--green)"  label="WIN RATE"  size={84} />
+      {/* ── PORTFOLIO DISTRIBUTION ──────────────────────────────────── */}
+      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
+          PORTFOLIO DISTRIBUTION
+        </div>
+        <div className="flex items-center justify-around">
+          <PortfolioCircle token="MNT" pct={45} color="var(--cyan)" />
+          <PortfolioCircle token="ETH" pct={35} color="var(--purple)" />
+          <PortfolioCircle token="USDT" pct={20} color="var(--green)" />
+        </div>
       </div>
 
-      {/* Stats list */}
+      {/* ── RISK ASSESSMENT MATRIX ──────────────────────────────────── */}
+      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
+          RISK ASSESSMENT MATRIX
+        </div>
+        <div className="space-y-1">
+          <RiskMatrixRow label="MNT" score={9} />
+          <RiskMatrixRow label="ETH" score={3} />
+          <RiskMatrixRow label="SIGN" score={5} />
+          <RiskMatrixRow label="LOG" score={2} />
+        </div>
+      </div>
+
+      {/* ── CURRENT AI POSITION ─────────────────────────────────────── */}
+      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
+          CURRENT AI POSITION
+        </div>
+        
+        {/* Table header */}
+        <div className="grid grid-cols-[1.2fr_1fr_1fr] text-[8px] font-mono text-[var(--text-muted)] font-bold pb-1.5 border-b border-[rgba(255,255,255,0.03)] mb-2">
+          <span>WALLET ADDRESS</span>
+          <span>OPEN TRADES</span>
+          <span className="text-right">STATUS</span>
+        </div>
+
+        {/* Table rows */}
+        <div className="space-y-2">
+          {[
+            { addr: '0xWhale...1234538', pair: 'MNT/USDT', pct: 95 },
+            { addr: '0xWhale...1234537', pair: 'MNT/USDT', pct: 55 }
+          ].map((pos, i) => (
+            <div key={i} className="grid grid-cols-[1.2fr_1fr_1fr] items-center text-[9px] font-mono">
+              <span className="text-[var(--text-primary)]">{pos.addr}</span>
+              <span className="text-[var(--text-muted)]">{pos.pair}</span>
+              <div className="flex flex-col items-end">
+                <span className="text-[var(--green)] font-bold mb-0.5">{pos.pct}%</span>
+                <div className="w-12 h-1 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
+                  <div className="h-full bg-[var(--green)] rounded-full" style={{ width: `${pos.pct}%` }} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── ACTIVE WHALE TARGETS ────────────────────────────────────── */}
       <div className="p-4 shrink-0">
-        <StatRow icon={TrendingUp} label="TOTAL PNL"   value={formatUSD(totalPnL)} color={totalPnL >= 0 ? 'var(--green)' : 'var(--red)'} />
-        <StatRow icon={Zap}        label="SIGNALS"     value={signals.toString()} color="var(--cyan)" />
-        <StatRow icon={Activity}   label="TRADES"      value={settled.toString()} />
-        <StatRow icon={Target}     label="NETWORK"     value="Mantle" color="var(--purple)" />
-        <StatRow icon={Shield}     label="STANDARD"    value={identity?.standard ?? 'ERC-8004'} color="var(--cyan)" />
-      </div>
+        <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
+          ACTIVE WHALE TARGETS
+        </div>
 
-    {/* ERC-8004 Identity badge */}
-      <div className="mx-4 mb-5 rounded-xl overflow-hidden shrink-0"
-        style={{ border: '1px solid rgba(124,58,237,0.3)' }}>
-        <div className="px-3 py-2"
-          style={{ background: 'rgba(124,58,237,0.08)', borderBottom: '1px solid rgba(124,58,237,0.15)' }}>
-          <span className="font-orbitron text-[8px] font-bold tracking-widest" style={{ color: 'var(--purple)' }}>
-            ERC-8004 ON-CHAIN IDENTITY
-          </span>
+        {/* Table header */}
+        <div className="grid grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr] text-[8px] font-mono text-[var(--text-muted)] font-bold pb-1.5 border-b border-[rgba(255,255,255,0.03)] mb-2">
+          <span>ADDRESS</span>
+          <span>TRANSFER</span>
+          <span>TOKEN</span>
+          <span className="text-right">PRIORITY</span>
         </div>
-        <div className="p-3 space-y-1.5">
-          {[
-            { k: 'REPUTATION', v: `${repScore}/1000` },
-            { k: 'TRUST SCORE', v: `${Math.round(winRate)}%` },
-            { k: 'CHAIN', v: 'Mantle Mainnet' },
-            { k: 'TOKEN ID', v: `#${identity?.token_id ?? '001'}` },
-          ].map(({ k, v }) => (
-            <div key={k} className="flex items-center justify-between">
-              <span className="font-mono text-[8px]" style={{ color: 'var(--text-muted)' }}>{k}</span>
-              <span className="font-mono text-[9px] font-bold" style={{ color: 'rgba(124,58,237,0.9)' }}>{v}</span>
-            </div>
-          ))}
-        </div>
-      </div>
 
-      {/* Active Sub-Networks */}
-      <div className="mx-4 mb-8 shrink-0">
-        <div className="flex items-center gap-2 mb-4">
-          <motion.div className="w-2 h-2 bg-[var(--cyan)] rounded-full" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }} />
-          <span className="font-orbitron text-[10px] font-bold tracking-widest" style={{ color: 'var(--cyan)' }}>
-            NEURAL SUB-NETWORKS
-          </span>
-        </div>
-        <div className="grid grid-cols-2 gap-3">
+        {/* Table rows */}
+        <div className="space-y-2">
           {[
-            { label: 'RPC NODE', ping: '12ms' },
-            { label: 'NLP CORE', ping: '8ms' },
-            { label: 'MEMPOOL', ping: '24ms' },
-            { label: 'EXECUTION', ping: '15ms' }
-          ].map((n, i) => (
-            <div key={i} className="rounded-xl p-3" style={{ background: 'rgba(0,245,255,0.03)', border: '1px solid rgba(0,245,255,0.1)' }}>
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-mono text-[9px]" style={{ color: 'var(--text-muted)' }}>{n.label}</span>
-                <span className="font-mono text-[9px]" style={{ color: 'var(--green)' }}>{n.ping}</span>
-              </div>
-              <div className="w-full bg-[rgba(0,245,255,0.1)] h-1 rounded-full overflow-hidden">
-                <motion.div 
-                  className="h-full bg-[var(--cyan)]" 
-                  initial={{ width: '40%' }}
-                  animate={{ width: ['40%', '80%', '50%', '90%', '40%'] }}
-                  transition={{ duration: 3 + i, repeat: Infinity, ease: 'linear' }}
-                />
+            { addr: '0xWhale...12344NN', amount: '+6 GRT', token: 'MNT', p: 9, cls: 'badge-priority-high' },
+            { addr: '0xWhale...1234022', amount: '+1 GRT', token: 'AGNI', p: 5, cls: 'badge-priority-medium' },
+            { addr: '0xWhale...1234028', amount: '+5 BRT', token: 'AGNI', p: 3, cls: 'badge-priority-low' }
+          ].map((target, i) => (
+            <div key={i} className="grid grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr] items-center text-[9px] font-mono">
+              <span className="text-[var(--text-primary)]">{target.addr}</span>
+              <span className="text-[var(--green)] font-bold">{target.amount}</span>
+              <span className="text-[var(--text-muted)]">{target.token}</span>
+              <div className="flex justify-end">
+                <span className={`text-[8px] font-bold px-2 py-0.5 rounded ${target.cls}`}>
+                  {target.p}
+                </span>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Portfolio Distribution */}
-      <div className="mx-4 mb-8 shrink-0">
-         <div className="flex items-center gap-2 mb-4">
-          <span className="font-orbitron text-[10px] font-bold tracking-widest" style={{ color: 'var(--purple)' }}>
-            PORTFOLIO DISTRIBUTION
-          </span>
-        </div>
-        <div className="space-y-4">
-           {[
-             { token: 'mETH', pct: 45, color: 'var(--cyan)' },
-             { token: 'USDC', pct: 30, color: 'var(--green)' },
-             { token: 'WMNT', pct: 25, color: 'var(--purple)' }
-           ].map(t => (
-             <div key={t.token}>
-                <div className="flex justify-between text-[11px] font-mono mb-2">
-                   <span style={{ color: 'var(--text-primary)' }}>{t.token}</span>
-                   <span style={{ color: t.color }}>{t.pct}%</span>
-                </div>
-                <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
-                  <motion.div className="h-full rounded-full" style={{ background: t.color, width: `${t.pct}%` }} />
-                </div>
-             </div>
-           ))}
-        </div>
-      </div>
-
-      {/* Risk Assessment */}
-      <div className="mx-4 mb-8 shrink-0">
-         <div className="flex items-center gap-2 mb-4">
-          <span className="font-orbitron text-[10px] font-bold tracking-widest text-[var(--red)]">
-            RISK ASSESSMENT MATRIX
-          </span>
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="p-3 rounded-xl" style={{ background: 'rgba(255,59,92,0.05)', border: '1px solid rgba(255,59,92,0.1)' }}>
-            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">MARKET VOLATILITY</div>
-            <div className="font-mono text-[11px] font-bold text-[var(--red)]">ELEVATED (84%)</div>
-          </div>
-          <div className="p-3 rounded-xl" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)' }}>
-            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">SMART CONTRACT</div>
-            <div className="font-mono text-[11px] font-bold text-[var(--green)]">MINIMAL (12%)</div>
-          </div>
-          <div className="p-3 rounded-xl" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)' }}>
-            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">LIQUIDITY DEPTH</div>
-            <div className="font-mono text-[11px] font-bold text-[var(--green)]">OPTIMAL (94%)</div>
-          </div>
-          <div className="p-3 rounded-xl" style={{ background: 'rgba(255,204,21,0.05)', border: '1px solid rgba(255,204,21,0.1)' }}>
-            <div className="font-mono text-[9px] text-[var(--text-muted)] mb-1.5">NETWORK CONGESTION</div>
-            <div className="font-mono text-[11px] font-bold text-[var(--warning)]">MODERATE (45%)</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Current AI Position */}
-      <div className="mx-4 mb-8 shrink-0">
-        <div className="flex items-center gap-2 mb-4">
-          <motion.div className="w-2 h-2 rounded-full" style={{ background: 'var(--green)' }} animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }} />
-          <span className="font-orbitron text-[10px] font-bold tracking-widest text-[var(--green)]">
-            CURRENT AI POSITION
-          </span>
-        </div>
-        <div className="rounded-xl p-4 relative overflow-hidden" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.3)', boxShadow: '0 0 20px rgba(16,185,129,0.05)' }}>
-          <div className="absolute inset-0 bg-mesh opacity-20 pointer-events-none" />
-          <div className="relative z-10 flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-[10px] text-[var(--text-muted)]">PAIR</span>
-              <span className="font-orbitron text-[12px] font-bold text-white">mETH / USDC</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-[10px] text-[var(--text-muted)]">ACTION</span>
-              <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: 'rgba(16,185,129,0.2)', color: 'var(--green)', border: '1px solid rgba(16,185,129,0.4)' }}>LONG</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-[10px] text-[var(--text-muted)]">ENTRY</span>
-              <span className="font-mono text-[11px] text-[var(--cyan)]">$3,812.50</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-[10px] text-[var(--text-muted)]">TARGET</span>
-              <span className="font-mono text-[11px] text-[var(--green)]">$4,269.00</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-[10px] text-[var(--text-muted)]">STOP LOSS</span>
-              <span className="font-mono text-[11px] text-[var(--red)]">$3,697.00</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-[10px] text-[var(--text-muted)]">CONFIDENCE</span>
-              <span className="font-mono text-[11px] font-bold text-[var(--green)]">92%</span>
-            </div>
-            <div className="mt-2 pt-3 border-t border-[rgba(16,185,129,0.2)] flex items-center justify-center">
-              <span className="font-orbitron text-[10px] font-bold tracking-widest text-[var(--green)] animate-pulse">
-                [ EXECUTING ]
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Active Whale Targets */}
-      <div className="mx-4 mb-8 shrink-0">
-        <div className="flex items-center gap-2 mb-4">
-          <Target size={12} className="text-[var(--red)]" />
-          <span className="font-orbitron text-[10px] font-bold tracking-widest text-[var(--red)]">
-            ACTIVE WHALE TARGETS
-          </span>
-        </div>
-        <div className="space-y-3">
-          {[
-            { addr: '0x7cc...29d', score: '94%', color: 'var(--red)' },
-            { addr: '0xF3a...11c', score: '88%', color: 'var(--warning)' },
-            { addr: '0x91d...2aa', score: '79%', color: 'var(--cyan)' },
-          ].map((w, i) => (
-            <div key={i} className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-              <div className="flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-full" style={{ background: w.color, boxShadow: `0 0 8px ${w.color}` }} />
-                <span className="font-mono text-[11px] text-[var(--text-primary)]">{w.addr}</span>
-              </div>
-              <span className="font-mono text-[11px] font-bold" style={{ color: w.color }}>{w.score}</span>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   )
 }
