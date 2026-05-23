@@ -77,7 +77,7 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
 
   return (
     <div
-      className="flex items-center h-12 w-full overflow-hidden animate-in"
+      className="flex items-center h-16 w-full overflow-hidden animate-in"
       style={{ background: 'var(--bg-surface)' }}
     >
       {/* Left Logo branding */}
@@ -85,8 +85,8 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
         className="flex items-center gap-2.5 px-5 shrink-0 h-full"
         style={{ borderRight: '1px solid var(--border)', minWidth: 180 }}
       >
-        <span className="text-xl">🐋</span>
-        <span className="font-orbitron text-[15px] font-black tracking-widest text-gradient">
+        <span className="text-2xl">🐋</span>
+        <span className="font-orbitron text-[16px] font-black tracking-widest text-gradient">
           GHOSTWHALE
         </span>
       </div>

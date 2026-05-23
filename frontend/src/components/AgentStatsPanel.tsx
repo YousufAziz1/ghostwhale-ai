@@ -64,9 +64,9 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
   }
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto gap-0 pr-1 select-none">
-      {/* ── Diagnostics Header ─────────────────────────────────────────── */}
-      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+    <div className="flex flex-col gap-3.5 p-3.5 feed-scroll overflow-y-auto h-full select-none justify-between">
+      {/* ── Diagnostics Header Card ────────────────────────────────────── */}
+      <div className="p-3.5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
         <div className="flex items-center gap-3 mb-3">
           <motion.div
             className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0"
@@ -143,8 +143,8 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
         </div>
       </div>
 
-      {/* ── Core Statistics Grid ──────────────────────────────────────── */}
-      <div className="p-4 shrink-0 grid grid-cols-2 gap-2" style={{ borderBottom: '1px solid var(--border)' }}>
+      {/* ── Core Statistics Card ──────────────────────────────────────── */}
+      <div className="p-3.5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 grid grid-cols-2 gap-2">
         <div className="p-2.5 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] flex flex-col">
           <span className="font-mono text-[9.5px] font-bold text-[var(--text-muted)]">WIN RATE</span>
           <span className="font-orbitron text-[14px] font-black text-[var(--purple)] mt-1">{winRate}%</span>
@@ -163,8 +163,8 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
         </div>
       </div>
 
-      {/* ERC-8004 Identity */}
-      <div className="p-4 shrink-0 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
+      {/* ── ERC-8004 Identity Card ────────────────────────────────────── */}
+      <div className="p-3.5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <Shield size={13} className="text-[var(--purple)]" />
           <span className="font-mono text-[11px] font-bold text-[var(--text-muted)] tracking-wider">ERC-8004 IDENTITY</span>
@@ -174,8 +174,8 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
         </span>
       </div>
 
-      {/* ── Neural Sub-Networks ────────────────────────────────────────── */}
-      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+      {/* ── Neural Sub-Networks Card ──────────────────────────────────── */}
+      <div className="p-3.5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
         <div className="flex items-center gap-1.5 mb-2.5">
           <Brain size={13} className="text-[var(--cyan)]" />
           <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--cyan)]">NEURAL SUB-NETWORKS</span>
@@ -206,8 +206,8 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
         </div>
       </div>
 
-      {/* ── Portfolio Distribution (Circles) ───────────────────────────── */}
-      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+      {/* ── Portfolio Distribution Card ───────────────────────────────── */}
+      <div className="p-3.5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
         <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--purple)] block mb-3">
           PORTFOLIO DISTRIBUTION
         </span>
@@ -234,8 +234,8 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
         </div>
       </div>
 
-      {/* ── Risk Assessment Heatmap ────────────────────────────────────── */}
-      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+      {/* ── Risk Assessment Heatmap Card ──────────────────────────────── */}
+      <div className="p-3.5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
         <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--red)] block mb-2.5">
           RISK ASSESSMENT MATRIX
         </span>
@@ -247,8 +247,8 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
         </div>
       </div>
 
-      {/* ── Current AI Position ────────────────────────────────────────── */}
-      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+      {/* ── Current AI Position Card ──────────────────────────────────── */}
+      <div className="p-3.5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
         <div className="flex items-center gap-1.5 mb-2.5">
           <Activity size={13} className="text-[var(--green)]" />
           <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--green)]">CURRENT AI POSITION</span>
@@ -278,8 +278,8 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
         </div>
       </div>
 
-      {/* ── Active Whale Targets ───────────────────────────────────────── */}
-      <div className="p-4 shrink-0 mb-4">
+      {/* ── Active Whale Targets Card ─────────────────────────────────── */}
+      <div className="p-3.5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 mb-1">
         <div className="flex items-center gap-1.5 mb-2.5">
           <Target size={13} className="text-[var(--red)]" />
           <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--red)]">ACTIVE WHALE TARGETS</span>

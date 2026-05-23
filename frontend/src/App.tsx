@@ -369,7 +369,7 @@ export default function App() {
 
           {/* Right header controls */}
           <div
-            className="flex items-center gap-4 px-4 shrink-0 h-10"
+            className="flex items-center gap-4 px-6 shrink-0 h-16"
             style={{ borderLeft: '1px solid var(--border)' }}
           >
             {/* RPC Latency Pill */}
@@ -396,16 +396,16 @@ export default function App() {
                   audio.playAlarm()
                   startDemo()
                 }}
-                className="font-orbitron text-[11px] font-black px-6 py-2 rounded-lg shrink-0 flex items-center gap-2"
+                className="font-orbitron text-[12.5px] font-black px-7 py-3 rounded-lg shrink-0 flex items-center gap-2"
                 style={{
-                  background: 'linear-gradient(135deg, #00F5FF 0%, #3B82F6 100%)',
+                  background: 'linear-gradient(135deg, #00F5FF 0%, #00FFCC 100%)',
                   color: '#050816',
-                  border: '1px solid rgba(0,245,255,0.7)',
-                  boxShadow: '0 0 15px rgba(0, 245, 255, 0.4)',
+                  border: '2px solid rgba(0,245,255,1)',
+                  boxShadow: '0 0 25px rgba(0, 245, 255, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.8)',
                   cursor: 'pointer'
                 }}
-                whileHover={{ scale: 1.03, boxShadow: '0 0 25px rgba(0, 245, 255, 0.7)' }}
-                whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.04, boxShadow: '0 0 35px rgba(0, 245, 255, 0.95)' }}
+                whileTap={{ scale: 0.96 }}
               >
                 <span>ACTIVATE GHOST MODE</span>
               </motion.button>
@@ -416,21 +416,19 @@ export default function App() {
                   audio.init()
                   audio.playPing()
                 }}
-                className="flex items-center gap-2 px-6 py-2 rounded-lg cursor-pointer"
+                className="font-orbitron text-[12.5px] font-black px-7 py-3 rounded-lg shrink-0 flex items-center gap-2 cursor-pointer"
                 style={{
-                  background: 'rgba(255,59,92,0.12)',
-                  color: 'var(--red)',
-                  border: '1px solid rgba(255,59,92,0.5)',
-                  boxShadow: '0 0 15px rgba(255, 59, 92, 0.3)'
+                  background: 'linear-gradient(135deg, #FF3B5C 0%, #E11D48 100%)',
+                  color: '#FFFFFF',
+                  border: '2px solid rgba(255,59,92,1)',
+                  boxShadow: '0 0 25px rgba(255, 59, 92, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.4)'
                 }}
-                whileHover={{ scale: 1.03, boxShadow: '0 0 25px rgba(255, 59, 92, 0.6)' }}
-                whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.04, boxShadow: '0 0 35px rgba(255, 59, 92, 0.95)' }}
+                whileTap={{ scale: 0.96 }}
               >
-                <motion.span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--red)' }}
+                <motion.span className="w-1.5 h-1.5 rounded-full" style={{ background: '#FFFFFF' }}
                   animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
-                <span className="font-orbitron text-[11px] font-black">
-                  SIMULATION ACTIVE
-                </span>
+                <span>SIMULATION ACTIVE</span>
               </motion.button>
             )}
           </div>
