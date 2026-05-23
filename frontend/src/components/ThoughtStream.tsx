@@ -17,10 +17,10 @@ const typeColors = {
   scan:    'var(--purple)',
 }
 const typePrefixes = {
-  info:    '[AI]',
-  alert:   '[⚠]',
-  success: '[✓]',
-  scan:    '[↻]',
+  info:    '[SYSTEM_INFO]',
+  alert:   '[NEURAL_ANOMALY]',
+  success: '[DECISION_EXEC]',
+  scan:    '[POOL_SCANNING]',
 }
 
 function Typewriter({ text, speed = 18 }: { text: string; speed?: number }) {

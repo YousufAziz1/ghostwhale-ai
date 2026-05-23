@@ -16,6 +16,7 @@ import TxPopup from '@/components/TxPopup'
 import NeuralReasoningLogs from '@/components/NeuralReasoningLogs'
 import TradeExecutionFeed from '@/components/TradeExecutionFeed'
 import SmartMoneyAnalysis from '@/components/SmartMoneyAnalysis'
+import TxIntelligenceModal from '@/components/TxIntelligenceModal'
 
 // ── Seed demo data — UI is NEVER blank ─────────────────────────────────────
 const DEMO_TOKENS = ['mETH', 'WMNT', 'AGNI', 'MOE', 'USDY', 'USDC']
@@ -57,18 +58,38 @@ function makeMockWhale(token?: string): WhaleEvent {
   const isBuy = Math.random() > 0.3
   const tok = token ?? DEMO_TOKENS[Math.floor(Math.random() * DEMO_TOKENS.length)]
   const wallet = '0x' + Array.from({length: 8}, () => Math.floor(Math.random()*16).toString(16)).join('').toUpperCase()
+  const txHash = '0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('')
+  const score = 0.6 + Math.random() * 0.4
+  const confidence = Math.round(score * 100)
+  
+  // Custom reasoning mock script matching token
+  let customReasoning = `Heavy block transfer of ${tok} detected. Neural logic suggests accumulation near local supports.`
+  if (tok === 'mETH' || tok === 'ETH') {
+    customReasoning = `Smart money vault executing aggressive mETH accumulation block. Historical patterns suggest 85% probability of bullish momentum.`
+  } else if (tok === 'AGNI' || tok === 'MOE') {
+    customReasoning = `Merchant Moe liquidity routing event. Big swap volumes coordinates with known smart wallets indicating imminent pool expansion.`
+  }
+
   return {
     id: Math.random(),
-    tx_hash: '0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join(''),
+    tx_hash: txHash,
     from_wallet: wallet,
     to_wallet: '0x' + Array.from({length: 8}, () => Math.floor(Math.random()*16).toString(16)).join('').toUpperCase(),
     token: tok,
     amount_usd: 50_000 + Math.random() * 750_000,
     amount_raw: '0',
     action: (isBuy ? 'buy' : 'sell') as 'buy' | 'sell',
-    block_number: 70_000_000 + Math.floor(Math.random() * 100_000),
-    wallet_score: 0.6 + Math.random() * 0.4,
+    block_number: 72_384_000 + Math.floor(Math.random() * 10_000),
+    wallet_score: score,
     timestamp: new Date().toISOString(),
+    // Telemetry fields
+    gas_fee: (0.0021 + Math.random() * 0.0064).toFixed(4) + ' MNT',
+    chain_source: 'Mantle Sepolia',
+    smart_money_tier: confidence >= 85 ? 'Tier 1' : confidence >= 70 ? 'Tier 2' : 'Tier 3',
+    ai_reasoning: customReasoning,
+    explorer_link: `https://mantlescan.xyz/tx/${txHash}`,
+    tx_type: isBuy ? 'DEX Swap Router' : 'Liquidity Outflow',
+    wallet_label: Math.random() > 0.5 ? 'Institutional Smart Vault' : 'DeFi Arbitrage Fund'
   }
 }
 
@@ -169,6 +190,7 @@ export default function App() {
   const [statusPhrase, setStatusPhrase] = useState(STATUS_PHRASES[0])
   const [whaleFlash, setWhaleFlash] = useState(false)
   const [txPopupEvent, setTxPopupEvent] = useState<Trade | null>(null)
+  const [selectedWhaleEvent, setSelectedWhaleEvent] = useState<WhaleEvent | null>(null)
   const logIdxRef = useRef(0)
   const alertTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const txTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
@@ -442,7 +464,7 @@ export default function App() {
 
             {/* Whale Feed — bottom 56% */}
             <div className="flex-1 min-h-0">
-              <WhaleFeed events={state.whaleEvents} loading={false} />
+              <WhaleFeed events={state.whaleEvents} loading={false} onSelectEvent={(event) => setSelectedWhaleEvent(event)} />
             </div>
           </main>
 
@@ -490,6 +512,16 @@ export default function App() {
           </aside>
         </div>
       </div>
+      
+      {/* ── Transaction Intelligence Modal ────────────────────────────── */}
+      <AnimatePresence>
+        {selectedWhaleEvent && (
+          <TxIntelligenceModal 
+            event={selectedWhaleEvent} 
+            onClose={() => setSelectedWhaleEvent(null)} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }

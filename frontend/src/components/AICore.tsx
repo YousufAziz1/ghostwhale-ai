@@ -255,6 +255,39 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
           strokeWidth="1"
           style={{ filter: `drop-shadow(0 0 3px ${accentColor})` }} />
 
+        {/* HUD Crosshairs with ticks */}
+        <line x1={cx - maxR * 1.05} y1={cy} x2={cx + maxR * 1.05} y2={cy} stroke="rgba(0, 245, 255, 0.12)" strokeWidth="0.8" />
+        <line x1={cx} y1={cy - maxR * 1.05} x2={cx} y2={cy + maxR * 1.05} stroke="rgba(0, 245, 255, 0.12)" strokeWidth="0.8" />
+        
+        {/* Tick Marks on HUD */}
+        {[-0.8, -0.6, -0.4, -0.2, 0.2, 0.4, 0.6, 0.8].map(f => (
+          <g key={f} opacity="0.5">
+            {/* Horizontal Ticks */}
+            <line x1={cx + maxR * f} y1={cy - 2.5} x2={cx + maxR * f} y2={cy + 2.5} stroke="rgba(0, 245, 255, 0.35)" strokeWidth="0.8" />
+            <text x={cx + maxR * f} y={cy - 4} fill="rgba(0,245,255,0.4)" fontSize="4.5" fontFamily="JetBrains Mono" textAnchor="middle">
+              {Math.abs(Math.round(f * 100))}%
+            </text>
+            {/* Vertical Ticks */}
+            <line x1={cx - 2.5} y1={cy + maxR * f * 0.7} x2={cx + 2.5} y2={cy + maxR * f * 0.7} stroke="rgba(0, 245, 255, 0.35)" strokeWidth="0.8" />
+          </g>
+        ))}
+
+        {/* Outer HUD Degree Indicators */}
+        <g opacity="0.4" className="font-mono text-[5.5px]" fill="rgba(0,245,255,0.7)">
+          <text x={cx} y={cy - maxR * 1.03} textAnchor="middle">000°</text>
+          <text x={cx + maxR * 1.03 + 2} y={cy + 2} textAnchor="start">090°</text>
+          <text x={cx} y={cy + maxR * 1.03 + 4} textAnchor="middle">180°</text>
+          <text x={cx - maxR * 1.03 - 2} y={cy + 2} textAnchor="end">270°</text>
+        </g>
+
+        {/* Core Targeting Box Brackets (AI Target Lock) */}
+        <g opacity={locked ? "0.9" : "0.35"}>
+          <path d={`M ${cx - coreR * 1.4} ${cy - coreR * 1.1} L ${cx - coreR * 1.7} ${cy - coreR * 1.1} L ${cx - coreR * 1.7} ${cy - coreR * 0.7}`} fill="none" stroke={accentColor} strokeWidth="1" />
+          <path d={`M ${cx + coreR * 1.4} ${cy - coreR * 1.1} L ${cx + coreR * 1.7} ${cy - coreR * 1.1} L ${cx + coreR * 1.7} ${cy - coreR * 0.7}`} fill="none" stroke={accentColor} strokeWidth="1" />
+          <path d={`M ${cx - coreR * 1.4} ${cy + coreR * 1.1} L ${cx - coreR * 1.7} ${cy + coreR * 1.1} L ${cx - coreR * 1.7} ${cy + coreR * 0.7}`} fill="none" stroke={accentColor} strokeWidth="1" />
+          <path d={`M ${cx + coreR * 1.4} ${cy + coreR * 1.1} L ${cx + coreR * 1.7} ${cy + coreR * 1.1} L ${cx + coreR * 1.7} ${cy + coreR * 0.7}`} fill="none" stroke={accentColor} strokeWidth="1" />
+        </g>
+
         {/* Connection lines: node → center (subtle) */}
         {nodePositions.map((pos, i) => (
           <motion.line key={i} x1={pos.x} y1={pos.y} x2={cx} y2={cy}

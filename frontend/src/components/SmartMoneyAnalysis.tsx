@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-function Sparkline({ data, color }: { data: number[]; color: string }) {
+function Sparkline({ data, color, gradId }: { data: number[]; color: string; gradId: string }) {
   const min = Math.min(...data)
   const max = Math.max(...data)
   const range = max - min || 1
@@ -12,14 +12,14 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
     <div className="relative" style={{ width: w, height: h }}>
       <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
         <defs>
-          <linearGradient id={`grad-${color}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={color} stopOpacity="0.25" />
+          <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.3" />
             <stop offset="100%" stopColor={color} stopOpacity="0.0" />
           </linearGradient>
         </defs>
-        <polygon points={fillPts} fill={`url(#grad-${color})`} />
+        <polygon points={fillPts} fill={`url(#${gradId})`} />
         <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5"
-          style={{ filter: `drop-shadow(0 0 2px ${color}aa)` }} strokeLinecap="round" strokeLinejoin="round" />
+          style={{ filter: `drop-shadow(0 0 3px ${color})` }} strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </div>
   )
@@ -51,7 +51,7 @@ export default function SmartMoneyAnalysis() {
             <span className="text-[7.5px] text-[var(--text-muted)] font-bold">BTC/USDT</span>
             <span className="text-[9px] font-bold text-white">${Math.round(btcData[btcData.length - 1] * 1000).toLocaleString()}</span>
           </div>
-          <Sparkline data={btcData} color="var(--cyan)" />
+          <Sparkline data={btcData} color="#00F5FF" gradId="btc-spark-grad" />
         </div>
         {/* Divider */}
         <div className="w-px h-6 bg-[var(--border)] shrink-0" />
@@ -61,7 +61,7 @@ export default function SmartMoneyAnalysis() {
             <span className="text-[7.5px] text-[var(--text-muted)] font-bold">ETH/USDT</span>
             <span className="text-[9px] font-bold text-white">${Math.round(ethData[ethData.length - 1] * 100).toLocaleString()}</span>
           </div>
-          <Sparkline data={ethData} color="var(--purple)" />
+          <Sparkline data={ethData} color="#7C3AED" gradId="eth-spark-grad" />
         </div>
       </div>
     </div>

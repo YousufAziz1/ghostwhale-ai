@@ -15,6 +15,14 @@ export interface WhaleEvent {
   // Joined from signals
   from_wallet_display?: string
   to_wallet_display?: string
+  // Advanced Blockchain Telemetry Fields
+  gas_fee?: string
+  chain_source?: string
+  smart_money_tier?: string
+  ai_reasoning?: string
+  explorer_link?: string
+  tx_type?: string
+  wallet_label?: string
 }
 
 export interface Signal {

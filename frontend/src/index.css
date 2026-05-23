@@ -456,3 +456,103 @@ body::after {
   50% { border-color: rgba(255, 59, 92, 1); box-shadow: 0 0 65px rgba(255, 59, 92, 0.35); }
 }
 
+/* ━━ Cinematic Cyberpunk Overlay Styles ━━━━━━━━━━━━━━ */
+.whale-card-scanline {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 245, 255, 0.02) 50%
+  );
+  background-size: 100% 4px;
+  opacity: 0.35;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 2;
+}
+
+.card-glow-green:hover {
+  border-color: rgba(16, 185, 129, 0.6) !important;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  transform: translateY(-4px) translate3d(0,0,0) !important;
+}
+
+.card-glow-red:hover {
+  border-color: rgba(255, 59, 92, 0.6) !important;
+  box-shadow: 0 0 25px rgba(255, 59, 92, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  transform: translateY(-4px) translate3d(0,0,0) !important;
+}
+
+.card-glow-cyan:hover {
+  border-color: rgba(0, 245, 255, 0.6) !important;
+  box-shadow: 0 0 25px rgba(0, 245, 255, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  transform: translateY(-4px) translate3d(0,0,0) !important;
+}
+
+.blink-tag-red {
+  animation: blinkRed 1.4s ease-in-out infinite;
+}
+@keyframes blinkRed {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(255,59,92,0.6); }
+  50% { opacity: 0.45; box-shadow: 0 0 2px rgba(255,59,92,0.1); }
+}
+
+.blink-tag-green {
+  animation: blinkGreen 1.4s ease-in-out infinite;
+}
+@keyframes blinkGreen {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(16,185,129,0.6); }
+  50% { opacity: 0.45; box-shadow: 0 0 2px rgba(16,185,129,0.1); }
+}
+
+.terminal-flicker {
+  animation: flicker 0.18s infinite;
+}
+@keyframes flicker {
+  0% { opacity: 0.995; }
+  50% { opacity: 1; }
+  100% { opacity: 0.995; }
+}
+
+.fog-glow-purple {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  background: rgba(124, 58, 237, 0.07);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.fog-glow-cyan {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  background: rgba(0, 245, 255, 0.05);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.holo-reflection {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  z-index: 3;
+  border-radius: inherit;
+}
+
+.gpu-accelerated {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform, opacity, filter;
+}
+
+

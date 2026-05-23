@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import type { WhaleEvent } from '@/types'
-import { truncateAddr, timeAgo } from '@/lib/api'
+import { truncateAddr, timeAgo, mantleExplorerTx } from '@/lib/api'
 import { audio } from '@/lib/audio'
+import { ExternalLink, Zap } from 'lucide-react'
 
 interface WhaleFeedProps {
   events: WhaleEvent[]
   loading: boolean
+  onSelectEvent?: (event: WhaleEvent) => void
 }
 
 const TOKEN_PRICES: Record<string, number> = {
@@ -46,11 +48,11 @@ function getAIReasoning(token: string, action: string): string {
   return `Aggressive ${action} block transfer detected. AI Engine flags potential volatile price momentum.`
 }
 
-function WhaleCard({ event }: { event: WhaleEvent }) {
+function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => void }) {
   const [visible, setVisible] = useState(false)
   const confidence = Math.round(event.wallet_score * 100)
   const isBuy = event.action === 'buy' || event.action === 'lp_add'
-  const isHighValue = event.amount_usd >= 200_000
+  const isHighValue = event.amount_usd >= 250_000
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 30)
@@ -63,25 +65,28 @@ function WhaleCard({ event }: { event: WhaleEvent }) {
   const formattedAmount = rawAmount.toLocaleString('en-US', { maximumFractionDigits: 0 })
 
   const smartMoneyTier = confidence >= 85 ? 'Tier 1' : confidence >= 70 ? 'Tier 2' : 'Tier 3'
+  const gas = event.gas_fee ?? '0.0042 MNT'
+  const source = event.chain_source ?? 'Mantle'
 
   return (
     <div
+      onClick={onSelect}
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0) scale(1)' : 'translateY(-10px) scale(0.98)',
+        transform: visible ? 'translate3d(0, 0, 0) scale(1)' : 'translate3d(0, -10px, 0) scale(0.98)',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        border: isHighValue 
-          ? `1.5px solid ${isBuy ? 'rgba(16,185,129,0.45)' : 'rgba(255,59,92,0.45)'}` 
-          : '1px solid var(--border)',
-        boxShadow: isHighValue 
-          ? `0 0 20px ${isBuy ? 'rgba(16,185,129,0.1)' : 'rgba(255,59,92,0.1)'}` 
-          : 'none'
       }}
-      className="whale-card-custom relative flex flex-col justify-between w-full h-[155px] font-mono select-none"
+      className={`whale-card-custom relative flex flex-col justify-between w-full h-[155px] font-mono select-none cursor-pointer gpu-accelerated ${
+        isBuy ? 'card-glow-green' : 'card-glow-red'
+      }`}
     >
+      {/* Holographic Overlays */}
+      <div className="holo-reflection" />
+      <div className="whale-card-scanline" />
+
       <div>
         {/* Header: Logo and symbol */}
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-2 z-10 relative">
           <div className="flex items-center gap-2">
             <div 
               className="w-7 h-7 rounded-full flex items-center justify-center text-[10px]"
@@ -94,8 +99,15 @@ function WhaleCard({ event }: { event: WhaleEvent }) {
             >
               {TOKEN_ICONS[event.token] ?? TOKEN_ICONS.default}
             </div>
-            <span className="font-display font-extrabold text-[12px] text-white tracking-wide">
+            <span className="font-display font-extrabold text-[12px] text-white tracking-wide flex items-center gap-1.5">
               {event.token}
+              {isHighValue && (
+                <span className={`text-[7px] font-black px-1 rounded uppercase tracking-wider ${
+                  isBuy ? 'blink-tag-green bg-emerald-950/20 text-emerald-400 border border-emerald-500/30' : 'blink-tag-red bg-rose-950/20 text-rose-400 border border-rose-500/30'
+                }`}>
+                  HV
+                </span>
+              )}
             </span>
           </div>
           
@@ -109,8 +121,8 @@ function WhaleCard({ event }: { event: WhaleEvent }) {
                 className="h-full rounded-full" 
                 style={{ 
                   width: `${confidence}%`,
-                  background: isBuy ? 'var(--cyan)' : 'var(--red)',
-                  boxShadow: `0 0 4px ${isBuy ? 'var(--cyan)' : 'var(--red)'}`
+                  background: isBuy ? 'var(--green)' : 'var(--red)',
+                  boxShadow: `0 0 4px ${isBuy ? 'var(--green)' : 'var(--red)'}`
                 }} 
               />
             </div>
@@ -118,32 +130,52 @@ function WhaleCard({ event }: { event: WhaleEvent }) {
         </div>
 
         {/* 2-Column Details Grid */}
-        <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 text-[8.5px] font-mono mb-2 pb-1.5" style={{ borderBottom: '1px dashed rgba(255,255,255,0.04)' }}>
+        <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[8.5px] font-mono mb-1.5 pb-1 border-b border-[rgba(255,255,255,0.02)] z-10 relative">
           <div className="flex flex-col">
-            <span className="text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Transfer</span>
+            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Transfer</span>
             <span className="text-white font-bold truncate">{formattedAmount} {event.token}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Confidence</span>
+            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Confidence</span>
             <span className="text-[var(--cyan)] font-extrabold">{confidence}%</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Wallet</span>
+            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Wallet</span>
             <span className="text-white font-bold truncate">{truncateAddr(event.from_wallet)}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Smart Money</span>
+            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Smart Money</span>
             <span className="text-white font-bold">{smartMoneyTier}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Gas Fee</span>
+            <span className="text-slate-400 font-medium truncate">{gas}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Source</span>
+            <span className="text-slate-400 font-medium truncate">{source}</span>
           </div>
         </div>
       </div>
 
       {/* AI Reasoning */}
-      <div className="flex-1 flex flex-col justify-end">
-        <span className="text-[7px] font-bold text-[var(--text-muted)] uppercase tracking-wider block mb-0.5">
-          AI Reasoning:
-        </span>
-        <p className="text-[8px] leading-snug text-slate-400 font-medium line-clamp-2">
+      <div className="flex-1 flex flex-col justify-end z-10 relative">
+        <div className="flex items-center justify-between">
+          <span className="text-[6.5px] font-bold text-[var(--text-muted)] uppercase tracking-wider block">
+            AI Reasoning:
+          </span>
+          <span 
+            onClick={(e) => {
+              e.stopPropagation()
+              window.open(mantleExplorerTx(event.tx_hash), '_blank')
+            }}
+            className="text-[6.5px] text-[var(--cyan)] hover:text-white flex items-center gap-0.5 transition-colors cursor-pointer"
+          >
+            explorer
+            <ExternalLink size={6} />
+          </span>
+        </div>
+        <p className="text-[8px] leading-snug text-slate-400 font-medium line-clamp-2 mt-0.5">
           {getAIReasoning(event.token, event.action)}
         </p>
       </div>
@@ -163,7 +195,7 @@ function EmptyState() {
   )
 }
 
-export default function WhaleFeed({ events, loading }: WhaleFeedProps) {
+export default function WhaleFeed({ events, loading, onSelectEvent }: WhaleFeedProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const prevLen = useRef(events.length)
 
@@ -181,7 +213,10 @@ export default function WhaleFeed({ events, loading }: WhaleFeedProps) {
       <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] shrink-0">
         <div className="flex items-center gap-2">
           <div className="live-dot" style={{ width: 5, height: 5 }} />
-          <span className="font-display font-bold text-xs tracking-wider text-[var(--text-primary)]">LIVE WHALE FEED</span>
+          <span className="font-display font-bold text-xs tracking-wider text-[var(--text-primary)] flex items-center gap-1.5">
+            <Zap size={11} className="text-[var(--cyan)]" />
+            LIVE WHALE FEED
+          </span>
           <span className="font-mono text-[8px] text-[var(--text-muted)] tracking-wider">· MANTLE NETWORK</span>
         </div>
         <div className="flex items-center gap-1.5 font-mono text-[9px]">
@@ -201,7 +236,11 @@ export default function WhaleFeed({ events, loading }: WhaleFeedProps) {
           </div>
         ) : (
           events.map((event, i) => (
-            <WhaleCard key={`${event.id ?? event.tx_hash}-${i}`} event={event} />
+            <WhaleCard 
+              key={`${event.id ?? event.tx_hash}-${i}`} 
+              event={event} 
+              onSelect={() => onSelectEvent?.(event)}
+            />
           ))
         )}
       </div>
