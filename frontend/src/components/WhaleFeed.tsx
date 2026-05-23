@@ -73,7 +73,7 @@ function WhaleCard({ event, onSelectEvent }: { event: WhaleEvent; onSelectEvent?
         boxShadow: cardShadow,
         background: 'rgba(8,11,26,0.95)'
       }}
-      className="rounded-xl p-3.5 flex gap-3.5 cursor-pointer group shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:border-[rgba(0,245,255,0.3)] hover:-translate-y-0.5 duration-200"
+      className="rounded-xl p-5 flex gap-4 cursor-pointer group shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:border-[rgba(0,245,255,0.3)] hover:-translate-y-0.5 duration-200"
     >
       {/* Circle Icon left */}
       <div 
@@ -120,7 +120,7 @@ function WhaleCard({ event, onSelectEvent }: { event: WhaleEvent; onSelectEvent?
         </div>
 
         {/* Row 3: Confidence & Smart Money Tier */}
-        <div className="flex items-center justify-between gap-1.5 py-1 border-t border-[rgba(255,255,255,0.03)] mt-0.5">
+        <div className="flex items-center justify-between gap-1.5 py-1.5 border-t border-[rgba(255,255,255,0.06)] mt-2">
           <div className="flex items-center gap-1">
             <span className="font-mono text-[9px] font-bold text-[var(--text-muted)]">CONFIDENCE:</span>
             <span className="font-mono text-[11px] font-black text-[var(--cyan)]">{Math.round(event.wallet_score * 100)}%</span>
@@ -134,7 +134,7 @@ function WhaleCard({ event, onSelectEvent }: { event: WhaleEvent; onSelectEvent?
         </div>
 
         {/* Row 4: AI Reasoning text block */}
-        <p className="font-mono text-[11px] leading-relaxed text-[var(--text-muted)] border-t border-[rgba(255,255,255,0.03)] pt-1 mt-0.5 line-clamp-2 text-justify">
+        <p className="font-mono text-[11px] leading-relaxed text-[var(--text-muted)] border-t border-[rgba(255,255,255,0.06)] pt-2 mt-2 line-clamp-2">
           <span className="text-[var(--cyan)] font-black">AI REASONING: </span>
           {aiReasoning}
         </p>
@@ -188,7 +188,7 @@ export default function WhaleFeed({ events, loading, onSelectEvent }: WhaleFeedP
       </div>
 
       {/* Feed body */}
-      <div ref={containerRef} className="feed-scroll flex-1 p-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 overflow-y-auto auto-rows-max items-start">
+      <div ref={containerRef} className="feed-scroll flex-1 p-3.5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 overflow-y-auto auto-rows-max items-start">
         {events.length === 0 ? (
           <EmptyState />
         ) : (

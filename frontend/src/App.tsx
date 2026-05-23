@@ -359,7 +359,7 @@ export default function App() {
       </AnimatePresence>
 
       {/* ── Layout ──────────────────────────────────────────────────────── */}
-      <div className="relative z-10 flex flex-col min-h-screen lg:h-screen lg:overflow-hidden">
+      <div className="relative z-10 flex flex-col min-h-screen lg:h-screen lg:overflow-hidden max-w-[1550px] mx-auto w-full px-4 lg:px-6">
 
         {/* ── Top Header ─────────────────────────────────────────────────── */}
         <div className="shrink-0 flex items-center w-full" style={{ borderBottom: '1px solid var(--border)' }}>
