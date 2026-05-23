@@ -312,7 +312,7 @@ export default function App() {
   const latestBlock = state.rpcStatus?.latest_block
 
   return (
-    <div className="relative h-screen overflow-hidden" style={{ background: 'var(--bg-base)' }}>
+    <div className="relative min-h-screen lg:h-screen lg:overflow-hidden" style={{ background: 'var(--bg-base)' }}>
       {/* ── Ambient layers ─────────────────────────────────────────────── */}
       <div className="bg-particles" />
       <div className="bg-grid" style={{ opacity: 0.6 }} />
@@ -332,7 +332,7 @@ export default function App() {
       </AnimatePresence>
 
       {/* ── Layout ──────────────────────────────────────────────────────── */}
-      <div className="relative z-10 flex flex-col h-screen">
+      <div className="relative z-10 flex flex-col min-h-screen lg:h-screen lg:overflow-hidden">
 
         {/* ── Top Header ─────────────────────────────────────────────────── */}
         <div className="shrink-0 flex items-center w-full" style={{ borderBottom: '1px solid var(--border)' }}>
@@ -405,17 +405,9 @@ export default function App() {
         </div>
 
         {/* ── Main 3-column grid ──────────────────────────────────────────── */}
-        <div
-          className="flex-1 overflow-hidden grid gap-4 p-4"
-          style={{
-            gridTemplateColumns: '280px 1fr 300px',
-          }}
-        >
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[280px_1fr_300px] gap-4 p-4 overflow-y-auto lg:overflow-hidden">
           {/* ── LEFT: Agent stats ──────────────────────────────────────── */}
-          <aside
-            className="overflow-hidden flex flex-col rounded-xl"
-            style={{ border: '1px solid rgba(0,245,255,0.15)', background: 'var(--bg-surface)', boxShadow: '0 0 30px rgba(0,0,0,0.5)' }}
-          >
+          <aside className="flex flex-col rounded-xl border border-[rgba(0,245,255,0.15)] bg-[var(--bg-surface)] shadow-[0_0_30px_rgba(0,0,0,0.5)] h-[600px] lg:h-full overflow-hidden">
             <AgentStatsPanel
               identity={state.identity}
               stats={state.stats}
@@ -425,7 +417,7 @@ export default function App() {
           </aside>
 
           {/* ── CENTER: AI Core + Whale Feed ───────────────────────────── */}
-          <main className="flex flex-col overflow-hidden relative rounded-xl" style={{ border: '1px solid rgba(0,245,255,0.15)', background: 'var(--bg-base)', boxShadow: '0 0 30px rgba(0,0,0,0.5)' }}>
+          <main className="flex flex-col relative rounded-xl border border-[rgba(0,245,255,0.15)] bg-[var(--bg-base)] shadow-[0_0_30px_rgba(0,0,0,0.5)] min-h-[600px] lg:h-full overflow-hidden">
             {/* Whale popup alert */}
             <WhaleAlert event={alertEvent} onDismiss={() => setAlertEvent(null)} />
             
@@ -448,10 +440,7 @@ export default function App() {
           </main>
 
           {/* ── RIGHT: Thought stream + Trades ────────────────────────── */}
-          <aside
-            className="flex flex-col overflow-hidden rounded-xl"
-            style={{ border: '1px solid rgba(0,245,255,0.15)', background: 'var(--bg-surface)', boxShadow: '0 0 30px rgba(0,0,0,0.5)' }}
-          >
+          <aside className="flex flex-col rounded-xl border border-[rgba(0,245,255,0.15)] bg-[var(--bg-surface)] shadow-[0_0_30px_rgba(0,0,0,0.5)] h-[600px] lg:h-full overflow-hidden">
             {/* AI Thought Stream — top 55% */}
             <div className="flex-1 min-h-0 overflow-hidden"
               style={{ borderBottom: '1px solid var(--border)' }}>

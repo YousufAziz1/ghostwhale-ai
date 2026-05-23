@@ -104,13 +104,13 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
       </div>
 
       {/* Tokens Row */}
-      <div className="flex-1 flex items-center gap-4 px-4 overflow-hidden">
+      <div className="hidden md:flex flex-1 items-center gap-4 px-4 overflow-hidden">
         {SEED.slice(0, 5).map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
       </div>
 
       {/* Right: block + time */}
       <div
-        className="flex items-center gap-4 px-4 shrink-0 h-full"
+        className="hidden sm:flex items-center gap-4 px-4 shrink-0 h-full"
         style={{ borderLeft: '1px solid var(--border)' }}
       >
         {latestBlock && (
