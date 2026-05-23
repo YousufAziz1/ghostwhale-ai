@@ -42,13 +42,13 @@
   --amber:          #F59E0B;
 
   /* Text */
-  --text-primary:   #E2E8F0;
-  --text-muted:     #475569;
-  --text-dim:       #1E293B;
+  --text-primary:   #FFFFFF;
+  --text-muted:     #8A99AD;
+  --text-dim:       #4A5D78;
 
   /* Borders */
-  --border:         rgba(0, 245, 255, 0.08);
-  --border-bright:  rgba(0, 245, 255, 0.25);
+  --border:         rgba(0, 245, 255, 0.16);
+  --border-bright:  rgba(0, 245, 255, 0.35);
 
   /* Legacy compat */
   --accent:         var(--cyan);

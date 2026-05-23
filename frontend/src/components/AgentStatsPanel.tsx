@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import type { AgentIdentity, AgentStats } from '@/types'
+import { Shield, Zap, Activity, TrendingUp, Target, Brain, Server } from 'lucide-react'
 import { formatUSD, truncateAddr } from '@/lib/api'
 
 interface AgentStatsProps {
@@ -9,153 +10,195 @@ interface AgentStatsProps {
   statusPhrase: string
 }
 
-function PortfolioCircle({ token, pct, color, centerText }: { token: string; pct: number; color: string; centerText?: string }) {
-  const size = 44
-  const R = size / 2 - 3
-  const circ = 2 * Math.PI * R
-  const strokeDashoffset = circ * (1 - pct / 100)
-
-  return (
-    <div className="flex flex-col items-center gap-1.5">
-      <div className="relative" style={{ width: size, height: size }}>
-        <svg width={size} height={size} className="transform -rotate-90">
-          <circle cx={size / 2} cy={size / 2} r={R} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="2.5" />
-          <circle
-            cx={size / 2} cy={size / 2} r={R}
-            fill="none"
-            stroke={color}
-            strokeWidth="2.5"
-            strokeDasharray={circ}
-            strokeDashoffset={strokeDashoffset}
-            strokeLinecap="round"
-            style={{ filter: `drop-shadow(0 0 4px ${color}88)` }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="font-orbitron font-bold text-[8.5px] text-white">
-            {centerText ?? `${pct}%`}
-          </span>
-        </div>
-      </div>
-      <span className="font-mono text-[8px] tracking-wider text-[var(--text-muted)] font-bold">{token}</span>
-    </div>
-  )
-}
-
-function RiskMatrixRow({ label, score }: { label: string; score: number }) {
-  return (
-    <div className="flex items-center justify-between text-[8px] font-mono py-0.5">
-      <span className="text-[var(--text-muted)] w-10 uppercase font-bold">{label}</span>
-      <div className="flex gap-0.5">
-        {Array.from({ length: 12 }).map((_, idx) => {
-          const val = idx + 1
-          const isActive = val <= score
-          let colorClass = ''
-          if (isActive) {
-            if (val <= 4) colorClass = 'green'
-            else if (val <= 8) colorClass = 'yellow'
-            else if (val <= 10) colorClass = 'orange'
-            else colorClass = 'red'
-          }
-          return <div key={idx} className={`risk-matrix-cell ${colorClass}`} style={{ width: '8px', height: '6px' }} />
-        })}
-      </div>
-    </div>
-  )
-}
-
 export default function AgentStatsPanel({ identity, stats, loading, statusPhrase }: AgentStatsProps) {
-  const repScore = identity?.reputation_score ?? stats?.reputation_score ?? 980
-  const winRate  = identity?.win_rate_pct ?? stats?.win_rate_pct ?? 72.5
-  const totalPnL = identity?.total_pnl_usd ?? stats?.total_pnl_usd ?? 5432.10
-  const signals  = identity?.total_signals ?? stats?.total_signals ?? 1204
-  const settled  = identity?.settled_trades ?? stats?.settled_trades ?? 651
+  const repScore = identity?.reputation_score ?? stats?.reputation_score ?? 840
+  const winRate  = identity?.win_rate_pct ?? stats?.win_rate_pct ?? 68.9
+  const totalPnL = identity?.total_pnl_usd ?? stats?.total_pnl_usd ?? 12450.45
+  const signals  = identity?.total_signals ?? stats?.total_signals ?? 142
+  const settled  = identity?.settled_trades ?? stats?.settled_trades ?? 87
+
+  // Helper for generating Risk Matrix blocks
+  const renderRiskRow = (label: string, activeCount: number) => {
+    return (
+      <div className="flex items-center justify-between gap-2 py-1">
+        <span className="font-mono text-[9px] text-[var(--text-muted)] w-8 shrink-0">{label}</span>
+        <div className="flex gap-1 flex-1 justify-start">
+          {Array.from({ length: 10 }).map((_, i) => {
+            const isActive = i < activeCount
+            let bg = 'rgba(255,255,255,0.03)'
+            let border = '1px solid rgba(255,255,255,0.05)'
+            let glow = 'none'
+
+            if (isActive) {
+              if (i < 6) {
+                bg = 'rgba(16,185,129,0.35)'
+                border = '1px solid var(--green)'
+                glow = '0 0 6px var(--green)'
+              } else if (i < 9) {
+                bg = 'rgba(245,158,11,0.35)'
+                border = '1px solid var(--amber)'
+                glow = '0 0 6px var(--amber)'
+              } else {
+                bg = 'rgba(255,59,92,0.35)'
+                border = '1px solid var(--red)'
+                glow = '0 0 6px var(--red)'
+              }
+            }
+
+            return (
+              <div
+                key={i}
+                className="w-3.5 h-2.5 rounded-sm"
+                style={{
+                  background: bg,
+                  border,
+                  boxShadow: glow,
+                  transition: 'all 0.3s ease'
+                }}
+              />
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto gap-0 bg-[var(--bg-surface)] font-sans select-none scrollbar-thin">
-      
-      {/* ── DIAGNOSTICS PANEL ────────────────────────────────────────── */}
-      <div className="p-3 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
-        <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3 uppercase">
-          DIAGNOSTICS PANEL
+    <div className="flex flex-col h-full overflow-y-auto gap-0 pr-1">
+      {/* ── Diagnostics Header ─────────────────────────────────────────── */}
+      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="flex items-center gap-3 mb-3">
+          <motion.div
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0,245,255,0.15) 0%, rgba(124,58,237,0.15) 100%)',
+              border: '1px solid rgba(0,245,255,0.3)',
+              boxShadow: '0 0 15px rgba(0,245,255,0.1)',
+            }}
+            animate={{ boxShadow: ['0 0 10px rgba(0,245,255,0.1)', '0 0 20px rgba(0,245,255,0.2)', '0 0 10px rgba(0,245,255,0.1)'] }}
+            transition={{ duration: 3, repeat: Infinity }}
+          >
+            🐋
+          </motion.div>
+          <div>
+            <div className="font-orbitron font-bold text-sm tracking-wide text-gradient">DIAGNOSTICS PANEL</div>
+            <div className="font-orbitron text-[8px] tracking-widest" style={{ color: 'var(--text-muted)' }}>
+              SYSTEM Vitals · RUNNING
+            </div>
+          </div>
         </div>
 
-        {/* AI status and reputation boxes side-by-side */}
-        <div className="grid grid-cols-2 gap-2 mb-2">
-          <div 
-            className="rounded-lg p-2 flex flex-col justify-between h-[46px] bg-black/20"
+        {/* Status Pill + Rep Score */}
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          <div
+            className="rounded-lg px-2.5 py-1.5 flex flex-col justify-between"
             style={{
-              border: '1px solid rgba(255, 59, 92, 0.45)',
-              boxShadow: '0 0 12px rgba(255, 59, 92, 0.08)'
+              background: 'rgba(124,58,237,0.06)',
+              border: '1px solid rgba(124,58,237,0.25)',
+              boxShadow: '0 0 10px rgba(124,58,237,0.05)'
             }}
           >
-            <span className="font-mono text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">AI AGENT STATUS:</span>
-            <span className="font-orbitron text-[9.5px] font-black text-[var(--red)] animate-pulse tracking-wide">HUNTING (ACTIVE)</span>
+            <span className="font-mono text-[7px] text-[var(--text-muted)] tracking-wider block">AI AGENT STATUS</span>
+            <span className="font-orbitron text-[9px] font-bold text-[var(--purple)] mt-0.5" style={{ textShadow: '0 0 8px rgba(124,58,237,0.4)' }}>
+              HUNTING (ACTIVE)
+            </span>
           </div>
 
-          <div 
-            className="rounded-lg p-2 flex flex-col justify-between h-[46px] bg-black/20"
+          <div
+            className="rounded-lg px-2.5 py-1.5 flex flex-col justify-between"
             style={{
-              border: '1px solid rgba(0, 245, 255, 0.45)',
-              boxShadow: '0 0 12px rgba(0, 245, 255, 0.08)'
+              background: 'rgba(0,245,255,0.06)',
+              border: '1px solid rgba(0,245,255,0.25)',
+              boxShadow: '0 0 10px rgba(0,245,255,0.05)'
             }}
           >
-            <span className="font-mono text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">REP SCORE:</span>
-            <span className="font-orbitron text-[10.5px] font-black text-[var(--cyan)] tracking-wide">
+            <span className="font-mono text-[7px] text-[var(--text-muted)] tracking-wider block">REP SCORE</span>
+            <span className="font-orbitron text-[10px] font-bold text-[var(--cyan)] mt-0.5" style={{ textShadow: '0 0 8px rgba(0,245,255,0.4)' }}>
               {Math.round(repScore / 10)}/100
             </span>
           </div>
         </div>
 
-        {/* Stats 2-column grid cards */}
-        <div className="grid grid-cols-2 gap-2 mb-2">
-          <div className="rounded-lg p-2 flex flex-col justify-between h-13 bg-black/20 border border-[rgba(0,245,255,0.15)] shadow-[0_0_10px_rgba(0,245,255,0.03)]">
-            <span className="font-mono text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">WIN RATE</span>
-            <span className="font-orbitron text-[11px] font-bold text-white">{winRate.toFixed(1)}%</span>
+        {/* Live log feed banner */}
+        <div
+          className="rounded-lg px-3 py-1.5"
+          style={{
+            background: 'rgba(0,245,255,0.02)',
+            border: '1px solid rgba(0,245,255,0.06)',
+          }}
+        >
+          <div className="flex items-center gap-1.5 mb-0.5">
+            <div className="live-dot" style={{ width: 5, height: 5 }} />
+            <span className="font-mono text-[7px]" style={{ color: 'rgba(0,245,255,0.5)' }}>MONITORING FEED</span>
           </div>
-          <div className="rounded-lg p-2 flex flex-col justify-between h-13 bg-black/20 border border-[rgba(16,185,129,0.3)] shadow-[0_0_10px_rgba(16,185,129,0.03)]">
-            <span className="font-mono text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">TOTAL PNL</span>
-            <span className={`font-orbitron text-[11px] font-bold ${totalPnL >= 0 ? 'text-[var(--green)]' : 'text-[var(--red)]'}`}>
-              {totalPnL >= 0 ? '+' : ''}{formatUSD(totalPnL)}
-            </span>
-          </div>
-          <div className="rounded-lg p-2 flex flex-col justify-between h-13 bg-black/20 border border-white/5">
-            <span className="font-mono text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">SIGNALS GENERATED</span>
-            <span className="font-orbitron text-[11px] font-bold text-white">{signals.toLocaleString()}</span>
-          </div>
-          <div className="rounded-lg p-2 flex flex-col justify-between h-13 bg-black/20 border border-white/5">
-            <span className="font-mono text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">EXECUTED TRADES</span>
-            <span className="font-orbitron text-[11px] font-bold text-white">{settled.toLocaleString()}</span>
-          </div>
-        </div>
-
-        {/* ERC-8004 Identity */}
-        <div className="rounded-lg p-2.5 flex items-center justify-between bg-black/20 border border-white/5 text-[8px] font-mono mt-1">
-          <span className="text-[var(--text-muted)] font-bold">ERC-8004 IDENTITY</span>
-          <span className="text-[var(--cyan)] font-extrabold tracking-wider">
-            {identity?.nft_address ? truncateAddr(identity.nft_address) : '0xIdentity...B123'}
-          </span>
+          <motion.p
+            key={statusPhrase}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="font-mono text-[8.5px] truncate"
+            style={{ color: 'var(--cyan)' }}
+          >
+            {statusPhrase}
+          </motion.p>
         </div>
       </div>
 
-      {/* ── NEURAL SUB-NETWORKS ─────────────────────────────────────── */}
-      <div className="p-3 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
-        <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
-          NEURAL SUB-NETWORKS
+      {/* ── Core Statistics Grid ──────────────────────────────────────── */}
+      <div className="p-4 shrink-0 grid grid-cols-2 gap-2" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="p-2 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] flex flex-col">
+          <span className="font-mono text-[7px] text-[var(--text-muted)]">WIN RATE</span>
+          <span className="font-orbitron text-[11px] font-bold text-[var(--purple)] mt-1">{winRate}%</span>
         </div>
-        <div className="space-y-2">
+        <div className="p-2 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] flex flex-col">
+          <span className="font-mono text-[7px] text-[var(--text-muted)]">TOTAL PNL</span>
+          <span className="font-orbitron text-[11px] font-bold text-[var(--green)] mt-1">+{formatUSD(totalPnL)}</span>
+        </div>
+        <div className="p-2 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] flex flex-col">
+          <span className="font-mono text-[7px] text-[var(--text-muted)]">SIGNALS GENERATED</span>
+          <span className="font-orbitron text-[11px] font-bold text-white mt-1">{signals}</span>
+        </div>
+        <div className="p-2 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] flex flex-col">
+          <span className="font-mono text-[7px] text-[var(--text-muted)]">EXECUTED TRADES</span>
+          <span className="font-orbitron text-[11px] font-bold text-white mt-1">{settled}</span>
+        </div>
+      </div>
+
+      {/* ERC-8004 Identity */}
+      <div className="p-4 shrink-0 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="flex items-center gap-1.5">
+          <Shield size={11} className="text-[var(--purple)]" />
+          <span className="font-mono text-[8px] text-[var(--text-muted)] tracking-wider">ERC-8004 IDENTITY</span>
+        </div>
+        <span className="font-mono text-[9px] font-bold text-[var(--purple)] bg-[var(--purple-dim)] px-2 py-0.5 rounded border border-[rgba(124,58,237,0.2)]">
+          {identity?.nft_address ? truncateAddr(identity.nft_address) : '0xIdentity...B123'}
+        </span>
+      </div>
+
+      {/* ── Neural Sub-Networks ────────────────────────────────────────── */}
+      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="flex items-center gap-1.5 mb-2.5">
+          <Brain size={11} className="text-[var(--cyan)]" />
+          <span className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--cyan)]">NEURAL SUB-NETWORKS</span>
+        </div>
+        <div className="space-y-1.5">
           {[
-            { name: 'MarketFlow_AI_01', active: true },
-            { name: 'Volume_Sentry_03', active: true },
-          ].map((sub, i) => (
-            <div key={i} className="flex items-center justify-between text-[9px] font-mono">
-              <span className="text-[var(--text-primary)]">{sub.name}</span>
-              <div className="flex items-center gap-1">
-                <span className="text-[var(--text-muted)] mr-1">Status</span>
-                <div className="flex gap-0.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--green)] shadow-[0_0_4px_var(--green)]" />
-                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--green)] shadow-[0_0_4px_var(--green)]" />
-                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--green)] shadow-[0_0_4px_var(--green)]" />
+            { name: 'MarketFlow_AI_01', count: 3 },
+            { name: 'Volume_Sentry_03', count: 3 },
+          ].map((n, idx) => (
+            <div key={idx} className="flex items-center justify-between py-1">
+              <span className="font-mono text-[9px] text-[var(--text-primary)]">{n.name}</span>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-[8px] text-[var(--text-muted)]">Status</span>
+                <div className="flex gap-1">
+                  {Array.from({ length: n.count }).map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="w-1.5 h-1.5 rounded-full bg-[var(--green)]"
+                      style={{ boxShadow: '0 0 5px var(--green)' }}
+                      animate={{ opacity: [0.4, 1, 0.4] }}
+                      transition={{ duration: 1.5, delay: i * 0.3, repeat: Infinity }}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
@@ -163,99 +206,129 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
         </div>
       </div>
 
-      {/* ── PORTFOLIO DISTRIBUTION ──────────────────────────────────── */}
-      <div className="p-3 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
-        <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
+      {/* ── Portfolio Distribution (Circles) ───────────────────────────── */}
+      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+        <span className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--purple)] block mb-3">
           PORTFOLIO DISTRIBUTION
-        </div>
-        <div className="flex items-center justify-around">
-          <PortfolioCircle token="MNT" pct={48} color="var(--cyan)" />
-          <PortfolioCircle token="ETH" pct={32} color="var(--purple)" />
-          <PortfolioCircle token="USD" pct={20} color="#F59E0B" centerText="$" />
+        </span>
+        <div className="flex justify-around items-center py-1">
+          {[
+            { token: 'MNT', color: 'var(--cyan)' },
+            { token: 'ETH', color: 'var(--purple)' },
+            { token: '$', color: 'var(--amber)' },
+          ].map((t, idx) => (
+            <div key={idx} className="flex flex-col items-center gap-1.5">
+              <div
+                className="w-11 h-11 rounded-full flex items-center justify-center font-orbitron text-[10px] font-bold text-white relative"
+                style={{
+                  background: 'var(--bg-elevated)',
+                  border: `2.5px solid ${t.color}`,
+                  boxShadow: `0 0 12px ${t.color}25`
+                }}
+              >
+                <div className="absolute inset-0 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.05)' }} />
+                {t.token}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* ── RISK ASSESSMENT MATRIX ──────────────────────────────────── */}
-      <div className="p-3 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
-        <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
+      {/* ── Risk Assessment Heatmap ────────────────────────────────────── */}
+      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+        <span className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--red)] block mb-2.5">
           RISK ASSESSMENT MATRIX
-        </div>
+        </span>
         <div className="space-y-1">
-          <RiskMatrixRow label="MNT" score={9} />
-          <RiskMatrixRow label="ETH" score={3} />
-          <RiskMatrixRow label="SIGN" score={5} />
-          <RiskMatrixRow label="LOG" score={2} />
+          {renderRiskRow('MKT', 8)}
+          {renderRiskRow('ETH', 6)}
+          {renderRiskRow('SIG', 9)}
+          {renderRiskRow('LIQ', 10)}
         </div>
       </div>
 
-      {/* ── CURRENT AI POSITION ─────────────────────────────────────── */}
-      <div className="p-3 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
-        <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
-          CURRENT AI POSITION
+      {/* ── Current AI Position ────────────────────────────────────────── */}
+      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="flex items-center gap-1.5 mb-2.5">
+          <Activity size={11} className="text-[var(--green)]" />
+          <span className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--green)]">CURRENT AI POSITION</span>
         </div>
-        
-        {/* Table header */}
-        <div className="grid grid-cols-[1.2fr_1fr_1fr] text-[8px] font-mono text-[var(--text-muted)] font-bold pb-1.5 border-b border-[rgba(255,255,255,0.03)] mb-2">
-          <span>WALLET ADDRESS</span>
-          <span>OPEN TRADES</span>
-          <span className="text-right">STATUS</span>
-        </div>
-
-        {/* Table rows */}
-        <div className="space-y-2">
-          {[
-            { addr: '0xWhale...1234538', pair: 'MNT/USDT', pct: 95 },
-            { addr: '0xWhale...1234537', pair: 'MNT/USDT', pct: 55 }
-          ].map((pos, i) => (
-            <div key={i} className="grid grid-cols-[1.2fr_1fr_1fr] items-center text-[9px] font-mono">
-              <span className="text-[var(--text-primary)]">{pos.addr}</span>
-              <span className="text-[var(--text-muted)]">{pos.pair}</span>
-              <div className="flex flex-col items-end">
-                <span className="text-[var(--green)] font-bold mb-0.5">{pos.pct}%</span>
-                <div className="w-12 h-1 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
-                  <div className="h-full bg-[var(--green)] rounded-full" style={{ width: `${pos.pct}%` }} />
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="w-full overflow-hidden rounded-lg border border-[rgba(255,255,255,0.03)] bg-[rgba(255,255,255,0.01)]">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                <th className="font-mono text-[7px] text-[var(--text-muted)] p-2 uppercase">Wallet Address</th>
+                <th className="font-mono text-[7px] text-[var(--text-muted)] p-2 uppercase">Open Trades</th>
+                <th className="font-mono text-[7px] text-[var(--text-muted)] p-2 uppercase text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                <td className="font-mono text-[8.5px] p-2 text-white font-medium">0xWhale...1234538</td>
+                <td className="font-mono text-[8.5px] p-2 text-[var(--cyan)]">mETH/USDC</td>
+                <td className="font-mono text-[8.5px] p-2 text-[var(--green)] text-right font-bold">95%</td>
+              </tr>
+              <tr>
+                <td className="font-mono text-[8.5px] p-2 text-white font-medium">0xWhale...1234537</td>
+                <td className="font-mono text-[8.5px] p-2 text-[var(--cyan)]">mETH/USDC</td>
+                <td className="font-mono text-[8.5px] p-2 text-[var(--amber)] text-right font-bold">55%</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      {/* ── ACTIVE WHALE TARGETS ────────────────────────────────────── */}
-      <div className="p-3 shrink-0">
-        <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
-          ACTIVE WHALE TARGETS
+      {/* ── Active Whale Targets ───────────────────────────────────────── */}
+      <div className="p-4 shrink-0 mb-4">
+        <div className="flex items-center gap-1.5 mb-2.5">
+          <Target size={11} className="text-[var(--red)]" />
+          <span className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--red)]">ACTIVE WHALE TARGETS</span>
         </div>
-
-        {/* Table header */}
-        <div className="grid grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr] text-[8px] font-mono text-[var(--text-muted)] font-bold pb-1.5 border-b border-[rgba(255,255,255,0.03)] mb-2">
-          <span>ADDRESS</span>
-          <span>TRANSFER</span>
-          <span>TOKEN</span>
-          <span className="text-right">PRIORITY</span>
-        </div>
-
-        {/* Table rows */}
-        <div className="space-y-2">
-          {[
-            { addr: '0xWhale...12344NN', amount: '+6 GRT', token: 'MNT', p: '▲ 9', cls: 'badge-priority-high' },
-            { addr: '0xWhale...1234022', amount: '+1 GRT', token: 'AGNI', p: '▼ 5', cls: 'badge-priority-medium' },
-            { addr: '0xWhale...1234028', amount: '+5 BRT', token: 'AGNI', p: '▼ 3', cls: 'badge-priority-low' }
-          ].map((target, i) => (
-            <div key={i} className="grid grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr] items-center text-[9px] font-mono">
-              <span className="text-[var(--text-primary)]">{target.addr}</span>
-              <span className="text-[var(--green)] font-bold">{target.amount}</span>
-              <span className="text-[var(--text-muted)]">{target.token}</span>
-              <div className="flex justify-end">
-                <span className={`text-[8.5px] font-black px-2 py-0.5 rounded ${target.cls} flex items-center justify-center min-w-9`}>
-                  {target.p}
-                </span>
-              </div>
-            </div>
-          ))}
+        <div className="w-full overflow-hidden rounded-lg border border-[rgba(255,255,255,0.03)] bg-[rgba(255,255,255,0.01)]">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                <th className="font-mono text-[7px] text-[var(--text-muted)] p-2 uppercase">Address</th>
+                <th className="font-mono text-[7px] text-[var(--text-muted)] p-2 uppercase">Transfer</th>
+                <th className="font-mono text-[7px] text-[var(--text-muted)] p-2 uppercase">Token</th>
+                <th className="font-mono text-[7px] text-[var(--text-muted)] p-2 uppercase text-right">Priority</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                <td className="font-mono text-[8.5px] p-2 text-white font-medium">0xWhale...1234088</td>
+                <td className="font-mono text-[8.5px] p-2 text-[var(--cyan)]">+6 GRT</td>
+                <td className="font-mono text-[8.5px] p-2 text-white">MNT</td>
+                <td className="p-2 text-right">
+                  <span className="font-mono text-[7.5px] font-bold bg-[rgba(255,59,92,0.15)] text-[var(--red)] border border-[rgba(255,59,92,0.3)] px-1.5 py-0.5 rounded">
+                    HIGH
+                  </span>
+                </td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                <td className="font-mono text-[8.5px] p-2 text-white font-medium">0xWhale...1234022</td>
+                <td className="font-mono text-[8.5px] p-2 text-[var(--cyan)]">+1 GRT</td>
+                <td className="font-mono text-[8.5px] p-2 text-white">AGNI</td>
+                <td className="p-2 text-right">
+                  <span className="font-mono text-[7.5px] font-bold bg-[rgba(245,158,11,0.15)] text-[var(--amber)] border border-[rgba(245,158,11,0.3)] px-1.5 py-0.5 rounded">
+                    MED
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td className="font-mono text-[8.5px] p-2 text-white font-medium">0xWhale...1234028</td>
+                <td className="font-mono text-[8.5px] p-2 text-[var(--cyan)]">+5 GRT</td>
+                <td className="font-mono text-[8.5px] p-2 text-white">AGNI</td>
+                <td className="p-2 text-right">
+                  <span className="font-mono text-[7.5px] font-bold bg-[rgba(59,130,246,0.15)] text-[var(--blue)] border border-[rgba(59,130,246,0.3)] px-1.5 py-0.5 rounded">
+                    LOW
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-
     </div>
   )
 }
