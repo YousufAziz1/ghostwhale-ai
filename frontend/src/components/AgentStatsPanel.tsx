@@ -75,15 +75,15 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
     <div className="flex flex-col h-full overflow-y-auto gap-0 bg-[var(--bg-surface)] font-sans select-none scrollbar-thin">
       
       {/* ── DIAGNOSTICS PANEL ────────────────────────────────────────── */}
-      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+      <div className="p-3 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3 uppercase">
           DIAGNOSTICS PANEL
         </div>
 
         {/* AI status and reputation boxes side-by-side */}
-        <div className="grid grid-cols-2 gap-3 mb-3">
+        <div className="grid grid-cols-2 gap-2 mb-2">
           <div 
-            className="rounded-lg p-2.5 flex flex-col justify-between h-[52px] bg-black/20"
+            className="rounded-lg p-2 flex flex-col justify-between h-[46px] bg-black/20"
             style={{
               border: '1px solid rgba(255, 59, 92, 0.45)',
               boxShadow: '0 0 12px rgba(255, 59, 92, 0.08)'
@@ -94,7 +94,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
           </div>
 
           <div 
-            className="rounded-lg p-2.5 flex flex-col justify-between h-[52px] bg-black/20"
+            className="rounded-lg p-2 flex flex-col justify-between h-[46px] bg-black/20"
             style={{
               border: '1px solid rgba(0, 245, 255, 0.45)',
               boxShadow: '0 0 12px rgba(0, 245, 255, 0.08)'
@@ -108,22 +108,22 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
         </div>
 
         {/* Stats 2-column grid cards */}
-        <div className="grid grid-cols-2 gap-3 mb-3">
-          <div className="rounded-lg p-2.5 flex flex-col justify-between h-13 bg-black/20 border border-[rgba(0,245,255,0.15)] shadow-[0_0_10px_rgba(0,245,255,0.03)]">
+        <div className="grid grid-cols-2 gap-2 mb-2">
+          <div className="rounded-lg p-2 flex flex-col justify-between h-13 bg-black/20 border border-[rgba(0,245,255,0.15)] shadow-[0_0_10px_rgba(0,245,255,0.03)]">
             <span className="font-mono text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">WIN RATE</span>
             <span className="font-orbitron text-[11px] font-bold text-white">{winRate.toFixed(1)}%</span>
           </div>
-          <div className="rounded-lg p-2.5 flex flex-col justify-between h-13 bg-black/20 border border-[rgba(16,185,129,0.3)] shadow-[0_0_10px_rgba(16,185,129,0.03)]">
+          <div className="rounded-lg p-2 flex flex-col justify-between h-13 bg-black/20 border border-[rgba(16,185,129,0.3)] shadow-[0_0_10px_rgba(16,185,129,0.03)]">
             <span className="font-mono text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">TOTAL PNL</span>
             <span className={`font-orbitron text-[11px] font-bold ${totalPnL >= 0 ? 'text-[var(--green)]' : 'text-[var(--red)]'}`}>
-              {totalPnL >= 0 ? '+' : ''}{formatUSD(totalPnL)} <span className="text-[7.5px] text-[var(--text-muted)]">(70)</span>
+              {totalPnL >= 0 ? '+' : ''}{formatUSD(totalPnL)}
             </span>
           </div>
-          <div className="rounded-lg p-2.5 flex flex-col justify-between h-13 bg-black/20 border border-white/5">
+          <div className="rounded-lg p-2 flex flex-col justify-between h-13 bg-black/20 border border-white/5">
             <span className="font-mono text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">SIGNALS GENERATED</span>
             <span className="font-orbitron text-[11px] font-bold text-white">{signals.toLocaleString()}</span>
           </div>
-          <div className="rounded-lg p-2.5 flex flex-col justify-between h-13 bg-black/20 border border-white/5">
+          <div className="rounded-lg p-2 flex flex-col justify-between h-13 bg-black/20 border border-white/5">
             <span className="font-mono text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">EXECUTED TRADES</span>
             <span className="font-orbitron text-[11px] font-bold text-white">{settled.toLocaleString()}</span>
           </div>
@@ -139,7 +139,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── NEURAL SUB-NETWORKS ─────────────────────────────────────── */}
-      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+      <div className="p-3 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
           NEURAL SUB-NETWORKS
         </div>
@@ -164,7 +164,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── PORTFOLIO DISTRIBUTION ──────────────────────────────────── */}
-      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+      <div className="p-3 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
           PORTFOLIO DISTRIBUTION
         </div>
@@ -176,7 +176,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── RISK ASSESSMENT MATRIX ──────────────────────────────────── */}
-      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+      <div className="p-3 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
           RISK ASSESSMENT MATRIX
         </div>
@@ -189,7 +189,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── CURRENT AI POSITION ─────────────────────────────────────── */}
-      <div className="p-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+      <div className="p-3 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
           CURRENT AI POSITION
         </div>

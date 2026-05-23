@@ -436,7 +436,7 @@ export default function App() {
         </div>
 
         {/* ── Main 3-column grid ──────────────────────────────────────────── */}
-        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[290px_1fr_310px] gap-5 p-5 overflow-y-auto lg:overflow-hidden">
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[272px_1fr_290px] gap-3 p-3 overflow-y-auto lg:overflow-hidden">
           {/* ── LEFT: Agent stats ──────────────────────────────────────── */}
           <aside className="hud-panel flex flex-col rounded-xl bg-[var(--bg-surface)] panel-shadow-cyan panel-glare h-[600px] lg:h-full overflow-hidden">
             <span className="hud-corner hud-corner-tl" />
@@ -472,7 +472,7 @@ export default function App() {
             <div
               className="shrink-0 relative flex flex-col items-center justify-center overflow-hidden"
               style={{
-                height: '88px',
+                height: '60px',
                 background: alertEvent
                   ? 'linear-gradient(180deg, rgba(255,59,92,0.06) 0%, rgba(255,59,92,0.12) 50%, rgba(255,59,92,0.06) 100%)'
                   : 'linear-gradient(180deg, transparent 0%, rgba(0,245,255,0.04) 50%, transparent 100%)',
@@ -504,11 +504,11 @@ export default function App() {
                     </div>
                     <div
                       className="hero-whale-text font-orbitron font-black tracking-[0.25em] text-[var(--red)] select-none"
-                      style={{ fontSize: 'clamp(16px, 2.2vw, 28px)' }}
+                      style={{ fontSize: 'clamp(13px, 1.6vw, 22px)' }}
                     >
                       ⚠&nbsp;&nbsp;HIGH VALUE WHALE DETECTED
                     </div>
-                    <div className="flex items-center gap-4 font-mono text-[10px] text-red-300 font-bold tracking-wider">
+                    <div className="flex items-center gap-3 font-mono text-[9px] text-red-300 font-bold tracking-wider">
                       <span>TOKEN: <span className="text-white">{alertEvent.token}</span></span>
                       <span className="text-red-600">|</span>
                       <span>VALUE: <span className="text-white">{formatUSD(alertEvent.amount_usd)}</span></span>
@@ -558,37 +558,37 @@ export default function App() {
             <span className="hud-corner hud-corner-br" />
 
             {/* 1. AI Thought Stream */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '20%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden" style={{ height: '22%', borderBottom: '1px solid var(--border)' }}>
               <ThoughtStream logs={logs} />
             </div>
 
             {/* 2. Neural Reasoning Logs */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '12%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden" style={{ height: '10%', borderBottom: '1px solid var(--border)' }}>
               <NeuralReasoningLogs />
             </div>
 
             {/* 3. Trade Execution Feed */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '13%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden" style={{ height: '12%', borderBottom: '1px solid var(--border)' }}>
               <TradeExecutionFeed />
             </div>
 
             {/* 4. Smart Money Analysis */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '11%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden" style={{ height: '10%', borderBottom: '1px solid var(--border)' }}>
               <SmartMoneyAnalysis />
             </div>
 
             {/* 5. AI Signal Generation */}
-            <div className="shrink-0 overflow-hidden flex flex-col justify-center bg-[var(--bg-surface)] px-4 py-3" style={{ height: '8%', borderBottom: '1px solid var(--border)' }}>
-              <div className="font-orbitron text-[10px] font-bold tracking-widest text-[var(--cyan)] mb-1 select-none">
+            <div className="shrink-0 overflow-hidden flex flex-col justify-center bg-[var(--bg-surface)] px-3 py-2" style={{ height: '7%', borderBottom: '1px solid var(--border)' }}>
+              <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--cyan)] mb-0.5 select-none">
                 AI SIGNAL GENERATION
               </div>
-              <p className="font-mono text-[9px] text-slate-400 leading-normal select-none">
-                Realtime signals generated from mempool scans. Execution latency: 15ms.
+              <p className="font-mono text-[8px] text-slate-500 leading-normal select-none">
+                Realtime signals from mempool scans. Latency: 15ms.
               </p>
             </div>
 
             {/* 6. Mock P&L Chart */}
-            <div className="shrink-0 overflow-hidden relative" style={{ height: '20%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden relative" style={{ height: '21%', borderBottom: '1px solid var(--border)' }}>
               <PnLChart data={state.pnlSeries} loading={false} />
             </div>
 

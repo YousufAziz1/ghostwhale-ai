@@ -104,7 +104,7 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
         transform: visible ? 'translate3d(0, 0, 0) scale(1)' : 'translate3d(0, -10px, 0) scale(0.98)',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
-      className={`whale-card-custom relative flex flex-col justify-between w-full h-[195px] font-mono select-none cursor-pointer gpu-accelerated p-4 ${cardBorderClass}`}
+      className={`whale-card-custom relative flex flex-col justify-between w-full h-[170px] font-mono select-none cursor-pointer gpu-accelerated p-3 ${cardBorderClass}`}
     >
       {/* Holographic Overlays */}
       <div className="holo-reflection" />
@@ -254,7 +254,7 @@ export default function WhaleFeed({ events, loading, onSelectEvent }: WhaleFeedP
       {/* Grid body */}
       <div 
         ref={containerRef} 
-        className="feed-scroll flex-1 p-3 grid grid-cols-2 lg:grid-cols-3 gap-3 overflow-y-auto auto-rows-max items-start scrollbar-thin"
+        className="feed-scroll flex-1 p-2.5 grid grid-cols-2 lg:grid-cols-4 gap-2.5 overflow-y-auto auto-rows-max items-start scrollbar-thin"
       >
         {events.length === 0 ? (
           <div className="col-span-full h-full flex items-center justify-center">
