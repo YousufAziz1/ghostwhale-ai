@@ -338,7 +338,7 @@ export default function App() {
   const latestBlock = state.rpcStatus?.latest_block
 
   return (
-    <div className="relative min-h-screen lg:h-screen lg:overflow-hidden" style={{ background: 'var(--bg-base)' }}>
+    <div className="relative min-h-screen lg:h-screen lg:overflow-hidden flex justify-center w-full" style={{ background: 'var(--bg-base)' }}>
       {/* ── Ambient layers ─────────────────────────────────────────────── */}
       <div className="bg-particles" />
       <div className="bg-grid" style={{ opacity: 0.6 }} />
@@ -359,7 +359,7 @@ export default function App() {
       </AnimatePresence>
 
       {/* ── Layout ──────────────────────────────────────────────────────── */}
-      <div className="relative z-10 flex flex-col min-h-screen lg:h-screen lg:overflow-hidden max-w-[1550px] mx-auto w-full px-4 lg:px-6">
+      <div className="relative z-10 flex flex-col min-h-screen lg:h-screen lg:overflow-hidden max-w-[1550px] w-full px-4 lg:px-6">
 
         {/* ── Top Header ─────────────────────────────────────────────────── */}
         <div className="shrink-0 flex items-center w-full" style={{ borderBottom: '1px solid var(--border)' }}>
