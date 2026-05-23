@@ -20,7 +20,7 @@ function ActionLabel({ action }: { action: WhaleEvent['action'] }) {
   }
   const { label, color } = map[action] ?? { label: action.toUpperCase(), color: 'var(--text-muted)' }
   return (
-    <span className="font-mono text-[8px] font-extrabold tracking-widest px-1.5 py-0.5 rounded bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] shrink-0" style={{ color }}>
+    <span className="font-mono text-[10.5px] font-black tracking-widest px-2 py-0.5 rounded bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] shrink-0" style={{ color }}>
       {label}
     </span>
   )
@@ -73,11 +73,11 @@ function WhaleCard({ event, onSelectEvent }: { event: WhaleEvent; onSelectEvent?
         boxShadow: cardShadow,
         background: 'rgba(8,11,26,0.95)'
       }}
-      className="rounded-xl p-3 flex gap-3 cursor-pointer group shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:border-[rgba(0,245,255,0.3)] hover:-translate-y-0.5 duration-200"
+      className="rounded-xl p-3.5 flex gap-3.5 cursor-pointer group shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:border-[rgba(0,245,255,0.3)] hover:-translate-y-0.5 duration-200"
     >
       {/* Circle Icon left */}
       <div 
-        className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-orbitron font-bold text-xs select-none relative"
+        className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-orbitron font-black text-[13px] select-none relative"
         style={{
           background: 'var(--bg-elevated)',
           border: `2px solid ${accentColor}`,
@@ -90,22 +90,22 @@ function WhaleCard({ event, onSelectEvent }: { event: WhaleEvent; onSelectEvent?
       </div>
 
       {/* Content right */}
-      <div className="flex-1 flex flex-col gap-1 min-w-0">
+      <div className="flex-1 flex flex-col gap-1.5 min-w-0">
         {/* Row 1: Token Symbol, Action badge & transfer details */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 min-w-0">
-            <span className="font-orbitron font-extrabold text-[11px] text-white tracking-wider">{event.token}</span>
+            <span className="font-orbitron font-black text-[13.5px] text-white tracking-wider">{event.token}</span>
             <ActionLabel action={event.action} />
           </div>
-          <span className="font-mono text-[8px] text-[var(--text-muted)] shrink-0">{timeAgo(event.timestamp)}</span>
+          <span className="font-mono text-[10.5px] font-semibold text-[var(--text-muted)] shrink-0">{timeAgo(event.timestamp)}</span>
         </div>
 
         {/* Row 2: Value and links */}
         <div className="flex items-center justify-between gap-2">
-          <span className="font-orbitron text-xs font-black text-white leading-tight">
+          <span className="font-orbitron text-[14.5px] font-black text-white leading-tight">
             {formatUSD(event.amount_usd)}
           </span>
-          <div className="flex items-center gap-1 font-mono text-[8.5px] font-bold text-[var(--text-muted)]">
+          <div className="flex items-center gap-1 font-mono text-[11px] font-bold text-[var(--text-muted)]">
             <a
               href={mantleExplorerTx(event.tx_hash)}
               target="_blank"
@@ -114,28 +114,28 @@ function WhaleCard({ event, onSelectEvent }: { event: WhaleEvent; onSelectEvent?
               onClick={e => e.stopPropagation()}
             >
               {truncateAddr(event.from_wallet)}
-              <ExternalLink size={8} />
+              <ExternalLink size={10} />
             </a>
           </div>
         </div>
 
         {/* Row 3: Confidence & Smart Money Tier */}
-        <div className="flex items-center justify-between gap-1.5 py-0.5 border-t border-[rgba(255,255,255,0.03)] mt-0.5">
+        <div className="flex items-center justify-between gap-1.5 py-1 border-t border-[rgba(255,255,255,0.03)] mt-0.5">
           <div className="flex items-center gap-1">
-            <span className="font-mono text-[7px] text-[var(--text-muted)]">CONFIDENCE:</span>
-            <span className="font-mono text-[8px] font-bold text-[var(--cyan)]">{Math.round(event.wallet_score * 100)}%</span>
+            <span className="font-mono text-[9px] font-bold text-[var(--text-muted)]">CONFIDENCE:</span>
+            <span className="font-mono text-[11px] font-black text-[var(--cyan)]">{Math.round(event.wallet_score * 100)}%</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="font-mono text-[7px] text-[var(--text-muted)]">SMART MONEY:</span>
-            <span className="font-mono text-[8px] font-bold text-[var(--green)]">
+            <span className="font-mono text-[9px] font-bold text-[var(--text-muted)]">SMART MONEY:</span>
+            <span className="font-mono text-[11px] font-black text-[var(--green)]">
               {event.wallet_score >= 0.8 ? 'TIER 1' : event.wallet_score >= 0.65 ? 'TIER 2' : 'TIER 3'}
             </span>
           </div>
         </div>
 
         {/* Row 4: AI Reasoning text block */}
-        <p className="font-mono text-[8px] leading-relaxed text-[var(--text-muted)] border-t border-[rgba(255,255,255,0.03)] pt-1 mt-0.5 line-clamp-2 text-justify">
-          <span className="text-[var(--cyan)] font-extrabold">AI REASONING: </span>
+        <p className="font-mono text-[11px] leading-relaxed text-[var(--text-muted)] border-t border-[rgba(255,255,255,0.03)] pt-1 mt-0.5 line-clamp-2 text-justify">
+          <span className="text-[var(--cyan)] font-black">AI REASONING: </span>
           {aiReasoning}
         </p>
       </div>

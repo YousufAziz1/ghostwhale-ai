@@ -28,11 +28,11 @@ export default function NeuralReasoningLogs() {
   return (
     <div className="flex flex-col h-full bg-[var(--bg-surface)]">
       <div className="px-4 py-2 border-b border-[var(--border-subtle)] bg-black/30 shrink-0">
-        <span className="font-orbitron text-[9px] font-bold tracking-widest text-[#A78BFA]">
+        <span className="font-orbitron text-[12px] font-black tracking-widest text-[#A78BFA]">
           NEURAL REASONING LOGS
         </span>
       </div>
-      <div className="flex-1 p-3 overflow-hidden flex flex-col justify-around font-mono text-[9px] text-slate-400 select-none">
+      <div className="flex-1 p-3 overflow-hidden flex flex-col justify-around font-mono text-[12px] font-semibold text-slate-300 select-none">
         {logs.map((log, idx) => (
           <div key={idx} className="line-clamp-1 leading-normal">
             <span className="text-[var(--purple)] mr-1.5">•</span>

@@ -374,16 +374,16 @@ export default function App() {
           >
             {/* RPC Latency Pill */}
             <div 
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[rgba(16,185,129,0.3)] bg-[rgba(16,185,129,0.06)] font-mono text-[8px] font-bold"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[rgba(16,185,129,0.35)] bg-[rgba(16,185,129,0.06)] font-mono text-[11px] font-black"
               style={{ color: 'var(--green)' }}
             >
-              <span className="w-1 h-1 rounded-full bg-[var(--green)] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--green)] animate-pulse" />
               <span>LIVE {(Math.random() * 8 + 4).toFixed(0)}ms RPC</span>
             </div>
 
             {/* AI Confidence Pill */}
             <div 
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[rgba(0,245,255,0.3)] bg-[rgba(0,245,255,0.06)] font-mono text-[8px] font-extrabold text-[var(--cyan)]"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[rgba(0,245,255,0.35)] bg-[rgba(0,245,255,0.06)] font-mono text-[11px] font-black text-[var(--cyan)]"
             >
               <span>95% AI CONFIDENCE</span>
             </div>
@@ -396,12 +396,13 @@ export default function App() {
                   audio.playAlarm()
                   startDemo()
                 }}
-                className="font-orbitron text-[9px] font-black px-6 py-2 rounded-lg shrink-0 flex items-center gap-2"
+                className="font-orbitron text-[11px] font-black px-6 py-2 rounded-lg shrink-0 flex items-center gap-2"
                 style={{
                   background: 'linear-gradient(135deg, #00F5FF 0%, #3B82F6 100%)',
                   color: '#050816',
                   border: '1px solid rgba(0,245,255,0.7)',
-                  boxShadow: '0 0 15px rgba(0, 245, 255, 0.4)'
+                  boxShadow: '0 0 15px rgba(0, 245, 255, 0.4)',
+                  cursor: 'pointer'
                 }}
                 whileHover={{ scale: 1.03, boxShadow: '0 0 25px rgba(0, 245, 255, 0.7)' }}
                 whileTap={{ scale: 0.97 }}
@@ -427,7 +428,7 @@ export default function App() {
               >
                 <motion.span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--red)' }}
                   animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
-                <span className="font-orbitron text-[9px] font-black">
+                <span className="font-orbitron text-[11px] font-black">
                   SIMULATION ACTIVE
                 </span>
               </motion.button>
@@ -470,11 +471,11 @@ export default function App() {
               </div>
               
               {/* Clean Status Text Below Radar */}
-              <div className="shrink-0 flex flex-col items-center justify-center py-2 z-10 bg-[var(--bg-base)]">
-                <div className="font-orbitron text-[12px] font-bold tracking-[0.3em] text-[var(--cyan)] select-none">
+              <div className="shrink-0 flex flex-col items-center justify-center py-2.5 z-10 bg-[var(--bg-base)]">
+                <div className="font-orbitron text-[15px] font-black tracking-[0.3em] text-[var(--cyan)] select-none">
                   MONITORING MANTLE LIQUIDITY FLOWS
                 </div>
-                <div className="mt-1 flex items-center gap-2 font-mono text-[8.5px] text-[var(--text-muted)] tracking-wider select-none">
+                <div className="mt-1 flex items-center gap-2 font-mono text-[11px] font-bold text-[var(--text-muted)] tracking-wider select-none">
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan)] animate-pulse shadow-[0_0_8px_var(--cyan)]" />
                   SYSTEM ACTIVE // SCANNING 246,000+ WALLET SIGNATURES
                 </div>
@@ -515,11 +516,11 @@ export default function App() {
             </div>
 
             {/* 5. AI Signal Generation */}
-            <div className="shrink-0 overflow-hidden flex flex-col justify-center bg-[var(--bg-surface)] px-3 py-2" style={{ height: '7%', borderBottom: '1px solid var(--border)' }}>
-              <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--cyan)] mb-0.5 select-none">
+            <div className="shrink-0 overflow-hidden flex flex-col justify-center bg-[var(--bg-surface)] px-4 py-2" style={{ height: '7%', borderBottom: '1px solid var(--border)' }}>
+              <div className="font-orbitron text-[12px] font-black tracking-widest text-[var(--cyan)] mb-0.5 select-none">
                 AI SIGNAL GENERATION
               </div>
-              <p className="font-mono text-[8px] text-slate-500 leading-normal select-none">
+              <p className="font-mono text-[10.5px] text-slate-400 font-bold leading-normal select-none">
                 Realtime signals from mempool scans. Latency: 15ms.
               </p>
             </div>

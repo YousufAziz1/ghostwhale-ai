@@ -43,8 +43,8 @@
 
   /* Text */
   --text-primary:   #FFFFFF;
-  --text-muted:     #8A99AD;
-  --text-dim:       #4A5D78;
+  --text-muted:     #A0AEC0;
+  --text-dim:       #64748B;
 
   /* Borders */
   --border:         rgba(0, 245, 255, 0.16);
@@ -90,11 +90,11 @@ body::after {
     0deg,
     transparent,
     transparent 3px,
-    rgba(0, 245, 255, 0.012) 3px,
-    rgba(0, 245, 255, 0.012) 4px
+    rgba(0, 245, 255, 0.008) 3px,
+    rgba(0, 245, 255, 0.008) 4px
   );
   pointer-events: none;
-  z-index: 9998;
+  z-index: 2; /* Put behind layout z-10 to prevent blurring text */
 }
 
 /* ━━ Scrollbar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -607,9 +607,9 @@ body::after {
 .crt-noise-overlay {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle, transparent 55%, rgba(5, 8, 22, 0.45) 100%);
+  background: radial-gradient(circle, transparent 70%, rgba(5, 8, 22, 0.3) 100%);
   pointer-events: none;
-  z-index: 9999;
+  z-index: 3; /* Put behind layout z-10 */
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

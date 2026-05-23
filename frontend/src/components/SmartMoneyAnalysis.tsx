@@ -40,7 +40,7 @@ export default function SmartMoneyAnalysis() {
   return (
     <div className="flex flex-col h-full bg-[var(--bg-surface)]">
       <div className="px-4 py-2 border-b border-[var(--border-subtle)] bg-black/30 shrink-0">
-        <span className="font-orbitron text-[9px] font-bold tracking-widest text-[#A78BFA]">
+        <span className="font-orbitron text-[12px] font-black tracking-widest text-[#A78BFA]">
           SMART MONEY ANALYSIS
         </span>
       </div>
@@ -48,8 +48,8 @@ export default function SmartMoneyAnalysis() {
         {/* BTC */}
         <div className="flex-1 flex items-center justify-between gap-1">
           <div className="flex flex-col font-mono">
-            <span className="text-[7.5px] text-[var(--text-muted)] font-bold">BTC/USDT</span>
-            <span className="text-[9px] font-bold text-white">${Math.round(btcData[btcData.length - 1] * 1000).toLocaleString()}</span>
+            <span className="text-[10.5px] text-[var(--text-muted)] font-black">BTC/USDT</span>
+            <span className="text-[12px] font-black text-white">${Math.round(btcData[btcData.length - 1] * 1000).toLocaleString()}</span>
           </div>
           <Sparkline data={btcData} color="#00F5FF" gradId="btc-spark-grad" />
         </div>
@@ -58,8 +58,8 @@ export default function SmartMoneyAnalysis() {
         {/* ETH */}
         <div className="flex-1 flex items-center justify-between gap-1">
           <div className="flex flex-col font-mono">
-            <span className="text-[7.5px] text-[var(--text-muted)] font-bold">ETH/USDT</span>
-            <span className="text-[9px] font-bold text-white">${Math.round(ethData[ethData.length - 1] * 100).toLocaleString()}</span>
+            <span className="text-[10.5px] text-[var(--text-muted)] font-black">ETH/USDT</span>
+            <span className="text-[12px] font-black text-white">${Math.round(ethData[ethData.length - 1] * 100).toLocaleString()}</span>
           </div>
           <Sparkline data={ethData} color="#7C3AED" gradId="eth-spark-grad" />
         </div>

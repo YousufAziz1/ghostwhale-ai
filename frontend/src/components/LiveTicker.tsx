@@ -33,19 +33,19 @@ function TickerItem({ t }: { t: Ticker }) {
   const color = isUp ? 'var(--green)' : 'var(--red)'
   return (
     <div 
-      className="flex items-center gap-3 px-3 py-1 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] shrink-0 shadow-[inset_0_1px_1px_rgba(255,255,255,0.02)]"
-      style={{ minWidth: 155 }}
+      className="flex items-center gap-3 px-3 py-1.5 rounded-lg bg-[rgba(15,21,48,0.5)] border border-[rgba(0,245,255,0.22)] shrink-0 shadow-[0_0_12px_rgba(0,245,255,0.05),inset_0_1px_1px_rgba(255,255,255,0.05)] hover:border-[rgba(0,245,255,0.45)] hover:shadow-[0_0_20px_rgba(0,245,255,0.15)] transition-all duration-200"
+      style={{ minWidth: 165 }}
     >
       <div className="flex-1 flex flex-col gap-0.5">
         <div className="flex items-center justify-between">
-          <span className="font-mono text-[8px] font-bold tracking-wider text-[var(--text-muted)]">
+          <span className="font-mono text-[10.5px] font-bold tracking-wider text-[var(--text-muted)]">
             {t.symbol}
           </span>
-          <span className="font-mono text-[8px] font-bold" style={{ color }}>
+          <span className="font-mono text-[10.5px] font-bold" style={{ color }}>
             {isUp ? '+' : ''}{t.change.toFixed(1)}%
           </span>
         </div>
-        <span className="font-orbitron text-[10.5px] font-bold text-white leading-tight">
+        <span className="font-orbitron text-[13px] font-black text-white leading-tight">
           ${t.price.toLocaleString('en-US', { minimumFractionDigits: t.price < 1 ? 4 : 2, maximumFractionDigits: t.price < 1 ? 4 : 2 })}
         </span>
       </div>
@@ -77,47 +77,23 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
 
   return (
     <div
-      className="flex items-center h-12 w-full overflow-hidden"
+      className="flex items-center h-12 w-full overflow-hidden animate-in"
       style={{ background: 'var(--bg-surface)' }}
     >
       {/* Left Logo branding */}
       <div
-        className="flex items-center gap-2.5 px-4 shrink-0 h-full"
+        className="flex items-center gap-2.5 px-5 shrink-0 h-full"
         style={{ borderRight: '1px solid var(--border)', minWidth: 180 }}
       >
         <span className="text-xl">🐋</span>
-        <span className="font-orbitron text-[13px] font-bold tracking-widest text-gradient">
+        <span className="font-orbitron text-[15px] font-black tracking-widest text-gradient">
           GHOSTWHALE
         </span>
       </div>
 
       {/* Tickers list */}
-      <div className="hidden md:flex flex-1 items-center gap-2.5 px-4 overflow-hidden">
+      <div className="flex flex-1 items-center gap-3 px-4 overflow-x-auto overflow-y-hidden py-1 feed-scroll scrollbar-none">
         {tickers.map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
-      </div>
-
-      {/* Right RPC Info / Status indicators */}
-      <div
-        className="hidden sm:flex items-center gap-3 px-4 shrink-0 h-full"
-        style={{ borderLeft: '1px solid var(--border)' }}
-      >
-        {/* RPC Latency indicator */}
-        <div 
-          className="flex items-center gap-1.5 px-2 py-1 rounded bg-[rgba(16,185,129,0.06)] border border-[rgba(16,185,129,0.2)]"
-          style={{ boxShadow: '0 0 6px rgba(16,185,129,0.03)' }}
-        >
-          <Wifi size={10} className="text-[var(--green)]" />
-          <span className="font-mono text-[8px] text-[var(--text-primary)] font-bold uppercase tracking-wider">LIVE 12ms RPC</span>
-        </div>
-
-        {/* AI Confidence Status */}
-        <div 
-          className="flex items-center gap-1.5 px-2 py-1 rounded bg-[rgba(0,245,255,0.06)] border border-[rgba(0,245,255,0.2)]"
-          style={{ boxShadow: '0 0 6px rgba(0,245,255,0.03)' }}
-        >
-          <Activity size={10} className="text-[var(--cyan)]" />
-          <span className="font-mono text-[8px] text-[var(--cyan)] font-bold uppercase tracking-wider">95% AI CONFIDENCE</span>
-        </div>
       </div>
     </div>
   )

@@ -430,22 +430,22 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
       </svg>
 
       {/* Title Overlays */}
-      <div className="absolute top-2 left-3 flex flex-col gap-0.5 pointer-events-none select-none">
-        <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)]">
+      <div className="absolute top-3 left-4 flex flex-col gap-0.5 pointer-events-none select-none">
+        <div className="font-orbitron text-[12px] font-black tracking-widest text-[var(--text-muted)]">
           CENTER PANEL
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2 mt-0.5">
           <motion.div
-            className="w-1 h-1 rounded-full animate-pulse"
+            className="w-1.5 h-1.5 rounded-full animate-pulse"
             style={{ background: locked ? 'var(--red)' : 'var(--cyan)', boxShadow: `0 0 6px ${locked ? 'var(--red)' : 'var(--cyan)'}` }}
           />
-          <span className="font-orbitron text-[7px] font-bold tracking-widest" style={{ color: locked ? 'var(--red)' : 'rgba(0,245,255,0.5)' }}>
+          <span className="font-orbitron text-[10.5px] font-black tracking-widest" style={{ color: locked ? 'var(--red)' : 'rgba(0,245,255,0.7)' }}>
             {locked ? 'TARGET ACQUIRED' : 'AI ACTIVE SCANNING'}
           </span>
         </div>
       </div>
 
-      <div className="absolute top-2 right-3 font-mono text-[8px] text-[var(--text-muted)] pointer-events-none select-none">
+      <div className="absolute top-3 right-4 font-mono text-[11px] font-bold text-[var(--text-muted)] pointer-events-none select-none">
         WALLET ADDRESSES: SCANNING ACTIVE
       </div>
 
@@ -458,10 +458,10 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
             
             {/* Top alert bar */}
             <div className="flex justify-between items-center z-35 font-orbitron select-none">
-              <div className="flex items-center gap-2 text-[10px] font-black text-[var(--red)] blink-tag-red">
+              <div className="flex items-center gap-2 text-[12px] font-black text-[var(--red)] blink-tag-red">
                 <span>[!!] CRITICAL BLOCKCHAIN THREAT DETECTED [!!]</span>
               </div>
-              <span className="font-mono text-[8px] text-red-400 font-bold">LOCK_SIG: #{events[0]?.block_number || 72384192}</span>
+              <span className="font-mono text-[11px] text-red-400 font-bold">LOCK_SIG: #{events[0]?.block_number || 72384192}</span>
             </div>
             
             {/* Center massive alert text block */}
@@ -470,12 +470,12 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
               animate={{ scale: [0.95, 1, 0.98, 1], opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.4 }}
-              className="flex flex-col items-center justify-center z-35 py-3 border-y-2 border-red-500/40 bg-red-950/50 shadow-[0_0_50px_rgba(239,68,68,0.25)] select-none"
+              className="flex flex-col items-center justify-center z-35 py-4 border-y-2 border-red-500/40 bg-red-950/60 shadow-[0_0_60px_rgba(239,68,68,0.35)] select-none"
             >
-              <span className="font-orbitron font-black text-[13px] text-[var(--red)] tracking-[0.25em] drop-shadow-[0_0_10px_rgba(255,59,92,0.9)] animate-pulse">
-                ⚠ HIGH VALUE WHALE DETECTED
+              <span className="font-orbitron font-black text-[24px] text-[var(--red)] tracking-[0.25em] drop-shadow-[0_0_12px_rgba(255,59,92,0.95)] animate-pulse">
+                🚨 HIGH VALUE WHALE DETECTED
               </span>
-              <div className="flex gap-4 font-mono text-[8.5px] text-red-300 font-bold mt-1 tracking-wider">
+              <div className="flex gap-4 font-mono text-[12px] text-red-100 font-bold mt-2 tracking-wider">
                 <span>COIN: {events[0]?.token || 'MNT'}</span>
                 <span>|</span>
                 <span>VALUE: {formatUSD(events[0]?.amount_usd || 1250000)}</span>
@@ -485,7 +485,7 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
             </motion.div>
             
             {/* Bottom diagnostic telemetry */}
-            <div className="flex justify-between items-center z-35 font-mono text-[7.5px] text-red-400 font-semibold select-none">
+            <div className="flex justify-between items-center z-35 font-mono text-[10px] text-red-400 font-bold select-none">
               <span>ESTIMATED SLIPPAGE DAMPENING: ACTIVE</span>
               <span>LOCK ACCURACY: 98.42%</span>
             </div>

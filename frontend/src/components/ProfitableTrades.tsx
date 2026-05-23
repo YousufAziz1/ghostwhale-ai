@@ -20,13 +20,13 @@ export default function ProfitableTrades({ trades }: { trades: Trade[] }) {
     <div className="flex flex-col h-full overflow-hidden bg-[var(--bg-surface)]">
       {/* Panel Header */}
       <div className="px-4 py-2 border-b border-[var(--border-subtle)] bg-black/30 shrink-0">
-        <span className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--green)]">
+        <span className="font-orbitron text-[12px] font-black tracking-widest text-[var(--green)]">
           TOP PROFITABLE TRADES
         </span>
       </div>
 
       {/* Table header */}
-      <div className="grid grid-cols-[1.2fr_1fr_0.8fr_0.8fr] text-[8px] font-mono text-[var(--text-muted)] font-bold px-3 py-1.5 border-b border-[rgba(255,255,255,0.02)] select-none shrink-0">
+      <div className="grid grid-cols-[1.2fr_1fr_0.8fr_0.8fr] text-[10px] font-mono text-[var(--text-muted)] font-black px-3 py-1.5 border-b border-[rgba(255,255,255,0.02)] select-none shrink-0">
         <span>ADDRESS</span>
         <span>PAIR</span>
         <span>SIZE</span>
@@ -51,18 +51,18 @@ export default function ProfitableTrades({ trades }: { trades: Trade[] }) {
           return (
             <div 
               key={t.id} 
-              className="grid grid-cols-[1.2fr_1fr_0.8fr_0.8fr] items-center text-[9px] font-mono px-3 py-0.5 text-slate-400 select-none"
+              className="grid grid-cols-[1.2fr_1fr_0.8fr_0.8fr] items-center text-[11.5px] font-mono px-3 py-0.5 text-slate-300 select-none"
             >
-              <span className="truncate text-slate-500 font-bold">
+              <span className="truncate text-slate-400 font-bold">
                 {truncateAddr(t.tx_hash || '0xWhale' + t.id.toString())}
               </span>
-              <span className="text-[var(--text-primary)] font-bold">
+              <span className="text-[var(--text-primary)] font-black">
                 {t.token}/USDT
               </span>
-              <span className="text-slate-400 font-medium">
+              <span className="text-slate-300 font-medium">
                 {formattedSize}
               </span>
-              <span className="text-right font-extrabold text-[var(--green)]">
+              <span className="text-right font-black text-[var(--green)]">
                 +{pnlPct.toFixed(2)}%
               </span>
             </div>

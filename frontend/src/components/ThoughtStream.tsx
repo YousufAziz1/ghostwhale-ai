@@ -188,14 +188,14 @@ export default function ThoughtStream({ logs }: { logs: LogEntry[] }) {
               animate={{ rotate: 360 }}
               transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
             >
-              <Brain size={12} color="var(--purple)" />
+              <Brain size={13} color="var(--purple)" />
             </motion.div>
-            <span className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--purple)]">
+            <span className="font-orbitron text-[12px] font-black tracking-widest text-[var(--purple)]">
               AI THOUGHT STREAM
             </span>
           </div>
-          <div className="flex items-center gap-1.5 font-mono text-[8px] tracking-wider text-[var(--cyan)]">
-            <div className="live-dot" style={{ width: 4, height: 4, backgroundColor: 'var(--cyan)' }} />
+          <div className="flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-wider text-[var(--cyan)]">
+            <div className="live-dot" style={{ width: 5, height: 5, backgroundColor: 'var(--cyan)' }} />
             LIVE CONNECTED
           </div>
         </div>
@@ -205,7 +205,7 @@ export default function ThoughtStream({ logs }: { logs: LogEntry[] }) {
       </div>
 
       {/* Log body */}
-      <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-2 feed-scroll">
+      <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-2.5 feed-scroll">
         {logs.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center gap-4 text-center">
             <motion.div
@@ -215,14 +215,14 @@ export default function ThoughtStream({ logs }: { logs: LogEntry[] }) {
               <Brain size={32} color="rgba(124,58,237,0.4)" />
             </motion.div>
             <div className="space-y-1">
-              <p className="font-orbitron text-[10px]" style={{ color: 'rgba(124,58,237,0.6)' }}>
+              <p className="font-orbitron text-[12px] font-bold" style={{ color: 'rgba(124,58,237,0.6)' }}>
                 NEURAL NETWORK IDLE
               </p>
-              <p className="font-mono text-[9px]" style={{ color: 'var(--text-muted)' }}>
+              <p className="font-mono text-[11px]" style={{ color: 'var(--text-muted)' }}>
                 Press SIMULATION to activate AI
               </p>
             </div>
-            <div className="flex gap-1">
+            <div className="flex gap-1.5">
               {[0, 1, 2].map(i => (
                 <motion.div
                   key={i}
@@ -253,16 +253,16 @@ export default function ThoughtStream({ logs }: { logs: LogEntry[] }) {
                   }}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-[8px] font-bold" style={{ color }}>
+                    <span className="font-mono text-[11px] font-bold" style={{ color }}>
                       {prefix}
                     </span>
-                    <span className="font-mono text-[8px]" style={{ color: 'var(--text-muted)' }}>
+                    <span className="font-mono text-[10.5px]" style={{ color: 'var(--text-muted)' }}>
                       {log.time}
                     </span>
                   </div>
                   <div
-                    className="font-mono text-[10px] leading-relaxed data-flicker"
-                    style={{ color: isLast ? color : 'rgba(226,232,240,0.75)' }}
+                    className="font-mono text-[12.5px] leading-relaxed data-flicker"
+                    style={{ color: isLast ? color : 'rgba(226,232,240,0.85)' }}
                   >
                     {isLast ? <Typewriter text={log.text} speed={14} /> : log.text}
                   </div>
