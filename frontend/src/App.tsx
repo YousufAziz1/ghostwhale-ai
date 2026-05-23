@@ -487,34 +487,34 @@ export default function App() {
           </main>
 
           {/* ── RIGHT: Thought stream + Trades ────────────────────────── */}
-          <aside className="hud-panel flex flex-col rounded-xl bg-[var(--bg-surface)] panel-shadow-cyan h-[950px] lg:h-full overflow-hidden shrink-0">
+          <aside className="hud-panel flex flex-col rounded-xl bg-[var(--bg-surface)] panel-shadow-cyan h-[600px] lg:h-full overflow-y-auto feed-scroll shrink-0">
             <span className="hud-corner hud-corner-tl" />
             <span className="hud-corner hud-corner-tr" />
             <span className="hud-corner hud-corner-bl" />
             <span className="hud-corner hud-corner-br" />
 
             {/* 1. AI Thought Stream */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '22%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden" style={{ height: '250px', borderBottom: '1px solid var(--border)' }}>
               <ThoughtStream logs={logs} />
             </div>
 
             {/* 2. Neural Reasoning Logs */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '10%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden" style={{ height: '135px', borderBottom: '1px solid var(--border)' }}>
               <NeuralReasoningLogs />
             </div>
 
             {/* 3. Trade Execution Feed */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '12%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden" style={{ height: '150px', borderBottom: '1px solid var(--border)' }}>
               <TradeExecutionFeed />
             </div>
 
             {/* 4. Smart Money Analysis */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '10%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden" style={{ height: '110px', borderBottom: '1px solid var(--border)' }}>
               <SmartMoneyAnalysis />
             </div>
 
             {/* 5. AI Signal Generation */}
-            <div className="shrink-0 overflow-hidden flex flex-col justify-center bg-[var(--bg-surface)] px-4 py-2" style={{ height: '7%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden flex flex-col justify-center bg-[var(--bg-surface)] px-4 py-2.5" style={{ height: '80px', borderBottom: '1px solid var(--border)' }}>
               <div className="font-orbitron text-[12px] font-black tracking-widest text-[var(--cyan)] mb-0.5 select-none">
                 AI SIGNAL GENERATION
               </div>
@@ -524,12 +524,12 @@ export default function App() {
             </div>
 
             {/* 6. Mock P&L Chart */}
-            <div className="shrink-0 overflow-hidden relative" style={{ height: '21%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden relative" style={{ height: '190px', borderBottom: '1px solid var(--border)' }}>
               <PnLChart data={state.pnlSeries} loading={false} />
             </div>
 
             {/* 7. Top Profitable Trades */}
-            <div className="flex-1 min-h-0 overflow-hidden">
+            <div className="shrink-0 overflow-hidden" style={{ height: '185px' }}>
               <ProfitableTrades trades={state.trades} />
             </div>
           </aside>
