@@ -472,8 +472,8 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
               transition={{ duration: 0.4 }}
               className="flex flex-col items-center justify-center z-35 py-3 border-y-2 border-red-500/40 bg-red-950/50 shadow-[0_0_50px_rgba(239,68,68,0.25)] select-none"
             >
-              <span className="font-orbitron font-black text-[13px] text-white tracking-[0.35em] drop-shadow-[0_0_10px_rgba(255,59,92,0.9)] animate-pulse">
-                AUTONOMOUS TARGET LOCK ACQUIRED
+              <span className="font-orbitron font-black text-[13px] text-[var(--red)] tracking-[0.25em] drop-shadow-[0_0_10px_rgba(255,59,92,0.9)] animate-pulse">
+                ⚠ HIGH VALUE WHALE DETECTED
               </span>
               <div className="flex gap-4 font-mono text-[8.5px] text-red-300 font-bold mt-1 tracking-wider">
                 <span>COIN: {events[0]?.token || 'MNT'}</span>

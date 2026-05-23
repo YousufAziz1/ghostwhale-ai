@@ -222,7 +222,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── ACTIVE WHALE TARGETS ────────────────────────────────────── */}
-      <div className="p-4 shrink-0">
+      <div className="p-3 shrink-0">
         <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--text-muted)] mb-3">
           ACTIVE WHALE TARGETS
         </div>

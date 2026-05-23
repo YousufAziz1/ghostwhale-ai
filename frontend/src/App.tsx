@@ -451,7 +451,7 @@ export default function App() {
             />
           </aside>
 
-          {/* ── CENTER: AI Core + Hero Banner + Whale Feed ──────────────── */}
+          {/* ── CENTER: AI Core + Whale Feed ──────────────── */}
           <main className="hud-panel flex flex-col relative rounded-xl bg-[var(--bg-base)] panel-shadow-cyan min-h-[600px] lg:h-full overflow-hidden">
             <span className={`hud-corner hud-corner-tl ${alertEvent ? 'hud-corner-alert' : ''}`} />
             <span className={`hud-corner hud-corner-tr ${alertEvent ? 'hud-corner-alert' : ''}`} />
@@ -463,89 +463,26 @@ export default function App() {
             {/* Real TX confirmation popup */}
             <TxPopup trade={txPopupEvent} />
 
-            {/* AI Core Orb — top 40% */}
-            <div className="shrink-0 relative" style={{ height: '40%' }}>
-              <AICore active={isDemoMode} whaleCount={state.whaleEvents.length} events={state.whaleEvents} />
+            {/* AI Core Orb — top 45% */}
+            <div className="shrink-0 relative flex flex-col pt-4" style={{ height: '48%' }}>
+              <div className="flex-1 min-h-0 relative">
+                <AICore active={isDemoMode} whaleCount={state.whaleEvents.length} events={state.whaleEvents} />
+              </div>
+              
+              {/* Clean Status Text Below Radar */}
+              <div className="shrink-0 flex flex-col items-center justify-center py-2 z-10 bg-[var(--bg-base)]">
+                <div className="font-orbitron text-[12px] font-bold tracking-[0.3em] text-[var(--cyan)] select-none">
+                  MONITORING MANTLE LIQUIDITY FLOWS
+                </div>
+                <div className="mt-1 flex items-center gap-2 font-mono text-[8.5px] text-[var(--text-muted)] tracking-wider select-none">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan)] animate-pulse shadow-[0_0_8px_var(--cyan)]" />
+                  SYSTEM ACTIVE // SCANNING 246,000+ WALLET SIGNATURES
+                </div>
+              </div>
             </div>
 
-            {/* ── CINEMATIC HERO BANNER ──────────────────────────────────── */}
-            <div
-              className="shrink-0 relative flex flex-col items-center justify-center overflow-hidden"
-              style={{
-                height: '60px',
-                background: alertEvent
-                  ? 'linear-gradient(180deg, rgba(255,59,92,0.06) 0%, rgba(255,59,92,0.12) 50%, rgba(255,59,92,0.06) 100%)'
-                  : 'linear-gradient(180deg, transparent 0%, rgba(0,245,255,0.04) 50%, transparent 100%)',
-                borderTop: alertEvent ? '1px solid rgba(255,59,92,0.25)' : '1px solid rgba(0,245,255,0.12)',
-                borderBottom: alertEvent ? '1px solid rgba(255,59,92,0.25)' : '1px solid rgba(0,245,255,0.12)',
-              }}
-            >
-              {/* Scanning sweep line */}
-              <div
-                className="hero-scan-sweep absolute inset-x-0 h-px pointer-events-none"
-                style={{ background: alertEvent ? 'rgba(255,59,92,0.4)' : 'rgba(0,245,255,0.25)' }}
-              />
-
-              <AnimatePresence mode="wait">
-                {alertEvent ? (
-                  <motion.div
-                    key="whale-alert"
-                    initial={{ opacity: 0, scale: 0.85, y: 12 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.9, y: -8 }}
-                    transition={{ duration: 0.3 }}
-                    className="flex flex-col items-center gap-1.5 select-none"
-                  >
-                    {/* Warning bars */}
-                    <div className="flex gap-2 mb-0.5">
-                      {[...Array(5)].map((_, i) => (
-                        <div key={i} className="alert-bar h-1 rounded-full" style={{ width: 24 + i * 8, background: 'var(--red)', opacity: 0.7 - i * 0.1 }} />
-                      ))}
-                    </div>
-                    <div
-                      className="hero-whale-text font-orbitron font-black tracking-[0.25em] text-[var(--red)] select-none"
-                      style={{ fontSize: 'clamp(13px, 1.6vw, 22px)' }}
-                    >
-                      ⚠&nbsp;&nbsp;HIGH VALUE WHALE DETECTED
-                    </div>
-                    <div className="flex items-center gap-3 font-mono text-[9px] text-red-300 font-bold tracking-wider">
-                      <span>TOKEN: <span className="text-white">{alertEvent.token}</span></span>
-                      <span className="text-red-600">|</span>
-                      <span>VALUE: <span className="text-white">{formatUSD(alertEvent.amount_usd)}</span></span>
-                      <span className="text-red-600">|</span>
-                      <span>WALLET: <span className="text-white">{truncateAddr(alertEvent.from_wallet)}</span></span>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="scan-mode"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="flex flex-col items-center gap-2 select-none"
-                  >
-                    <div
-                      className="hero-scan-text font-orbitron font-bold tracking-[0.35em] text-[var(--cyan)] uppercase"
-                      style={{ fontSize: 'clamp(11px, 1.2vw, 15px)' }}
-                    >
-                      MONITORING MANTLE LIQUIDITY FLOWS
-                    </div>
-                    <div className="flex items-center gap-2 font-mono text-[9px] text-[var(--text-muted)] tracking-widest">
-                      <motion.span
-                        className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--cyan)]"
-                        animate={{ opacity: [0.3, 1, 0.3] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                      />
-                      SYSTEM ACTIVE&nbsp;//&nbsp;SCANNING 240,000+ WALLET SIGNATURES
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Whale Feed — remaining height */}
-            <div className="flex-1 min-h-0">
+            {/* Whale Feed Grid — bottom 52% */}
+            <div className="flex-1 min-h-0 overflow-hidden relative">
               <WhaleFeed events={state.whaleEvents} loading={false} onSelectEvent={(event) => setSelectedWhaleEvent(event)} />
             </div>
           </main>
