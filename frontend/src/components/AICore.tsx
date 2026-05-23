@@ -255,17 +255,59 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
           strokeWidth="1"
           style={{ filter: `drop-shadow(0 0 3px ${accentColor})` }} />
 
-        {/* Connection lines: node → center */}
+        {/* Connection lines: node → center (subtle) */}
         {nodePositions.map((pos, i) => (
           <motion.line key={i} x1={pos.x} y1={pos.y} x2={cx} y2={cy}
             stroke={ORBIT_NODES[i].color}
-            strokeWidth={active ? "1" : "0.5"}
-            strokeDasharray="4 8"
-            opacity={active ? "0.6" : "0.25"}
-            animate={active ? { strokeDashoffset: [0, -24] } : {}}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+            strokeWidth="0.5"
+            strokeDasharray="2 6"
+            opacity="0.3"
           />
         ))}
+
+        {/* Constellation Star Connection Lines (Neon Purple/Pink) */}
+        {active && (() => {
+          const starConnections = [
+            [0, 2], [2, 4], [4, 1], [1, 3], [3, 5], [5, 0]
+          ]
+          return starConnections.map(([from, to], idx) => {
+            const p1 = nodePositions[from]
+            const p2 = nodePositions[to]
+            if (!p1 || !p2) return null
+            return (
+              <motion.line
+                key={`const-${idx}`}
+                x1={p1.x}
+                y1={p1.y}
+                x2={p2.x}
+                y2={p2.y}
+                stroke="rgba(192, 99, 255, 0.7)"
+                strokeWidth="1.5"
+                style={{ filter: 'drop-shadow(0 0 5px rgba(192, 99, 255, 0.8))' }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0.4, 0.9, 0.4] }}
+                transition={{ duration: 2, delay: idx * 0.15, repeat: Infinity }}
+              />
+            )
+          })
+        })()}
+
+        {/* Decorative Radar labels */}
+        <g opacity="0.65">
+          {/* Top Right Label */}
+          <line x1={cx + maxR * 0.3} y1={cy - maxR * 0.32} x2={cx + maxR * 0.65} y2={cy - maxR * 0.32} stroke="rgba(0, 245, 255, 0.35)" strokeWidth="0.8" strokeDasharray="2 3" />
+          <circle cx={cx + maxR * 0.3} cy={cy - maxR * 0.32} r="2" fill="var(--cyan)" />
+          <text x={cx + maxR * 0.68} y={cy - maxR * 0.29} fill="rgba(0,245,255,0.85)" fontSize="6.5" fontFamily="JetBrains Mono" fontWeight="700">
+            WALLET ADDRESSS
+          </text>
+
+          {/* Bottom Right Label */}
+          <line x1={cx + maxR * 0.2} y1={cy + maxR * 0.42} x2={cx + maxR * 0.55} y2={cy + maxR * 0.42} stroke="rgba(0, 245, 255, 0.35)" strokeWidth="0.8" strokeDasharray="2 3" />
+          <circle cx={cx + maxR * 0.2} cy={cy + maxR * 0.42} r="2" fill="var(--cyan)" />
+          <text x={cx + maxR * 0.58} y={cy + maxR * 0.45} fill="rgba(0,245,255,0.85)" fontSize="6.5" fontFamily="JetBrains Mono" fontWeight="700">
+            VOLUME ADDRESS
+          </text>
+        </g>
 
         {/* Orbiting wallet nodes */}
         {nodePositions.map((pos, i) => {

@@ -98,39 +98,54 @@ function WhaleCard({ event }: { event: WhaleEvent }) {
               {event.token}
             </span>
           </div>
-          <span className="text-[7.5px] text-[var(--text-muted)] tracking-wider">
-            {timeAgo(event.timestamp)}
-          </span>
+          
+          {/* Confidence Mini Progress Bar */}
+          <div className="flex flex-col items-end gap-0.5">
+            <span className="text-[7px] text-[var(--text-muted)] tracking-wider">
+              {timeAgo(event.timestamp)}
+            </span>
+            <div className="w-12 h-1 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
+              <div 
+                className="h-full rounded-full" 
+                style={{ 
+                  width: `${confidence}%`,
+                  background: isBuy ? 'var(--cyan)' : 'var(--red)',
+                  boxShadow: `0 0 4px ${isBuy ? 'var(--cyan)' : 'var(--red)'}`
+                }} 
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Transfer details */}
-        <div className="text-[10px] text-white font-bold mb-1">
-          Transfer: <span className="text-[var(--cyan)]">{formattedAmount} {event.token}</span>
-        </div>
-
-        {/* Confidence rating */}
-        <div className="flex items-center justify-between text-[8px] text-[var(--text-muted)] mb-2 font-bold">
-          <span>Confidence: <span className="text-[var(--cyan)] font-extrabold">{confidence}%</span></span>
-          <span>Smart Money: <span className="text-white font-extrabold">{smartMoneyTier}</span></span>
+        {/* 2-Column Details Grid */}
+        <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 text-[8.5px] font-mono mb-2 pb-1.5" style={{ borderBottom: '1px dashed rgba(255,255,255,0.04)' }}>
+          <div className="flex flex-col">
+            <span className="text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Transfer</span>
+            <span className="text-white font-bold truncate">{formattedAmount} {event.token}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Confidence</span>
+            <span className="text-[var(--cyan)] font-extrabold">{confidence}%</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Wallet</span>
+            <span className="text-white font-bold truncate">{truncateAddr(event.from_wallet)}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Smart Money</span>
+            <span className="text-white font-bold">{smartMoneyTier}</span>
+          </div>
         </div>
       </div>
 
       {/* AI Reasoning */}
-      <div 
-        className="pt-2" 
-        style={{ borderTop: '1px dashed rgba(255,255,255,0.04)' }}
-      >
-        <span className="text-[7.5px] font-bold text-[var(--text-muted)] uppercase tracking-wider block mb-1">
+      <div className="flex-1 flex flex-col justify-end">
+        <span className="text-[7px] font-bold text-[var(--text-muted)] uppercase tracking-wider block mb-0.5">
           AI Reasoning:
         </span>
-        <p className="text-[8px] leading-snug text-slate-400 font-medium line-clamp-3">
+        <p className="text-[8px] leading-snug text-slate-400 font-medium line-clamp-2">
           {getAIReasoning(event.token, event.action)}
         </p>
-      </div>
-
-      {/* Wallet badge indicator */}
-      <div className="absolute bottom-2 right-3 text-[7px] text-[var(--text-muted)] opacity-60">
-        Wallet: {truncateAddr(event.from_wallet)}
       </div>
     </div>
   )

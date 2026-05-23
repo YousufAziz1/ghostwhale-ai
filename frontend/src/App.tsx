@@ -348,20 +348,23 @@ export default function App() {
             className="flex items-center gap-4 px-4 shrink-0 h-10"
             style={{ borderLeft: '1px solid var(--border)' }}
           >
-            {/* AI latency */}
-            <div className="flex items-center gap-1.5">
-              <span className="font-mono text-[8px]" style={{ color: 'var(--text-muted)' }}>LATENCY</span>
-              <span className="font-mono text-[9px] font-bold" style={{ color: 'var(--green)' }}>
-                {(Math.random() * 12 + 4).toFixed(0)}ms
-              </span>
-            </div>
-            {/* Confidence */}
-            <div className="flex items-center gap-1.5">
-              <span className="font-mono text-[8px]" style={{ color: 'var(--text-muted)' }}>CONF</span>
-              <span className="font-mono text-[9px] font-bold" style={{ color: 'var(--cyan)' }}>92%</span>
+            {/* RPC Latency Pill */}
+            <div 
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[rgba(16,185,129,0.3)] bg-[rgba(16,185,129,0.06)] font-mono text-[8px] font-bold"
+              style={{ color: 'var(--green)' }}
+            >
+              <span className="w-1 h-1 rounded-full bg-[var(--green)] animate-pulse" />
+              <span>LIVE {(Math.random() * 8 + 4).toFixed(0)}ms RPC</span>
             </div>
 
-            {/* Demo button */}
+            {/* AI Confidence Pill */}
+            <div 
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[rgba(0,245,255,0.3)] bg-[rgba(0,245,255,0.06)] font-mono text-[8px] font-extrabold text-[var(--cyan)]"
+            >
+              <span>95% AI CONFIDENCE</span>
+            </div>
+
+            {/* Ghost Mode Button */}
             {!isDemoMode ? (
               <motion.button
                 onClick={() => {
@@ -369,20 +372,16 @@ export default function App() {
                   audio.playAlarm()
                   startDemo()
                 }}
-                className="font-orbitron text-[10px] font-bold px-5 py-2 rounded-full shrink-0 btn-glow flex items-center gap-2"
+                className="font-orbitron text-[9px] font-black px-6 py-2 rounded-lg shrink-0 flex items-center gap-2"
                 style={{
-                  background: 'rgba(255,59,92,0.15)',
-                  color: '#FF3B5C',
-                  border: '1px solid rgba(255,59,92,0.4)',
+                  background: 'linear-gradient(135deg, #00F5FF 0%, #3B82F6 100%)',
+                  color: '#050816',
+                  border: '1px solid rgba(0,245,255,0.7)',
+                  boxShadow: '0 0 15px rgba(0, 245, 255, 0.4)'
                 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                animate={{ boxShadow: ['0 0 10px rgba(255,59,92,0.2)', '0 0 20px rgba(255,59,92,0.5)', '0 0 10px rgba(255,59,92,0.2)'] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                whileHover={{ scale: 1.03, boxShadow: '0 0 25px rgba(0, 245, 255, 0.7)' }}
+                whileTap={{ scale: 0.97 }}
               >
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none" style={{ marginTop: '1px' }}>
-                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
                 <span>ACTIVATE GHOST MODE</span>
               </motion.button>
             ) : (
@@ -392,14 +391,19 @@ export default function App() {
                   audio.init()
                   audio.playPing()
                 }}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg cursor-pointer"
-                style={{ background: 'rgba(255,59,92,0.12)', border: '1px solid rgba(255,59,92,0.35)' }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-2 px-6 py-2 rounded-lg cursor-pointer"
+                style={{
+                  background: 'rgba(255,59,92,0.12)',
+                  color: 'var(--red)',
+                  border: '1px solid rgba(255,59,92,0.5)',
+                  boxShadow: '0 0 15px rgba(255, 59, 92, 0.3)'
+                }}
+                whileHover={{ scale: 1.03, boxShadow: '0 0 25px rgba(255, 59, 92, 0.6)' }}
+                whileTap={{ scale: 0.97 }}
               >
-                <motion.span className="w-2 h-2 rounded-full" style={{ background: 'var(--red)' }}
+                <motion.span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--red)' }}
                   animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
-                <span className="font-orbitron text-[8px] font-bold" style={{ color: 'var(--red)' }}>
+                <span className="font-orbitron text-[9px] font-black">
                   SIMULATION ACTIVE
                 </span>
               </motion.button>

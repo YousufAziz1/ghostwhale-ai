@@ -1,31 +1,27 @@
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
 
 interface Ticker {
   symbol: string; price: number; change: number; spark: number[]
 }
 
 const SEED: Ticker[] = [
-  { symbol: 'BTC',  price: 68_240,  change:  2.14, spark: [62,65,63,68,64,67,68] },
-  { symbol: 'ETH',  price: 3_812,   change: -0.82, spark: [38,37,39,38,36,37,38] },
-  { symbol: 'MNT',  price: 1.08,    change:  3.40, spark: [0.95,1.0,0.98,1.05,1.02,1.06,1.08] },
-  { symbol: 'mETH', price: 3_814,   change: -0.78, spark: [38,37,39,38,36,37,38] },
-  { symbol: 'AGNI', price: 0.0412,  change:  5.20, spark: [0.036,0.038,0.04,0.039,0.041,0.042,0.041] },
-  { symbol: 'MOE',  price: 0.00823, change: -1.30, spark: [0.009,0.0085,0.0082,0.0083,0.0081,0.0082,0.0082] },
-  { symbol: 'USDT', price: 1.0001,  change:  0.01, spark: [1,1,1,1,1,1,1] },
-  { symbol: 'USDY', price: 1.054,   change:  0.12, spark: [1.05,1.051,1.052,1.053,1.052,1.053,1.054] },
+  { symbol: 'BTC',  price: 68_240,  change:  3.10, spark: [62,65,63,68,64,67,68] },
+  { symbol: 'ETH',  price: 3_812,   change: -1.20, spark: [38,37,39,38,36,37,38] },
+  { symbol: 'MNT',  price: 1.08,    change:  5.80, spark: [0.95,1.0,0.98,1.05,1.02,1.06,1.08] },
+  { symbol: 'AGNI', price: 0.0412,  change:  2.10, spark: [0.036,0.038,0.04,0.039,0.041,0.042,0.041] },
+  { symbol: 'MOE',  price: 0.00823, change: -0.40, spark: [0.009,0.0085,0.0082,0.0083,0.0081,0.0082,0.0082] },
 ]
 
 function MiniSparkline({ data, color }: { data: number[]; color: string }) {
   const min = Math.min(...data)
   const max = Math.max(...data)
   const range = max - min || 1
-  const w = 36, h = 16
+  const w = 36, h = 14
   const pts = data.map((v, i) => `${(i / (data.length - 1)) * w},${h - ((v - min) / range) * h}`).join(' ')
   return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="shrink-0">
       <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5"
-        style={{ filter: `drop-shadow(0 0 3px ${color})` }} strokeLinecap="round" strokeLinejoin="round" />
+        style={{ filter: `drop-shadow(0 0 2px ${color}88)` }} strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -34,16 +30,20 @@ function TickerItem({ t }: { t: Ticker }) {
   const isUp = t.change >= 0
   const color = isUp ? 'var(--green)' : 'var(--red)'
   return (
-    <div className="flex items-center gap-3 px-5 shrink-0"
-      style={{ borderRight: '1px solid var(--border)' }}>
-      <span className="font-mono text-[10px] font-bold tracking-widest" style={{ color: 'var(--text-muted)' }}>
-        {t.symbol}
+    <div className="flex items-center gap-2 px-3 py-1 bg-[#080b1a]/50 border border-[rgba(0,245,255,0.12)] rounded-md select-none shrink-0"
+      style={{
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02)'
+      }}
+    >
+      <span className="font-mono text-[9px] font-bold text-slate-400">
+        {t.symbol}/USDT
       </span>
-      <span className="font-orbitron text-[11px] font-bold" style={{ color: 'var(--text-primary)' }}>
+      <span className="font-mono text-[9px] font-medium text-slate-500">|</span>
+      <span className="font-orbitron text-[9px] font-bold" style={{ color: 'var(--text-primary)' }}>
         ${t.price.toLocaleString('en-US', { minimumFractionDigits: t.price < 1 ? 4 : 2, maximumFractionDigits: t.price < 1 ? 4 : 2 })}
       </span>
-      <span className="font-mono text-[9px] font-bold" style={{ color }}>
-        {isUp ? '▲' : '▼'} {Math.abs(t.change).toFixed(2)}%
+      <span className="font-mono text-[9px] font-black" style={{ color }}>
+        {isUp ? '+' : ''}{t.change.toFixed(1)}%
       </span>
       <MiniSparkline data={t.spark} color={color} />
     </div>
@@ -68,9 +68,8 @@ const WhaleLogo = () => (
   </svg>
 )
 
-export default function LiveTicker({ isConnected, latestBlock }: { isConnected: boolean; latestBlock?: number }) {
+export default function LiveTicker({ isConnected, latestBlock }: { isConnected?: boolean; latestBlock?: number }) {
   const [tickers, setTickers] = useState<Ticker[]>(SEED)
-  const [time, setTime] = useState(new Date())
 
   useEffect(() => {
     const iv = setInterval(() => {
@@ -84,7 +83,6 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
           spark: [...t.spark.slice(1), newPrice],
         }
       }))
-      setTime(new Date())
     }, 3000)
     return () => clearInterval(iv)
   }, [])
@@ -106,23 +104,8 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
       </div>
 
       {/* Tokens Row */}
-      <div className="hidden md:flex flex-1 items-center gap-0 overflow-hidden h-full">
+      <div className="hidden md:flex flex-1 items-center gap-2 overflow-hidden h-full px-3">
         {tickers.slice(0, 5).map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
-      </div>
-
-      {/* Right: block + time */}
-      <div
-        className="hidden sm:flex items-center gap-4 px-4 shrink-0 h-full font-mono text-[9px]"
-        style={{ borderLeft: '1px solid var(--border)', color: 'var(--text-muted)' }}
-      >
-        {latestBlock && (
-          <span style={{ color: 'var(--cyan)' }} className="font-bold">
-            #{latestBlock.toLocaleString()}
-          </span>
-        )}
-        <span>
-          {time.toUTCString().slice(17, 25)} UTC
-        </span>
       </div>
     </div>
   )
