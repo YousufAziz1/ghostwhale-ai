@@ -54,7 +54,7 @@ export default function PnLChart({ data, loading }: PnLChartProps) {
   const totalPnL = data.length > 0 ? data[data.length - 1].cumulative_pnl_usd : 0
 
   return (
-    <section id="pnl-chart" className="flex flex-col h-full bg-[var(--bg-surface)] p-3">
+    <section id="pnl-chart" className="flex flex-col h-full bg-[var(--bg-surface)] px-5 py-4">
       {/* Header */}
       <div className="flex items-center justify-between shrink-0 mb-1.5">
         <span className="font-orbitron font-bold text-[9px] text-[var(--cyan)] tracking-widest">

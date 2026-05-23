@@ -33,8 +33,8 @@ function TickerItem({ t }: { t: Ticker }) {
   const color = isUp ? 'var(--green)' : 'var(--red)'
   return (
     <div 
-      className="flex items-center gap-3 px-3 py-1.5 rounded-lg bg-[rgba(15,21,48,0.5)] border border-[rgba(0,245,255,0.22)] shrink-0 shadow-[0_0_12px_rgba(0,245,255,0.05),inset_0_1px_1px_rgba(255,255,255,0.05)] hover:border-[rgba(0,245,255,0.45)] hover:shadow-[0_0_20px_rgba(0,245,255,0.15)] transition-all duration-200"
-      style={{ minWidth: 165 }}
+      className="flex items-center gap-3 px-4.5 py-2 rounded-lg bg-[rgba(15,21,48,0.5)] border border-[rgba(0,245,255,0.22)] shrink-0 shadow-[0_0_12px_rgba(0,245,255,0.05),inset_0_1px_1px_rgba(255,255,255,0.05)] hover:border-[rgba(0,245,255,0.45)] hover:shadow-[0_0_20px_rgba(0,245,255,0.15)] transition-all duration-200"
+      style={{ minWidth: 185 }}
     >
       <div className="flex-1 flex flex-col gap-0.5">
         <div className="flex items-center justify-between">

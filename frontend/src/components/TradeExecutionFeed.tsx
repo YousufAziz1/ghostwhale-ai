@@ -14,7 +14,7 @@ export default function TradeExecutionFeed() {
           TRADE EXECUTION FEED
         </span>
       </div>
-      <div className="flex-1 p-3 overflow-hidden flex flex-col justify-around font-mono text-[12px] font-semibold">
+      <div className="flex-1 px-5 py-4 overflow-hidden flex flex-col justify-around font-mono text-[12px] font-semibold">
         {feeds.map((f, idx) => (
           <div key={idx} className="flex justify-between items-center text-slate-300">
             <span>{f.time}</span>

@@ -73,7 +73,7 @@ function WhaleCard({ event, onSelectEvent }: { event: WhaleEvent; onSelectEvent?
         boxShadow: cardShadow,
         background: 'rgba(8,11,26,0.95)'
       }}
-      className="rounded-xl p-5 flex gap-4 cursor-pointer group shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:border-[rgba(0,245,255,0.3)] hover:-translate-y-0.5 duration-200"
+      className="rounded-xl p-6 flex gap-4.5 cursor-pointer group shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:border-[rgba(0,245,255,0.3)] hover:-translate-y-0.5 duration-200"
     >
       {/* Circle Icon left */}
       <div 

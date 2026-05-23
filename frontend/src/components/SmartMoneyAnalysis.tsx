@@ -44,7 +44,7 @@ export default function SmartMoneyAnalysis() {
           SMART MONEY ANALYSIS
         </span>
       </div>
-      <div className="flex-1 p-3 flex justify-between items-center gap-2 select-none">
+      <div className="flex-1 px-5 py-4 flex justify-between items-center gap-3 select-none">
         {/* BTC */}
         <div className="flex-1 flex items-center justify-between gap-1">
           <div className="flex flex-col font-mono">
