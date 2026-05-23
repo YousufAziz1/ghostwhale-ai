@@ -555,4 +555,56 @@ body::after {
   will-change: transform, opacity, filter;
 }
 
+/* ━━ Conic border glow ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.border-glow-conic {
+  position: relative;
+  background: var(--bg-surface);
+  border-radius: 12px;
+}
+.border-glow-conic::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from 0deg, transparent 30%, var(--cyan) 50%, transparent 70%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: borderSpin 4s linear infinite;
+  pointer-events: none;
+  z-index: 10;
+}
 
+.border-glow-conic-warn {
+  position: relative;
+  background: var(--bg-surface);
+  border-radius: 12px;
+}
+.border-glow-conic-warn::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from 0deg, transparent 30%, var(--red) 50%, transparent 70%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: borderSpin 2.5s linear infinite;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes borderSpin {
+  100% { transform: rotate(360deg); }
+}
+
+/* ━━ CRT screen vignette ━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.crt-noise-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, transparent 55%, rgba(5, 8, 22, 0.45) 100%);
+  pointer-events: none;
+  z-index: 9999;
+}

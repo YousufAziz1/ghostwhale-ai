@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useMemo } from 'react'
 import { motion, useAnimationFrame, AnimatePresence } from 'framer-motion'
 import type { WhaleEvent } from '@/types'
+import { formatUSD, truncateAddr } from '@/lib/api'
 
 interface Particle { x: number; y: number; vx: number; vy: number; life: number; maxLife: number; color: string }
 interface Beam { fromNode: number; progress: number; color: string; id: number }
@@ -161,7 +162,7 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
 
   const cx = dims.w / 2
   const cy = dims.h / 2
-  const maxR = Math.min(dims.w, dims.h) * 0.46
+  const maxR = Math.min(dims.w, dims.h) * 0.52
 
   // Compute scan sector
   const scanRad = (scanAngle * Math.PI) / 180
@@ -448,21 +449,46 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
         WALLET ADDRESSES: SCANNING ACTIVE
       </div>
 
-      {/* Flashing Warning Banner */}
+      {/* Massive HUD Threat/Anomaly Overlay */}
       <AnimatePresence>
         {locked && (
-          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none z-20">
+          <div className="absolute inset-0 bg-red-950/15 backdrop-blur-[1px] flex flex-col justify-between p-6 pointer-events-none z-20 border-2 border-red-500/20 border-double">
+            {/* Animated scanning lines */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(239,68,68,0.12)_50%)] bg-[length:100%_12px] animate-pulse pointer-events-none" />
+            
+            {/* Top alert bar */}
+            <div className="flex justify-between items-center z-35 font-orbitron select-none">
+              <div className="flex items-center gap-2 text-[10px] font-black text-[var(--red)] blink-tag-red">
+                <span>[!!] CRITICAL BLOCKCHAIN THREAT DETECTED [!!]</span>
+              </div>
+              <span className="font-mono text-[8px] text-red-400 font-bold">LOCK_SIG: #{events[0]?.block_number || 72384192}</span>
+            </div>
+            
+            {/* Center massive alert text block */}
             <motion.div
-              initial={{ scale: 0.82, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.82, opacity: 0 }}
-              className="center-warning-banner w-full py-3.5 flex items-center justify-center gap-3"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: [0.95, 1, 0.98, 1], opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.4 }}
+              className="flex flex-col items-center justify-center z-35 py-3 border-y-2 border-red-500/40 bg-red-950/50 shadow-[0_0_50px_rgba(239,68,68,0.25)] select-none"
             >
-              <span className="text-[16px] animate-bounce">⚠️</span>
-              <span className="font-orbitron font-extrabold text-[12px] tracking-[0.25em] text-white" style={{ textShadow: '0 0 10px var(--red)' }}>
-                HIGH VALUE WHALE DETECTED
+              <span className="font-orbitron font-black text-[13px] text-white tracking-[0.35em] drop-shadow-[0_0_10px_rgba(255,59,92,0.9)] animate-pulse">
+                AUTONOMOUS TARGET LOCK ACQUIRED
               </span>
+              <div className="flex gap-4 font-mono text-[8.5px] text-red-300 font-bold mt-1 tracking-wider">
+                <span>COIN: {events[0]?.token || 'MNT'}</span>
+                <span>|</span>
+                <span>VALUE: {formatUSD(events[0]?.amount_usd || 1250000)}</span>
+                <span>|</span>
+                <span>WALLET: {truncateAddr(events[0]?.from_wallet || '0xWhale...18C')}</span>
+              </div>
             </motion.div>
+            
+            {/* Bottom diagnostic telemetry */}
+            <div className="flex justify-between items-center z-35 font-mono text-[7.5px] text-red-400 font-semibold select-none">
+              <span>ESTIMATED SLIPPAGE DAMPENING: ACTIVE</span>
+              <span>LOCK ACCURACY: 98.42%</span>
+            </div>
           </div>
         )}
       </AnimatePresence>

@@ -89,7 +89,8 @@ function makeMockWhale(token?: string): WhaleEvent {
     ai_reasoning: customReasoning,
     explorer_link: `https://mantlescan.xyz/tx/${txHash}`,
     tx_type: isBuy ? 'DEX Swap Router' : 'Liquidity Outflow',
-    wallet_label: Math.random() > 0.5 ? 'Institutional Smart Vault' : 'DeFi Arbitrage Fund'
+    wallet_label: Math.random() > 0.5 ? 'Institutional Smart Vault' : 'DeFi Arbitrage Fund',
+    sparkline_data: Array.from({length: 9}, () => Math.floor(10 + Math.random() * 80))
   }
 }
 
@@ -341,6 +342,7 @@ export default function App() {
       {/* ── Ambient layers ─────────────────────────────────────────────── */}
       <div className="bg-particles" />
       <div className="bg-grid" style={{ opacity: 0.6 }} />
+      <div className="crt-noise-overlay" />
 
       {/* ── Whale flash effect ──────────────────────────────────────────── */}
       <AnimatePresence>
@@ -434,7 +436,7 @@ export default function App() {
         </div>
 
         {/* ── Main 3-column grid ──────────────────────────────────────────── */}
-        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[280px_1fr_300px] gap-4 p-4 overflow-y-auto lg:overflow-hidden">
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[320px_1fr_340px] gap-4 p-4 overflow-y-auto lg:overflow-hidden">
           {/* ── LEFT: Agent stats ──────────────────────────────────────── */}
           <aside className="flex flex-col rounded-xl border border-[rgba(0,245,255,0.15)] bg-[var(--bg-surface)] shadow-[0_0_30px_rgba(0,0,0,0.5)] h-[600px] lg:h-full overflow-hidden">
             <AgentStatsPanel

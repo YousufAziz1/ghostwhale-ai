@@ -36,6 +36,28 @@ const TOKEN_ICONS: Record<string, string> = {
   default: '💎'
 }
 
+function CardSparkline({ data, color, gradId }: { data: number[]; color: string; gradId: string }) {
+  const min = Math.min(...data)
+  const max = Math.max(...data)
+  const range = max - min || 1
+  const w = 55, h = 13
+  const pts = data.map((v, i) => `${(i / (data.length - 1)) * w},${h - ((v - min) / range) * h}`).join(' ')
+  const safeId = gradId.replace(/[^a-zA-Z0-9-]/g, '')
+
+  return (
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="shrink-0">
+      <defs>
+        <linearGradient id={safeId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.35" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <polygon points={`0,${h} ${pts} ${w},${h}`} fill={`url(#${safeId})`} />
+      <polyline points={pts} fill="none" stroke={color} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 function getAIReasoning(token: string, action: string): string {
   const t = token.toUpperCase()
   if (t === 'MNT' || t === 'WMNT') {
@@ -67,6 +89,12 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
   const smartMoneyTier = confidence >= 85 ? 'Tier 1' : confidence >= 70 ? 'Tier 2' : 'Tier 3'
   const gas = event.gas_fee ?? '0.0042 MNT'
   const source = event.chain_source ?? 'Mantle'
+  const mockSpark = event.sparkline_data ?? [40, 45, 42, 48, 46, 52, 50, 58]
+
+  // Dynamic conic border glows for high-value cards
+  const cardBorderClass = isHighValue
+    ? (isBuy ? 'border-glow-conic' : 'border-glow-conic-warn')
+    : (isBuy ? 'card-glow-green border border-[rgba(16,185,129,0.15)]' : 'card-glow-red border border-[rgba(255,59,92,0.15)]')
 
   return (
     <div
@@ -76,9 +104,7 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
         transform: visible ? 'translate3d(0, 0, 0) scale(1)' : 'translate3d(0, -10px, 0) scale(0.98)',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
-      className={`whale-card-custom relative flex flex-col justify-between w-full h-[155px] font-mono select-none cursor-pointer gpu-accelerated ${
-        isBuy ? 'card-glow-green' : 'card-glow-red'
-      }`}
+      className={`whale-card-custom relative flex flex-col justify-between w-full h-[175px] font-mono select-none cursor-pointer gpu-accelerated p-4 ${cardBorderClass}`}
     >
       {/* Holographic Overlays */}
       <div className="holo-reflection" />
@@ -86,7 +112,7 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
 
       <div>
         {/* Header: Logo and symbol */}
-        <div className="flex items-center justify-between mb-2 z-10 relative">
+        <div className="flex items-center justify-between mb-2.5 z-10 relative">
           <div className="flex items-center gap-2">
             <div 
               className="w-7 h-7 rounded-full flex items-center justify-center text-[10px]"
@@ -99,7 +125,7 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
             >
               {TOKEN_ICONS[event.token] ?? TOKEN_ICONS.default}
             </div>
-            <span className="font-display font-extrabold text-[12px] text-white tracking-wide flex items-center gap-1.5">
+            <span className="font-display font-extrabold text-[12.5px] text-white tracking-wide flex items-center gap-1.5">
               {event.token}
               {isHighValue && (
                 <span className={`text-[7px] font-black px-1 rounded uppercase tracking-wider ${
@@ -113,7 +139,7 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
           
           {/* Confidence Mini Progress Bar */}
           <div className="flex flex-col items-end gap-0.5">
-            <span className="text-[7px] text-[var(--text-muted)] tracking-wider">
+            <span className="text-[7.5px] text-[var(--text-muted)] tracking-wider font-bold">
               {timeAgo(event.timestamp)}
             </span>
             <div className="w-12 h-1 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
@@ -130,7 +156,7 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
         </div>
 
         {/* 2-Column Details Grid */}
-        <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[8.5px] font-mono mb-1.5 pb-1 border-b border-[rgba(255,255,255,0.02)] z-10 relative">
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-[9px] font-mono mb-2 pb-1.5 border-b border-[rgba(255,255,255,0.03)] z-10 relative">
           <div className="flex flex-col">
             <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Transfer</span>
             <span className="text-white font-bold truncate">{formattedAmount} {event.token}</span>
@@ -148,12 +174,12 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
             <span className="text-white font-bold">{smartMoneyTier}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Gas Fee</span>
-            <span className="text-slate-400 font-medium truncate">{gas}</span>
+            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Gas / Net</span>
+            <span className="text-slate-400 font-medium truncate">{gas} / {source}</span>
           </div>
-          <div className="flex flex-col">
-            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Source</span>
-            <span className="text-slate-400 font-medium truncate">{source}</span>
+          <div className="flex flex-col justify-center">
+            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold mb-0.5">Price Trend</span>
+            <CardSparkline data={mockSpark} color={isBuy ? '#10B981' : '#FF3B5C'} gradId={`sp-${event.id}-${event.token}`} />
           </div>
         </div>
       </div>
@@ -175,7 +201,7 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
             <ExternalLink size={6} />
           </span>
         </div>
-        <p className="text-[8px] leading-snug text-slate-400 font-medium line-clamp-2 mt-0.5">
+        <p className="text-[8.5px] leading-normal text-slate-400 font-medium line-clamp-2 mt-0.5">
           {getAIReasoning(event.token, event.action)}
         </p>
       </div>

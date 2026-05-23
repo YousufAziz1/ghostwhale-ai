@@ -23,6 +23,7 @@ export interface WhaleEvent {
   explorer_link?: string
   tx_type?: string
   wallet_label?: string
+  sparkline_data?: number[]
 }
 
 export interface Signal {
