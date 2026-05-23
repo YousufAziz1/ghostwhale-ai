@@ -338,12 +338,6 @@ export default function App() {
         <div className="shrink-0 flex items-center w-full" style={{ borderBottom: '1px solid var(--border)' }}>
           <div className="flex-1 min-w-0 flex items-center">
             <LiveTicker isConnected={isConnected} latestBlock={latestBlock} />
-            <div className="hidden 2xl:block px-6">
-              <p className="font-mono text-[9px] text-[var(--cyan)] opacity-80 leading-tight border-l border-[var(--cyan)]/30 pl-3">
-                GhostWhale is an autonomous AI hunter that scans Mantle in real-time, tracks smart capital,
-                <br />predicts whale intent, and executes transparent AI-driven trades before retail detects movement.
-              </p>
-            </div>
           </div>
 
           {/* Right header controls */}
