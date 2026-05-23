@@ -104,7 +104,7 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
         transform: visible ? 'translate3d(0, 0, 0) scale(1)' : 'translate3d(0, -10px, 0) scale(0.98)',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
-      className={`whale-card-custom relative flex flex-col justify-between w-full h-[175px] font-mono select-none cursor-pointer gpu-accelerated p-4 ${cardBorderClass}`}
+      className={`whale-card-custom relative flex flex-col justify-between w-full h-[195px] font-mono select-none cursor-pointer gpu-accelerated p-4 ${cardBorderClass}`}
     >
       {/* Holographic Overlays */}
       <div className="holo-reflection" />
@@ -125,7 +125,7 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
             >
               {TOKEN_ICONS[event.token] ?? TOKEN_ICONS.default}
             </div>
-            <span className="font-display font-extrabold text-[12.5px] text-white tracking-wide flex items-center gap-1.5">
+            <span className="font-display font-extrabold text-[13.5px] text-white tracking-wide flex items-center gap-1.5">
               {event.token}
               {isHighValue && (
                 <span className={`text-[7px] font-black px-1 rounded uppercase tracking-wider ${
@@ -139,7 +139,7 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
           
           {/* Confidence Mini Progress Bar */}
           <div className="flex flex-col items-end gap-0.5">
-            <span className="text-[7.5px] text-[var(--text-muted)] tracking-wider font-bold">
+            <span className="text-[8px] text-[var(--text-muted)] tracking-wider font-bold">
               {timeAgo(event.timestamp)}
             </span>
             <div className="w-12 h-1 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
@@ -158,27 +158,27 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
         {/* 2-Column Details Grid */}
         <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-[9px] font-mono mb-2 pb-1.5 border-b border-[rgba(255,255,255,0.03)] z-10 relative">
           <div className="flex flex-col">
-            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Transfer</span>
-            <span className="text-white font-bold truncate">{formattedAmount} {event.token}</span>
+          <span className="text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Transfer</span>
+            <span className="text-white font-bold truncate text-[9.5px]">{formattedAmount} {event.token}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Confidence</span>
-            <span className="text-[var(--cyan)] font-extrabold">{confidence}%</span>
+            <span className="text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Confidence</span>
+            <span className="text-[var(--cyan)] font-extrabold text-[10px]">{confidence}%</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Wallet</span>
-            <span className="text-white font-bold truncate">{truncateAddr(event.from_wallet)}</span>
+            <span className="text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Wallet</span>
+            <span className="text-white font-bold truncate text-[9.5px]">{truncateAddr(event.from_wallet)}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Smart Money</span>
-            <span className="text-white font-bold">{smartMoneyTier}</span>
+            <span className="text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Smart Money</span>
+            <span className="text-white font-bold text-[9.5px]">{smartMoneyTier}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Gas / Net</span>
-            <span className="text-slate-400 font-medium truncate">{gas} / {source}</span>
+            <span className="text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Gas / Net</span>
+            <span className="text-slate-400 font-medium truncate text-[9px]">{gas} / {source}</span>
           </div>
           <div className="flex flex-col justify-center">
-            <span className="text-[6.5px] text-[var(--text-muted)] uppercase tracking-wider font-bold mb-0.5">Price Trend</span>
+            <span className="text-[7px] text-[var(--text-muted)] uppercase tracking-wider font-bold mb-0.5">Price Trend</span>
             <CardSparkline data={mockSpark} color={isBuy ? '#10B981' : '#FF3B5C'} gradId={`sp-${event.id}-${event.token}`} />
           </div>
         </div>
@@ -187,7 +187,7 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
       {/* AI Reasoning */}
       <div className="flex-1 flex flex-col justify-end z-10 relative">
         <div className="flex items-center justify-between">
-          <span className="text-[6.5px] font-bold text-[var(--text-muted)] uppercase tracking-wider block">
+          <span className="text-[7px] font-bold text-[var(--text-muted)] uppercase tracking-wider block">
             AI Reasoning:
           </span>
           <span 
@@ -201,7 +201,7 @@ function WhaleCard({ event, onSelect }: { event: WhaleEvent; onSelect?: () => vo
             <ExternalLink size={6} />
           </span>
         </div>
-        <p className="text-[8.5px] leading-normal text-slate-400 font-medium line-clamp-2 mt-0.5">
+        <p className="text-[9px] leading-relaxed text-slate-300 font-medium line-clamp-2 mt-0.5">
           {getAIReasoning(event.token, event.action)}
         </p>
       </div>
@@ -239,22 +239,22 @@ export default function WhaleFeed({ events, loading, onSelectEvent }: WhaleFeedP
       <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] shrink-0">
         <div className="flex items-center gap-2">
           <div className="live-dot" style={{ width: 5, height: 5 }} />
-          <span className="font-display font-bold text-xs tracking-wider text-[var(--text-primary)] flex items-center gap-1.5">
-            <Zap size={11} className="text-[var(--cyan)]" />
-            LIVE WHALE FEED
-          </span>
-          <span className="font-mono text-[8px] text-[var(--text-muted)] tracking-wider">· MANTLE NETWORK</span>
+          <span className="font-display font-bold text-sm tracking-wider text-[var(--text-primary)] flex items-center gap-1.5">
+              <Zap size={12} className="text-[var(--cyan)]" />
+              LIVE WHALE FEED
+            </span>
+            <span className="font-mono text-[9px] text-[var(--text-muted)] tracking-wider">· MANTLE NETWORK</span>
         </div>
         <div className="flex items-center gap-1.5 font-mono text-[9px]">
-          <span className="text-[var(--cyan)] font-bold">{events.length}</span>
-          <span className="text-[var(--text-muted)]">detected</span>
+          <span className="text-[var(--cyan)] font-bold text-[11px]">{events.length}</span>
+            <span className="text-[var(--text-muted)] text-[9px]">detected</span>
         </div>
       </div>
 
       {/* Grid body */}
       <div 
         ref={containerRef} 
-        className="feed-scroll flex-1 p-3 grid grid-cols-2 lg:grid-cols-4 gap-3 overflow-y-auto auto-rows-max items-start scrollbar-thin"
+        className="feed-scroll flex-1 p-3 grid grid-cols-2 lg:grid-cols-3 gap-3 overflow-y-auto auto-rows-max items-start scrollbar-thin"
       >
         {events.length === 0 ? (
           <div className="col-span-full h-full flex items-center justify-center">

@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Signal, WhaleEvent, Trade, AgentStats, AgentIdentity, PnLPoint, RpcStatus } from '@/types'
-import { api } from '@/lib/api'
+import { api, formatUSD, truncateAddr } from '@/lib/api'
 import { audio } from '@/lib/audio'
 
 import LiveTicker    from '@/components/LiveTicker'
@@ -436,9 +436,13 @@ export default function App() {
         </div>
 
         {/* ── Main 3-column grid ──────────────────────────────────────────── */}
-        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[320px_1fr_340px] gap-4 p-4 overflow-y-auto lg:overflow-hidden">
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[290px_1fr_310px] gap-5 p-5 overflow-y-auto lg:overflow-hidden">
           {/* ── LEFT: Agent stats ──────────────────────────────────────── */}
-          <aside className="flex flex-col rounded-xl border border-[rgba(0,245,255,0.15)] bg-[var(--bg-surface)] shadow-[0_0_30px_rgba(0,0,0,0.5)] h-[600px] lg:h-full overflow-hidden">
+          <aside className="hud-panel flex flex-col rounded-xl bg-[var(--bg-surface)] panel-shadow-cyan panel-glare h-[600px] lg:h-full overflow-hidden">
+            <span className="hud-corner hud-corner-tl" />
+            <span className="hud-corner hud-corner-tr" />
+            <span className="hud-corner hud-corner-bl" />
+            <span className="hud-corner hud-corner-br" />
             <AgentStatsPanel
               identity={state.identity}
               stats={state.stats}
@@ -447,38 +451,119 @@ export default function App() {
             />
           </aside>
 
-          {/* ── CENTER: AI Core + Whale Feed ───────────────────────────── */}
-          <main className="flex flex-col relative rounded-xl border border-[rgba(0,245,255,0.15)] bg-[var(--bg-base)] shadow-[0_0_30px_rgba(0,0,0,0.5)] min-h-[600px] lg:h-full overflow-hidden">
+          {/* ── CENTER: AI Core + Hero Banner + Whale Feed ──────────────── */}
+          <main className="hud-panel flex flex-col relative rounded-xl bg-[var(--bg-base)] panel-shadow-cyan min-h-[600px] lg:h-full overflow-hidden">
+            <span className={`hud-corner hud-corner-tl ${alertEvent ? 'hud-corner-alert' : ''}`} />
+            <span className={`hud-corner hud-corner-tr ${alertEvent ? 'hud-corner-alert' : ''}`} />
+            <span className={`hud-corner hud-corner-bl ${alertEvent ? 'hud-corner-alert' : ''}`} />
+            <span className={`hud-corner hud-corner-br ${alertEvent ? 'hud-corner-alert' : ''}`} />
+
             {/* Whale popup alert */}
             <WhaleAlert event={alertEvent} onDismiss={() => setAlertEvent(null)} />
-            
             {/* Real TX confirmation popup */}
             <TxPopup trade={txPopupEvent} />
 
-            {/* AI Core Orb — top 44% */}
-            <div className="shrink-0 p-4 relative" style={{ height: '44%' }}>
+            {/* AI Core Orb — top 40% */}
+            <div className="shrink-0 relative" style={{ height: '40%' }}>
               <AICore active={isDemoMode} whaleCount={state.whaleEvents.length} events={state.whaleEvents} />
             </div>
 
-            {/* Divider */}
-            <div className="shrink-0 h-px"
-              style={{ background: 'linear-gradient(90deg, transparent, var(--cyan), var(--purple), transparent)', opacity: 0.4 }} />
+            {/* ── CINEMATIC HERO BANNER ──────────────────────────────────── */}
+            <div
+              className="shrink-0 relative flex flex-col items-center justify-center overflow-hidden"
+              style={{
+                height: '88px',
+                background: alertEvent
+                  ? 'linear-gradient(180deg, rgba(255,59,92,0.06) 0%, rgba(255,59,92,0.12) 50%, rgba(255,59,92,0.06) 100%)'
+                  : 'linear-gradient(180deg, transparent 0%, rgba(0,245,255,0.04) 50%, transparent 100%)',
+                borderTop: alertEvent ? '1px solid rgba(255,59,92,0.25)' : '1px solid rgba(0,245,255,0.12)',
+                borderBottom: alertEvent ? '1px solid rgba(255,59,92,0.25)' : '1px solid rgba(0,245,255,0.12)',
+              }}
+            >
+              {/* Scanning sweep line */}
+              <div
+                className="hero-scan-sweep absolute inset-x-0 h-px pointer-events-none"
+                style={{ background: alertEvent ? 'rgba(255,59,92,0.4)' : 'rgba(0,245,255,0.25)' }}
+              />
 
-            {/* Whale Feed — bottom 56% */}
+              <AnimatePresence mode="wait">
+                {alertEvent ? (
+                  <motion.div
+                    key="whale-alert"
+                    initial={{ opacity: 0, scale: 0.85, y: 12 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, y: -8 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex flex-col items-center gap-1.5 select-none"
+                  >
+                    {/* Warning bars */}
+                    <div className="flex gap-2 mb-0.5">
+                      {[...Array(5)].map((_, i) => (
+                        <div key={i} className="alert-bar h-1 rounded-full" style={{ width: 24 + i * 8, background: 'var(--red)', opacity: 0.7 - i * 0.1 }} />
+                      ))}
+                    </div>
+                    <div
+                      className="hero-whale-text font-orbitron font-black tracking-[0.25em] text-[var(--red)] select-none"
+                      style={{ fontSize: 'clamp(16px, 2.2vw, 28px)' }}
+                    >
+                      ⚠&nbsp;&nbsp;HIGH VALUE WHALE DETECTED
+                    </div>
+                    <div className="flex items-center gap-4 font-mono text-[10px] text-red-300 font-bold tracking-wider">
+                      <span>TOKEN: <span className="text-white">{alertEvent.token}</span></span>
+                      <span className="text-red-600">|</span>
+                      <span>VALUE: <span className="text-white">{formatUSD(alertEvent.amount_usd)}</span></span>
+                      <span className="text-red-600">|</span>
+                      <span>WALLET: <span className="text-white">{truncateAddr(alertEvent.from_wallet)}</span></span>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="scan-mode"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="flex flex-col items-center gap-2 select-none"
+                  >
+                    <div
+                      className="hero-scan-text font-orbitron font-bold tracking-[0.35em] text-[var(--cyan)] uppercase"
+                      style={{ fontSize: 'clamp(11px, 1.2vw, 15px)' }}
+                    >
+                      MONITORING MANTLE LIQUIDITY FLOWS
+                    </div>
+                    <div className="flex items-center gap-2 font-mono text-[9px] text-[var(--text-muted)] tracking-widest">
+                      <motion.span
+                        className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--cyan)]"
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      />
+                      SYSTEM ACTIVE&nbsp;//&nbsp;SCANNING 240,000+ WALLET SIGNATURES
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Whale Feed — remaining height */}
             <div className="flex-1 min-h-0">
               <WhaleFeed events={state.whaleEvents} loading={false} onSelectEvent={(event) => setSelectedWhaleEvent(event)} />
             </div>
           </main>
 
           {/* ── RIGHT: Thought stream + Trades ────────────────────────── */}
-          <aside className="flex flex-col rounded-xl border border-[rgba(0,245,255,0.15)] bg-[var(--bg-surface)] shadow-[0_0_30px_rgba(0,0,0,0.5)] h-[950px] lg:h-full overflow-hidden shrink-0">
+          <aside className="hud-panel flex flex-col rounded-xl bg-[var(--bg-surface)] panel-shadow-cyan h-[950px] lg:h-full overflow-hidden shrink-0">
+            <span className="hud-corner hud-corner-tl" />
+            <span className="hud-corner hud-corner-tr" />
+            <span className="hud-corner hud-corner-bl" />
+            <span className="hud-corner hud-corner-br" />
+
             {/* 1. AI Thought Stream */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '17%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden" style={{ height: '20%', borderBottom: '1px solid var(--border)' }}>
               <ThoughtStream logs={logs} />
             </div>
 
             {/* 2. Neural Reasoning Logs */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '11%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden" style={{ height: '12%', borderBottom: '1px solid var(--border)' }}>
               <NeuralReasoningLogs />
             </div>
 
@@ -488,22 +573,22 @@ export default function App() {
             </div>
 
             {/* 4. Smart Money Analysis */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '10%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden" style={{ height: '11%', borderBottom: '1px solid var(--border)' }}>
               <SmartMoneyAnalysis />
             </div>
 
             {/* 5. AI Signal Generation */}
-            <div className="shrink-0 overflow-hidden flex flex-col justify-center bg-[var(--bg-surface)] p-3" style={{ height: '8%', borderBottom: '1px solid var(--border)' }}>
-              <div className="font-orbitron text-[9px] font-bold tracking-widest text-[var(--cyan)] mb-1 select-none">
+            <div className="shrink-0 overflow-hidden flex flex-col justify-center bg-[var(--bg-surface)] px-4 py-3" style={{ height: '8%', borderBottom: '1px solid var(--border)' }}>
+              <div className="font-orbitron text-[10px] font-bold tracking-widest text-[var(--cyan)] mb-1 select-none">
                 AI SIGNAL GENERATION
               </div>
-              <p className="font-mono text-[8px] text-slate-400 leading-normal select-none">
+              <p className="font-mono text-[9px] text-slate-400 leading-normal select-none">
                 Realtime signals generated from mempool scans. Execution latency: 15ms.
               </p>
             </div>
 
             {/* 6. Mock P&L Chart */}
-            <div className="shrink-0 overflow-hidden relative" style={{ height: '21%', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 overflow-hidden relative" style={{ height: '20%', borderBottom: '1px solid var(--border)' }}>
               <PnLChart data={state.pnlSeries} loading={false} />
             </div>
 

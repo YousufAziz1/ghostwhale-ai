@@ -608,3 +608,105 @@ body::after {
   pointer-events: none;
   z-index: 9999;
 }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PHASE 3: CINEMATIC HUD COMPOSITION
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* ━━ HUD Panel Corner Brackets ━━━━━━━━━━━━━━━━━━━━━━━━ */
+.hud-panel { position: relative; }
+.hud-corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-color: rgba(0, 245, 255, 0.55);
+  border-style: solid;
+  pointer-events: none;
+  z-index: 2;
+}
+.hud-corner-tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+.hud-corner-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+.hud-corner-bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+.hud-corner-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+/* Glowing corners when alert active */
+.hud-corner-alert { border-color: rgba(255, 59, 92, 0.8) !important; }
+
+/* ━━ Hero Banner: HIGH VALUE WHALE DETECTED ━━━━━━━━━━━ */
+@keyframes whaleDetectPulse {
+  0%, 100% {
+    text-shadow:
+      0 0 20px rgba(255,59,92,0.9),
+      0 0 50px rgba(255,59,92,0.5),
+      0 0 100px rgba(255,59,92,0.2);
+    opacity: 1;
+  }
+  50% {
+    text-shadow:
+      0 0 40px rgba(255,59,92,1),
+      0 0 90px rgba(255,59,92,0.7),
+      0 0 150px rgba(255,59,92,0.35);
+    opacity: 0.75;
+  }
+}
+
+@keyframes scanModePulse {
+  0%, 100% {
+    text-shadow:
+      0 0 15px rgba(0,245,255,0.5),
+      0 0 40px rgba(0,245,255,0.2);
+    opacity: 0.7;
+  }
+  50% {
+    text-shadow:
+      0 0 25px rgba(0,245,255,0.8),
+      0 0 60px rgba(0,245,255,0.4);
+    opacity: 1;
+  }
+}
+
+.hero-whale-text {
+  animation: whaleDetectPulse 0.65s ease-in-out infinite;
+}
+.hero-scan-text {
+  animation: scanModePulse 3s ease-in-out infinite;
+}
+
+/* ━━ Hero Banner scanning line sweep ━━━━━━━━━━━━━━━━━━ */
+@keyframes heroScanLine {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+.hero-scan-sweep {
+  animation: heroScanLine 3s linear infinite;
+}
+
+/* ━━ Alert Warning Bars ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@keyframes alertBarFlash {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+.alert-bar { animation: alertBarFlash 0.5s ease-in-out infinite; }
+
+/* ━━ Holographic diagonal glare on panels ━━━━━━━━━━━━━ */
+.panel-glare::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -60%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.025) 50%, transparent 70%);
+  pointer-events: none;
+  animation: glareSlide 6s ease-in-out infinite;
+}
+@keyframes glareSlide {
+  0%   { left: -60%; }
+  100% { left: 160%; }
+}
+
+/* ━━ Improved panel glow shadows ━━━━━━━━━━━━━━━━━━━━━━ */
+.panel-shadow-cyan  { box-shadow: 0 0 0 1px rgba(0,245,255,0.10), 0 8px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(0,245,255,0.05); }
+.panel-shadow-alert { box-shadow: 0 0 0 1px rgba(255,59,92,0.25), 0 8px 40px rgba(255,59,92,0.15), inset 0 1px 0 rgba(255,59,92,0.05); }
+
