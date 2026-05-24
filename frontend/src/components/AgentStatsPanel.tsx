@@ -64,12 +64,12 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
   }
 
   return (
-    <div className="flex flex-col gap-5 p-5 feed-scroll overflow-y-auto h-full select-none justify-between">
+    <div className="flex flex-col gap-2.5 p-3 feed-scroll overflow-y-auto h-full select-none">
       {/* ── Diagnostics Header Card ────────────────────────────────────── */}
-      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
-        <div className="flex items-center gap-3 mb-3">
+      <div className="p-3 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
+        <div className="flex items-center gap-2 mb-2">
           <motion.div
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0"
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-base shrink-0"
             style={{
               background: 'linear-gradient(135deg, rgba(0,245,255,0.15) 0%, rgba(124,58,237,0.15) 100%)',
               border: '1px solid rgba(0,245,255,0.3)',
@@ -89,9 +89,9 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
         </div>
 
         {/* Status Pill + Rep Score */}
-        <div className="grid grid-cols-2 gap-2.5 mb-3.5">
+        <div className="grid grid-cols-2 gap-1.5 mb-2">
           <div
-            className="rounded-lg px-4 py-2.5 flex flex-col justify-between"
+            className="rounded-lg px-2.5 py-1.5 flex flex-col justify-between"
             style={{
               background: 'rgba(124,58,237,0.06)',
               border: '1px solid rgba(124,58,237,0.25)',
@@ -105,7 +105,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
           </div>
 
           <div
-            className="rounded-lg px-4 py-2.5 flex flex-col justify-between"
+            className="rounded-lg px-2.5 py-1.5 flex flex-col justify-between"
             style={{
               background: 'rgba(0,245,255,0.06)',
               border: '1px solid rgba(0,245,255,0.25)',
@@ -121,7 +121,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
 
         {/* Live log feed banner */}
         <div
-          className="rounded-lg px-4 py-2.5"
+          className="rounded-lg px-2.5 py-1.5"
           style={{
             background: 'rgba(0,245,255,0.02)',
             border: '1px solid rgba(0,245,255,0.06)',
@@ -144,27 +144,27 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── Core Statistics Card ──────────────────────────────────────── */}
-      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 grid grid-cols-2 gap-5">
-        <div className="p-3.5 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] flex flex-col items-center justify-center text-center">
+      <div className="p-3 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 grid grid-cols-2 gap-2">
+        <div className="p-2 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] flex flex-col items-center justify-center text-center">
           <span className="font-mono text-[9.5px] font-bold text-[var(--text-muted)]">WIN RATE</span>
           <span className="font-orbitron text-[14px] font-black text-[var(--purple)] mt-1">{winRate}%</span>
         </div>
-        <div className="p-3.5 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] flex flex-col items-center justify-center text-center">
+        <div className="p-2 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] flex flex-col items-center justify-center text-center">
           <span className="font-mono text-[9.5px] font-bold text-[var(--text-muted)]">TOTAL PNL</span>
           <span className="font-orbitron text-[14px] font-black text-[var(--green)] mt-1">+{formatUSD(totalPnL)}</span>
         </div>
-        <div className="p-3.5 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] flex flex-col items-center justify-center text-center">
+        <div className="p-2 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] flex flex-col items-center justify-center text-center">
           <span className="font-mono text-[9.5px] font-bold text-[var(--text-muted)]">SIGNALS GENERATED</span>
           <span className="font-orbitron text-[14px] font-black text-white mt-1">{signals}</span>
         </div>
-        <div className="p-3.5 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] flex flex-col items-center justify-center text-center">
+        <div className="p-2 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] flex flex-col items-center justify-center text-center">
           <span className="font-mono text-[9.5px] font-bold text-[var(--text-muted)]">EXECUTED TRADES</span>
           <span className="font-orbitron text-[14px] font-black text-white mt-1">{settled}</span>
         </div>
       </div>
 
       {/* ── ERC-8004 Identity Card ────────────────────────────────────── */}
-      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 flex items-center justify-between">
+      <div className="p-3 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <Shield size={13} className="text-[var(--purple)]" />
           <span className="font-mono text-[11px] font-bold text-[var(--text-muted)] tracking-wider">ERC-8004 IDENTITY</span>
@@ -175,8 +175,8 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── Neural Sub-Networks Card ──────────────────────────────────── */}
-      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
-        <div className="flex items-center justify-center gap-1.5 mb-3">
+      <div className="p-3 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
+        <div className="flex items-center justify-center gap-1.5 mb-1.5">
           <Brain size={13} className="text-[var(--cyan)]" />
           <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--cyan)]">NEURAL SUB-NETWORKS</span>
         </div>
@@ -207,11 +207,11 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── Portfolio Distribution Card ───────────────────────────────── */}
-      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
-        <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--purple)] block mb-3 text-center w-full">
+      <div className="p-3 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
+        <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--purple)] block mb-1.5 text-center w-full">
           PORTFOLIO DISTRIBUTION
         </span>
-        <div className="flex justify-around items-center py-1">
+        <div className="flex justify-around items-center py-0">
           {[
             { token: 'MNT', color: 'var(--cyan)' },
             { token: 'ETH', color: 'var(--purple)' },
@@ -235,8 +235,8 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── Risk Assessment Heatmap Card ──────────────────────────────── */}
-      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
-        <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--red)] block mb-3 text-center w-full">
+      <div className="p-3 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
+        <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--red)] block mb-1.5 text-center w-full">
           RISK ASSESSMENT MATRIX
         </span>
         <div className="space-y-1">
@@ -248,8 +248,8 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── Current AI Position Card ──────────────────────────────────── */}
-      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
-        <div className="flex items-center justify-center gap-1.5 mb-3">
+      <div className="p-3 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
+        <div className="flex items-center justify-center gap-1.5 mb-1.5">
           <Activity size={13} className="text-[var(--green)]" />
           <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--green)]">CURRENT AI POSITION</span>
         </div>
@@ -279,8 +279,8 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── Active Whale Targets Card ─────────────────────────────────── */}
-      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 mb-1">
-        <div className="flex items-center justify-center gap-1.5 mb-3">
+      <div className="p-3 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
+        <div className="flex items-center justify-center gap-1.5 mb-1.5">
           <Target size={13} className="text-[var(--red)]" />
           <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--red)]">ACTIVE WHALE TARGETS</span>
         </div>
