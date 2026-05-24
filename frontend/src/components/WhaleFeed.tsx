@@ -96,6 +96,11 @@ function WhaleCard({ event, onSelectEvent }: { event: WhaleEvent; onSelectEvent?
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="font-orbitron font-black text-[12px] text-white tracking-wider">{event.token}</span>
             <ActionLabel action={event.action} />
+            {event.amount_raw === '0' || event.chain_source === 'Mantle Sepolia' ? (
+              <span className="font-mono text-[7px] font-black tracking-wider px-1 py-0.2 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 shrink-0 select-none">DEMO</span>
+            ) : (
+              <span className="font-mono text-[7px] font-black tracking-wider px-1 py-0.2 rounded bg-green-500/10 text-[var(--green)] border border-green-500/20 shrink-0 select-none shadow-[0_0_6px_rgba(16,185,129,0.1)]">LIVE</span>
+            )}
           </div>
           <span className="font-mono text-[9.5px] font-semibold text-[var(--text-muted)] shrink-0">{timeAgo(event.timestamp)}</span>
         </div>

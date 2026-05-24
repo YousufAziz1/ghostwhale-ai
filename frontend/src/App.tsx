@@ -369,17 +369,35 @@ export default function App() {
           {/* Right header controls */}
           <div className="flex items-center justify-end gap-2.5 shrink-0 h-full">
             {/* Combined Telemetry Slot Card */}
-            <div className="hidden sm:flex flex-col justify-center px-2 py-1 border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg min-w-[120px] h-[40px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.08)] select-none">
+            <div 
+              style={{
+                borderColor: !isDemoMode ? 'rgba(0,245,255,0.25)' : 'rgba(245,158,11,0.25)',
+                boxShadow: !isDemoMode ? 'inset 0 1px 1px rgba(255,255,255,0.03), 0 0 15px rgba(0,245,255,0.08)' : 'inset 0 1px 1px rgba(255,255,255,0.03), 0 0 15px rgba(245,158,11,0.08)'
+              }}
+              className="hidden sm:flex flex-col justify-center px-2 py-1 border bg-[rgba(8,11,26,0.55)] rounded-lg min-w-[130px] h-[40px] select-none"
+            >
               <div className="flex items-center gap-1 font-body text-[8px] font-bold text-[#A0AEC0] tracking-wider leading-none uppercase">
-                <span className="w-1 h-1 rounded-full bg-[var(--green)] animate-pulse shadow-[0_0_6px_var(--green)]" />
-                <span>LIVE 12ms RPC</span>
+                {!isDemoMode ? (
+                  <>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--green)] animate-pulse shadow-[0_0_6px_var(--green)]" />
+                    <span>MANTLE MAINNET</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse shadow-[0_0_6px_#f59e0b]" />
+                    <span>DEMO SANDBOX</span>
+                  </>
+                )}
               </div>
               <div className="flex items-baseline gap-1 mt-0.5 leading-none">
-                <span className="font-body text-[12px] font-black text-[var(--cyan)] tracking-wide leading-none drop-shadow-[0_0_5px_var(--cyan)]">
-                  95%
+                <span 
+                  style={{ color: !isDemoMode ? 'var(--cyan)' : '#f59e0b', textShadow: !isDemoMode ? '0 0 5px var(--cyan)' : '0 0 5px #f59e0b' }}
+                  className="font-body text-[12px] font-black tracking-wide leading-none"
+                >
+                  {!isDemoMode ? 'LIVE FEED' : 'SIMULATED'}
                 </span>
                 <span className="font-body text-[7.5px] font-bold text-[#A0AEC0] tracking-wider leading-none uppercase">
-                  AI CONFIDENCE
+                  {!isDemoMode ? 'ON-CHAIN' : 'TELEMETRY'}
                 </span>
               </div>
             </div>
@@ -388,11 +406,11 @@ export default function App() {
             <div
               style={{
                 background: !isDemoMode 
-                  ? 'linear-gradient(135deg, #7C3AED 0%, #FF3B5C 100%)' 
-                  : 'linear-gradient(135deg, #00F5FF 0%, #3B82F6 100%)',
+                  ? 'linear-gradient(135deg, #00F5FF 0%, #3B82F6 100%)'
+                  : 'linear-gradient(135deg, #7C3AED 0%, #FF3B5C 100%)',
                 padding: '1.5px'
               }}
-              className="relative shrink-0 transition-all duration-300 hover:shadow-[0_0_15px_rgba(124,58,237,0.3)] h-[40px] rounded-lg overflow-hidden"
+              className="relative shrink-0 transition-all duration-300 hover:shadow-[0_0_15px_rgba(0,245,255,0.2)] h-[40px] rounded-lg overflow-hidden"
             >
               <motion.button
                 onClick={() => {
@@ -407,11 +425,11 @@ export default function App() {
                   }
                 }}
                 style={{
-                  background: !isDemoMode ? '#00F5FF' : '#FF3B5C',
-                  color: !isDemoMode ? '#050816' : '#FFFFFF',
+                  background: !isDemoMode ? 'rgba(8,11,26,0.95)' : '#FF3B5C',
+                  color: !isDemoMode ? 'var(--cyan)' : '#FFFFFF',
                   cursor: 'pointer'
                 }}
-                className="font-body px-4 h-full w-full flex items-center justify-center gap-1.5 select-none text-xs font-black tracking-wider leading-none rounded-[6.5px]"
+                className="font-body px-3.5 h-full w-full flex items-center justify-center gap-1.5 select-none text-xs font-black tracking-wider leading-none rounded-[6.5px]"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -424,10 +442,10 @@ export default function App() {
                 )}
                 <div className="flex flex-col items-center justify-center leading-none text-center">
                   <span className="text-[9.5px] font-black tracking-wider uppercase">
-                    {!isDemoMode ? 'ACTIVATE' : 'SIMULATION'}
+                    {!isDemoMode ? 'RUN MOCK' : 'STOP DEMO'}
                   </span>
                   <span className="text-[10px] font-black tracking-wider uppercase mt-0.5">
-                    {!isDemoMode ? 'GHOST MODE' : 'ACTIVE'}
+                    {!isDemoMode ? 'SIMULATOR' : 'RESTORE LIVE'}
                   </span>
                 </div>
               </motion.button>

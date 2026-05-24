@@ -85,17 +85,25 @@ export default function DecisionLog({ trades, loading }: DecisionLogProps) {
                 <span className="font-mono text-[10px] text-[var(--text-muted)]">
                   {timeAgo(trade.timestamp)}
                 </span>
-                <div className="flex items-center gap-1">
-                  <span className="font-mono text-[10px] text-[var(--text-primary)]">{trade.token}</span>
+                <div className="flex flex-col gap-0.5 justify-center min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono text-[10px] text-[var(--text-primary)] font-bold">{trade.token}</span>
+                    {trade.mock === 0 ? (
+                      <span className="font-mono text-[7px] font-black px-1 py-0.2 rounded bg-green-500/10 text-[var(--green)] border border-green-500/20 shrink-0 select-none shadow-[0_0_6px_rgba(16,185,129,0.1)]">LIVE</span>
+                    ) : (
+                      <span className="font-mono text-[7px] font-black px-1 py-0.2 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 shrink-0 select-none">DEMO</span>
+                    )}
+                  </div>
                   {trade.tx_hash && (
                     <a
                       href={mantleExplorerTx(trade.tx_hash)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="font-mono text-[8px] text-[var(--text-muted)] hover:text-[var(--accent)] flex items-center gap-0.5 mt-0.5 shrink-0"
                       aria-label="View on explorer"
                     >
-                      <ExternalLink size={9} className="text-[var(--text-muted)] hover:text-[var(--accent)]" />
+                      {truncateAddr(trade.tx_hash)}
+                      <ExternalLink size={7} />
                     </a>
                   )}
                 </div>
