@@ -45,6 +45,16 @@ const TICKER_CONFIGS: Record<string, { sparkColor: string; textColor: string; gl
   'MOE/USDT': { sparkColor: '#00F5FF', textColor: 'var(--red)', glowColor: 'rgba(0,245,255,0.35)' },
 }
 
+const formatPrice = (val: number) => {
+  if (val >= 1000) {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val)
+  } else if (val >= 1) {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val)
+  } else {
+    return '$' + val.toFixed(4)
+  }
+}
+
 function SparklineArea({ data, color, glowColor }: { data: number[]; color: string; glowColor: string }) {
   const min = Math.min(...data)
   const max = Math.max(...data)
@@ -63,7 +73,7 @@ function SparklineArea({ data, color, glowColor }: { data: number[]; color: stri
   const gradId = `grad-${Math.random().toString(36).substr(2, 9)}`
 
   return (
-    <svg width="100%" height={h} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="overflow-visible">
+    <svg width="100%" height="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="overflow-visible">
       <defs>
         <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={color} stopOpacity="0.25" />
@@ -88,20 +98,25 @@ function TickerItem({ t }: { t: Ticker }) {
   const [base, quote] = t.symbol.split('/')
 
   return (
-    <div className="flex-1 min-w-[120px] h-[40px] relative overflow-hidden border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg group hover:bg-[rgba(0,245,255,0.02)] transition-colors duration-200 select-none shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.08)]">
-      {/* Vertically Centered Text Row */}
-      <div className="relative z-10 flex items-center justify-between w-full h-full px-2.5 py-1 pointer-events-none">
-        <span className="font-body text-[10px] font-bold tracking-wide select-none uppercase leading-none">
-          <span className="text-[#FFFFFF]">{base}</span>
-          <span className="text-[#64748B]">{quote ? `/${quote}` : ''}</span>
-        </span>
-        <span className="font-body text-[10px] font-black select-none tracking-wide leading-none" style={{ color: config.textColor }}>
-          {isUp ? '+' : ''}{t.change.toFixed(1)}%
+    <div className="flex-1 min-w-[125px] h-[40px] px-2.5 py-1 flex items-center justify-between border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg group hover:bg-[rgba(0,245,255,0.02)] transition-colors duration-200 select-none shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.08)] gap-1.5">
+      {/* Left Column: Symbol, Change, and Price */}
+      <div className="flex flex-col justify-center select-none pointer-events-none min-w-0">
+        <div className="flex items-center gap-1.5 leading-none">
+          <span className="font-body text-[9px] font-bold uppercase tracking-wider whitespace-nowrap">
+            <span className="text-[#FFFFFF]">{base}</span>
+            <span className="text-[#64748B]">{quote ? `/${quote}` : ''}</span>
+          </span>
+          <span className="font-body text-[9px] font-black leading-none shrink-0" style={{ color: config.textColor }}>
+            {isUp ? '+' : ''}{t.change.toFixed(1)}%
+          </span>
+        </div>
+        <span className="font-mono text-[11px] font-black text-white mt-0.5 leading-none tracking-wide whitespace-nowrap">
+          {formatPrice(t.price)}
         </span>
       </div>
 
-      {/* Sparkline area - Positioned absolutely at the bottom, taking full width and h-[28px] height */}
-      <div className="absolute inset-x-0 bottom-0 h-[28px] z-0 flex items-end pointer-events-none overflow-hidden">
+      {/* Right Column: Inline Sparkline Chart */}
+      <div className="w-[45px] h-[22px] flex items-center pointer-events-none overflow-hidden shrink-0">
         <SparklineArea data={t.spark} color={config.sparkColor} glowColor={config.glowColor} />
       </div>
     </div>
