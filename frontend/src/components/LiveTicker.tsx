@@ -81,8 +81,8 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
     >
       {/* Left Logo branding aligned to 284px width */}
       <div
-        className="flex items-center gap-3 shrink-0 h-full"
-        style={{ borderRight: '1px solid var(--border)', width: 284, paddingLeft: 12 }}
+        className="flex items-center gap-3 shrink-0 h-full w-auto lg:w-[284px]"
+        style={{ borderRight: '1px solid var(--border)', paddingLeft: 12 }}
       >
         <span className="text-2xl drop-shadow-[0_0_10px_var(--cyan)] select-none">🐋</span>
         <span className="font-orbitron text-[16px] font-black tracking-widest text-gradient select-none">
@@ -91,7 +91,7 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
       </div>
 
       {/* Tickers list */}
-      <div className="flex flex-1 items-center gap-3 px-6 overflow-x-auto overflow-y-hidden py-1 feed-scroll scrollbar-none">
+      <div className="hidden md:flex flex-1 items-center gap-3 px-6 overflow-x-auto overflow-y-hidden py-1 feed-scroll scrollbar-none">
         {tickers.map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
       </div>
     </div>

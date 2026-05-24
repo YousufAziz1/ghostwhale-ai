@@ -64,9 +64,9 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
   }
 
   return (
-    <div className="flex flex-col gap-3.5 p-3.5 feed-scroll overflow-y-auto h-full select-none justify-between">
+    <div className="flex flex-col gap-5 p-5 feed-scroll overflow-y-auto h-full select-none justify-between">
       {/* ── Diagnostics Header Card ────────────────────────────────────── */}
-      <div className="p-5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
+      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
         <div className="flex items-center gap-3 mb-3">
           <motion.div
             className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0"
@@ -144,7 +144,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── Core Statistics Card ──────────────────────────────────────── */}
-      <div className="p-5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 grid grid-cols-2 gap-3.5">
+      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 grid grid-cols-2 gap-5">
         <div className="p-3.5 rounded-lg bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] flex flex-col items-center justify-center text-center">
           <span className="font-mono text-[9.5px] font-bold text-[var(--text-muted)]">WIN RATE</span>
           <span className="font-orbitron text-[14px] font-black text-[var(--purple)] mt-1">{winRate}%</span>
@@ -164,7 +164,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── ERC-8004 Identity Card ────────────────────────────────────── */}
-      <div className="p-5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 flex items-center justify-between">
+      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <Shield size={13} className="text-[var(--purple)]" />
           <span className="font-mono text-[11px] font-bold text-[var(--text-muted)] tracking-wider">ERC-8004 IDENTITY</span>
@@ -175,7 +175,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── Neural Sub-Networks Card ──────────────────────────────────── */}
-      <div className="p-5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
+      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
         <div className="flex items-center justify-center gap-1.5 mb-3">
           <Brain size={13} className="text-[var(--cyan)]" />
           <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--cyan)]">NEURAL SUB-NETWORKS</span>
@@ -207,7 +207,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── Portfolio Distribution Card ───────────────────────────────── */}
-      <div className="p-5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
+      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
         <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--purple)] block mb-3 text-center w-full">
           PORTFOLIO DISTRIBUTION
         </span>
@@ -235,7 +235,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── Risk Assessment Heatmap Card ──────────────────────────────── */}
-      <div className="p-5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
+      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
         <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--red)] block mb-3 text-center w-full">
           RISK ASSESSMENT MATRIX
         </span>
@@ -248,7 +248,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── Current AI Position Card ──────────────────────────────────── */}
-      <div className="p-5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
+      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
         <div className="flex items-center justify-center gap-1.5 mb-3">
           <Activity size={13} className="text-[var(--green)]" />
           <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--green)]">CURRENT AI POSITION</span>
@@ -279,7 +279,7 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
       </div>
 
       {/* ── Active Whale Targets Card ─────────────────────────────────── */}
-      <div className="p-5 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 mb-1">
+      <div className="p-5 rounded-2xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 mb-1">
         <div className="flex items-center justify-center gap-1.5 mb-3">
           <Target size={13} className="text-[var(--red)]" />
           <span className="font-orbitron text-[11.5px] font-black tracking-widest text-[var(--red)]">ACTIVE WHALE TARGETS</span>

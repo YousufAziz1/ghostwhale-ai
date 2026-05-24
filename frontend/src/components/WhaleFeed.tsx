@@ -188,7 +188,7 @@ export default function WhaleFeed({ events, loading, onSelectEvent }: WhaleFeedP
       </div>
 
       {/* Feed body */}
-      <div ref={containerRef} className="feed-scroll flex-1 p-3.5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-3.5 overflow-y-auto auto-rows-max items-start">
+      <div ref={containerRef} className="feed-scroll flex-1 p-3.5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-3.5 overflow-y-auto auto-rows-max items-start">
         {events.length === 0 ? (
           <EmptyState />
         ) : (

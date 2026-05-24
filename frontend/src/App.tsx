@@ -338,7 +338,7 @@ export default function App() {
   const latestBlock = state.rpcStatus?.latest_block
 
   return (
-    <div className="relative min-h-screen lg:h-screen lg:overflow-hidden flex flex-col w-full" style={{ background: 'var(--bg-base)' }}>
+    <div className="relative min-h-screen lg:h-screen lg:overflow-hidden flex flex-col items-center w-full" style={{ background: 'var(--bg-base)' }}>
       {/* ── Ambient layers ─────────────────────────────────────────────── */}
       <div className="bg-particles" />
       <div className="bg-grid" style={{ opacity: 0.6 }} />
@@ -368,7 +368,7 @@ export default function App() {
             </div>
 
             {/* Telemetry Pills in the middle section to prevent line overlap */}
-            <div className="flex items-center gap-3 shrink-0 ml-4">
+            <div className="hidden md:flex items-center gap-3 shrink-0 ml-4">
               {/* RPC Latency Pill */}
               <div 
                 className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[rgba(16,185,129,0.35)] bg-[rgba(16,185,129,0.06)] font-mono text-[11px] font-black hover:bg-[rgba(16,185,129,0.12)] transition-colors duration-200 cursor-pointer"
@@ -389,8 +389,8 @@ export default function App() {
 
           {/* Right header controls aligned to 302px width (right sidebar alignment) */}
           <div
-            className="flex items-center justify-end shrink-0 h-full"
-            style={{ borderLeft: '1px solid var(--border)', width: 302, paddingRight: 12, paddingLeft: 16 }}
+            className="flex items-center justify-end shrink-0 h-full w-auto lg:w-[302px]"
+            style={{ borderLeft: '1px solid var(--border)', paddingRight: 12, paddingLeft: 16 }}
           >
             {/* Ghost Mode Button */}
             {!isDemoMode ? (
@@ -440,11 +440,11 @@ export default function App() {
       </header>
 
       {/* ── Main Layout Wrapper (Subtle margins matching original spacing) ── */}
-      <div className="relative z-10 flex-1 min-h-0 flex flex-col w-full lg:overflow-hidden max-w-[1880px] mx-auto px-4 lg:px-6">
+      <div className="relative z-10 flex-1 min-h-0 flex flex-col w-full lg:overflow-hidden max-w-[1880px] mx-auto px-4 py-4 lg:px-6 lg:py-5">
         {/* ── Main 3-column grid ──────────────────────────────────────────── */}
-        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[272px_1fr_290px] gap-3 p-3 overflow-y-auto lg:overflow-hidden">
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[272px_1fr_290px] gap-5 p-5 overflow-y-auto lg:overflow-hidden">
           {/* ── LEFT: Agent stats ──────────────────────────────────────── */}
-          <aside className="hud-panel flex flex-col rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] panel-shadow-cyan panel-glare h-[600px] lg:h-full overflow-hidden">
+          <aside className="hud-panel flex flex-col rounded-2xl bg-[var(--bg-surface)] border border-[var(--border)] panel-shadow-cyan panel-glare h-[600px] lg:h-full overflow-hidden">
             <span className="hud-corner hud-corner-tl" />
             <span className="hud-corner hud-corner-tr" />
             <span className="hud-corner hud-corner-bl" />
@@ -458,9 +458,9 @@ export default function App() {
           </aside>
 
           {/* ── CENTER: Radar Scan + Whale Feed (Separate floating panels) ── */}
-          <main className="flex-1 min-h-0 flex flex-col gap-3 h-[600px] lg:h-full overflow-hidden">
+          <main className="flex-1 min-h-0 flex flex-col gap-5 h-[600px] lg:h-full overflow-hidden">
             {/* Panel 1: Center Panel (Radar) */}
-            <div className="shrink-0 hud-panel flex flex-col relative rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '48%' }}>
+            <div className="shrink-0 hud-panel flex flex-col relative rounded-2xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '48%' }}>
               <span className={`hud-corner hud-corner-tl ${alertEvent ? 'hud-corner-alert' : ''}`} />
               <span className={`hud-corner hud-corner-tr ${alertEvent ? 'hud-corner-alert' : ''}`} />
               <span className={`hud-corner hud-corner-bl ${alertEvent ? 'hud-corner-alert' : ''}`} />
@@ -491,7 +491,7 @@ export default function App() {
             </div>
 
             {/* Panel 2: Live Whale Feed */}
-            <div className="flex-1 min-h-0 hud-panel relative rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden">
+            <div className="flex-1 min-h-0 hud-panel relative rounded-2xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden">
               <span className="hud-corner hud-corner-tl" />
               <span className="hud-corner hud-corner-tr" />
               <span className="hud-corner hud-corner-bl" />
@@ -507,9 +507,9 @@ export default function App() {
           </main>
 
           {/* ── RIGHT: Thought stream + Trades (Separate floating panels) ── */}
-          <aside className="flex flex-col gap-3 h-[600px] lg:h-full overflow-y-auto feed-scroll shrink-0 pr-1 select-none" style={{ width: 290 }}>
+          <aside className="flex flex-col gap-5 h-[600px] lg:h-full overflow-y-auto feed-scroll shrink-0 pr-1 select-none" style={{ width: 290 }}>
             {/* 1. AI Thought Stream */}
-            <div className="shrink-0 hud-panel rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '250px' }}>
+            <div className="shrink-0 hud-panel rounded-2xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '250px' }}>
               <span className="hud-corner hud-corner-tl" />
               <span className="hud-corner hud-corner-tr" />
               <span className="hud-corner hud-corner-bl" />
@@ -518,7 +518,7 @@ export default function App() {
             </div>
 
             {/* 2. Neural Reasoning Logs */}
-            <div className="shrink-0 hud-panel rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '135px' }}>
+            <div className="shrink-0 hud-panel rounded-2xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '135px' }}>
               <span className="hud-corner hud-corner-tl" />
               <span className="hud-corner hud-corner-tr" />
               <span className="hud-corner hud-corner-bl" />
@@ -527,7 +527,7 @@ export default function App() {
             </div>
 
             {/* 3. Trade Execution Feed */}
-            <div className="shrink-0 hud-panel rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '150px' }}>
+            <div className="shrink-0 hud-panel rounded-2xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '150px' }}>
               <span className="hud-corner hud-corner-tl" />
               <span className="hud-corner hud-corner-tr" />
               <span className="hud-corner hud-corner-bl" />
@@ -536,7 +536,7 @@ export default function App() {
             </div>
 
             {/* 4. Smart Money Analysis */}
-            <div className="shrink-0 hud-panel rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '110px' }}>
+            <div className="shrink-0 hud-panel rounded-2xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '110px' }}>
               <span className="hud-corner hud-corner-tl" />
               <span className="hud-corner hud-corner-tr" />
               <span className="hud-corner hud-corner-bl" />
@@ -545,7 +545,7 @@ export default function App() {
             </div>
 
             {/* 5. AI Signal Generation */}
-            <div className="shrink-0 hud-panel rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden flex flex-col justify-center px-5 py-4" style={{ height: '80px' }}>
+            <div className="shrink-0 hud-panel rounded-2xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden flex flex-col justify-center px-5 py-4" style={{ height: '80px' }}>
               <span className="hud-corner hud-corner-tl" />
               <span className="hud-corner hud-corner-tr" />
               <span className="hud-corner hud-corner-bl" />
@@ -559,7 +559,7 @@ export default function App() {
             </div>
 
             {/* 6. Mock P&L Chart */}
-            <div className="shrink-0 hud-panel rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden relative" style={{ height: '190px' }}>
+            <div className="shrink-0 hud-panel rounded-2xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden relative" style={{ height: '190px' }}>
               <span className="hud-corner hud-corner-tl" />
               <span className="hud-corner hud-corner-tr" />
               <span className="hud-corner hud-corner-bl" />
@@ -568,7 +568,7 @@ export default function App() {
             </div>
 
             {/* 7. Top Profitable Trades */}
-            <div className="shrink-0 hud-panel rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '185px' }}>
+            <div className="shrink-0 hud-panel rounded-2xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '185px' }}>
               <span className="hud-corner hud-corner-tl" />
               <span className="hud-corner hud-corner-tr" />
               <span className="hud-corner hud-corner-bl" />
