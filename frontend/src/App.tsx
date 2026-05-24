@@ -444,7 +444,7 @@ export default function App() {
         {/* ── Main 3-column grid ──────────────────────────────────────────── */}
         <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[272px_1fr_290px] gap-3 p-3 overflow-y-auto lg:overflow-hidden">
           {/* ── LEFT: Agent stats ──────────────────────────────────────── */}
-          <aside className="hud-panel flex flex-col rounded-xl bg-[var(--bg-surface)] panel-shadow-cyan panel-glare h-[600px] lg:h-full overflow-hidden">
+          <aside className="hud-panel flex flex-col rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] panel-shadow-cyan panel-glare h-[600px] lg:h-full overflow-hidden">
             <span className="hud-corner hud-corner-tl" />
             <span className="hud-corner hud-corner-tr" />
             <span className="hud-corner hud-corner-bl" />
@@ -457,86 +457,122 @@ export default function App() {
             />
           </aside>
 
-          {/* ── CENTER: AI Core + Whale Feed ──────────────── */}
-          <main className="hud-panel flex flex-col relative rounded-xl bg-[var(--bg-base)] panel-shadow-cyan min-h-[600px] lg:h-full overflow-hidden">
-            <span className={`hud-corner hud-corner-tl ${alertEvent ? 'hud-corner-alert' : ''}`} />
-            <span className={`hud-corner hud-corner-tr ${alertEvent ? 'hud-corner-alert' : ''}`} />
-            <span className={`hud-corner hud-corner-bl ${alertEvent ? 'hud-corner-alert' : ''}`} />
-            <span className={`hud-corner hud-corner-br ${alertEvent ? 'hud-corner-alert' : ''}`} />
+          {/* ── CENTER: Radar Scan + Whale Feed (Separate floating panels) ── */}
+          <main className="flex-1 min-h-0 flex flex-col gap-3 h-[600px] lg:h-full overflow-hidden">
+            {/* Panel 1: Center Panel (Radar) */}
+            <div className="shrink-0 hud-panel flex flex-col relative rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '48%' }}>
+              <span className={`hud-corner hud-corner-tl ${alertEvent ? 'hud-corner-alert' : ''}`} />
+              <span className={`hud-corner hud-corner-tr ${alertEvent ? 'hud-corner-alert' : ''}`} />
+              <span className={`hud-corner hud-corner-bl ${alertEvent ? 'hud-corner-alert' : ''}`} />
+              <span className={`hud-corner hud-corner-br ${alertEvent ? 'hud-corner-alert' : ''}`} />
 
-            {/* Whale popup alert */}
-            <WhaleAlert event={alertEvent} onDismiss={() => setAlertEvent(null)} />
-            {/* Real TX confirmation popup */}
-            <TxPopup trade={txPopupEvent} />
+              {/* Panel Header */}
+              <div className="px-4 py-2 border-b border-[var(--border-subtle)] bg-black/30 shrink-0 select-none">
+                <span className="font-orbitron text-[12px] font-black tracking-widest text-[#A78BFA]">
+                  CENTER PANEL
+                </span>
+              </div>
 
-            {/* AI Core Orb — top 45% */}
-            <div className="shrink-0 relative flex flex-col pt-4" style={{ height: '48%' }}>
+              {/* Radar Orbit Area */}
               <div className="flex-1 min-h-0 relative">
                 <AICore active={isDemoMode} whaleCount={state.whaleEvents.length} events={state.whaleEvents} />
               </div>
               
-              {/* Clean Status Text Below Radar */}
-              <div className="shrink-0 flex flex-col items-center justify-center py-2.5 z-10 bg-[var(--bg-base)]">
-                <div className="font-orbitron text-[15px] font-black tracking-[0.3em] text-[var(--cyan)] select-none">
+              {/* Status Text Below Radar */}
+              <div className="shrink-0 flex flex-col items-center justify-center py-2.5 z-10 bg-black/10">
+                <div className="font-orbitron text-[13px] font-black tracking-[0.25em] text-[var(--cyan)] select-none">
                   MONITORING MANTLE LIQUIDITY FLOWS
                 </div>
-                <div className="mt-1 flex items-center gap-2 font-mono text-[11px] font-bold text-[var(--text-muted)] tracking-wider select-none">
+                <div className="mt-0.5 flex items-center gap-1.5 font-mono text-[10px] font-bold text-[var(--text-muted)] tracking-wider select-none">
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan)] animate-pulse shadow-[0_0_8px_var(--cyan)]" />
                   SYSTEM ACTIVE // SCANNING 246,000+ WALLET SIGNATURES
                 </div>
               </div>
             </div>
 
-            {/* Whale Feed Grid — bottom 52% */}
-            <div className="flex-1 min-h-0 overflow-hidden relative">
+            {/* Panel 2: Live Whale Feed */}
+            <div className="flex-1 min-h-0 hud-panel relative rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden">
+              <span className="hud-corner hud-corner-tl" />
+              <span className="hud-corner hud-corner-tr" />
+              <span className="hud-corner hud-corner-bl" />
+              <span className="hud-corner hud-corner-br" />
+
+              {/* Whale popup alert */}
+              <WhaleAlert event={alertEvent} onDismiss={() => setAlertEvent(null)} />
+              {/* Real TX confirmation popup */}
+              <TxPopup trade={txPopupEvent} />
+
               <WhaleFeed events={state.whaleEvents} loading={false} onSelectEvent={(event) => setSelectedWhaleEvent(event)} />
             </div>
           </main>
 
-          {/* ── RIGHT: Thought stream + Trades ────────────────────────── */}
-          <aside className="hud-panel flex flex-col rounded-xl bg-[var(--bg-surface)] panel-shadow-cyan h-[600px] lg:h-full overflow-y-auto feed-scroll shrink-0">
-            <span className="hud-corner hud-corner-tl" />
-            <span className="hud-corner hud-corner-tr" />
-            <span className="hud-corner hud-corner-bl" />
-            <span className="hud-corner hud-corner-br" />
-
+          {/* ── RIGHT: Thought stream + Trades (Separate floating panels) ── */}
+          <aside className="flex flex-col gap-3 h-[600px] lg:h-full overflow-y-auto feed-scroll shrink-0 pr-1 select-none" style={{ width: 290 }}>
             {/* 1. AI Thought Stream */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '250px', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 hud-panel rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '250px' }}>
+              <span className="hud-corner hud-corner-tl" />
+              <span className="hud-corner hud-corner-tr" />
+              <span className="hud-corner hud-corner-bl" />
+              <span className="hud-corner hud-corner-br" />
               <ThoughtStream logs={logs} />
             </div>
 
             {/* 2. Neural Reasoning Logs */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '135px', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 hud-panel rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '135px' }}>
+              <span className="hud-corner hud-corner-tl" />
+              <span className="hud-corner hud-corner-tr" />
+              <span className="hud-corner hud-corner-bl" />
+              <span className="hud-corner hud-corner-br" />
               <NeuralReasoningLogs />
             </div>
 
             {/* 3. Trade Execution Feed */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '150px', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 hud-panel rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '150px' }}>
+              <span className="hud-corner hud-corner-tl" />
+              <span className="hud-corner hud-corner-tr" />
+              <span className="hud-corner hud-corner-bl" />
+              <span className="hud-corner hud-corner-br" />
               <TradeExecutionFeed />
             </div>
 
             {/* 4. Smart Money Analysis */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '110px', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 hud-panel rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '110px' }}>
+              <span className="hud-corner hud-corner-tl" />
+              <span className="hud-corner hud-corner-tr" />
+              <span className="hud-corner hud-corner-bl" />
+              <span className="hud-corner hud-corner-br" />
               <SmartMoneyAnalysis />
             </div>
 
             {/* 5. AI Signal Generation */}
-            <div className="shrink-0 overflow-hidden flex flex-col justify-center bg-[var(--bg-surface)] px-4 py-2.5" style={{ height: '80px', borderBottom: '1px solid var(--border)' }}>
-              <div className="font-orbitron text-[12px] font-black tracking-widest text-[var(--cyan)] mb-0.5 select-none">
+            <div className="shrink-0 hud-panel rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden flex flex-col justify-center px-5 py-4" style={{ height: '80px' }}>
+              <span className="hud-corner hud-corner-tl" />
+              <span className="hud-corner hud-corner-tr" />
+              <span className="hud-corner hud-corner-bl" />
+              <span className="hud-corner hud-corner-br" />
+              <div className="font-orbitron text-[12px] font-black tracking-widest text-[var(--cyan)] mb-1 select-none">
                 AI SIGNAL GENERATION
               </div>
-              <p className="font-mono text-[10.5px] text-slate-400 font-bold leading-normal select-none">
+              <p className="font-mono text-[10px] text-slate-400 font-bold leading-normal select-none">
                 Realtime signals from mempool scans. Latency: 15ms.
               </p>
             </div>
 
             {/* 6. Mock P&L Chart */}
-            <div className="shrink-0 overflow-hidden relative" style={{ height: '190px', borderBottom: '1px solid var(--border)' }}>
+            <div className="shrink-0 hud-panel rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden relative" style={{ height: '190px' }}>
+              <span className="hud-corner hud-corner-tl" />
+              <span className="hud-corner hud-corner-tr" />
+              <span className="hud-corner hud-corner-bl" />
+              <span className="hud-corner hud-corner-br" />
               <PnLChart data={state.pnlSeries} loading={false} />
             </div>
 
             {/* 7. Top Profitable Trades */}
-            <div className="shrink-0 overflow-hidden" style={{ height: '185px' }}>
+            <div className="shrink-0 hud-panel rounded-xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '185px' }}>
+              <span className="hud-corner hud-corner-tl" />
+              <span className="hud-corner hud-corner-tr" />
+              <span className="hud-corner hud-corner-bl" />
+              <span className="hud-corner hud-corner-br" />
               <ProfitableTrades trades={state.trades} />
             </div>
           </aside>

@@ -257,21 +257,21 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
           <table className="w-full text-left border-collapse">
             <thead>
               <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                <th className="font-mono text-[9px] font-bold text-[var(--text-muted)] px-4 py-3 uppercase">Wallet Address</th>
-                <th className="font-mono text-[9px] font-bold text-[var(--text-muted)] px-4 py-3 uppercase">Open Trades</th>
-                <th className="font-mono text-[9px] font-bold text-[var(--text-muted)] px-4 py-3 uppercase text-right">Status</th>
+                <th className="font-mono text-[8px] font-bold text-[var(--text-muted)] px-2.5 py-2 uppercase">Wallet</th>
+                <th className="font-mono text-[8px] font-bold text-[var(--text-muted)] px-2.5 py-2 uppercase">Open Trades</th>
+                <th className="font-mono text-[8px] font-bold text-[var(--text-muted)] px-2.5 py-2 uppercase text-right">Status</th>
               </tr>
             </thead>
             <tbody>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                <td className="font-mono text-[11px] px-4 py-3 text-white font-medium">0xWhale...1234538</td>
-                <td className="font-mono text-[11px] px-4 py-3 text-[var(--cyan)]">mETH/USDC</td>
-                <td className="font-mono text-[11px] px-4 py-3 text-[var(--green)] text-right font-black">95%</td>
+                <td className="font-mono text-[10px] px-2.5 py-1.5 text-white font-medium">0xWhale...538</td>
+                <td className="font-mono text-[10px] px-2.5 py-1.5 text-[var(--cyan)]">mETH/USDC</td>
+                <td className="font-mono text-[10px] px-2.5 py-1.5 text-[var(--green)] text-right font-black">95%</td>
               </tr>
               <tr>
-                <td className="font-mono text-[11px] px-4 py-3 text-white font-medium">0xWhale...1234537</td>
-                <td className="font-mono text-[11px] px-4 py-3 text-[var(--cyan)]">mETH/USDC</td>
-                <td className="font-mono text-[11px] px-4 py-3 text-[var(--amber)] text-right font-black">55%</td>
+                <td className="font-mono text-[10px] px-2.5 py-1.5 text-white font-medium">0xWhale...537</td>
+                <td className="font-mono text-[10px] px-2.5 py-1.5 text-[var(--cyan)]">mETH/USDC</td>
+                <td className="font-mono text-[10px] px-2.5 py-1.5 text-[var(--amber)] text-right font-black">55%</td>
               </tr>
             </tbody>
           </table>
@@ -288,39 +288,39 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
           <table className="w-full text-left border-collapse">
             <thead>
               <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                <th className="font-mono text-[9px] font-bold text-[var(--text-muted)] px-4 py-3 uppercase">Address</th>
-                <th className="font-mono text-[9px] font-bold text-[var(--text-muted)] px-4 py-3 uppercase">Transfer</th>
-                <th className="font-mono text-[9px] font-bold text-[var(--text-muted)] px-4 py-3 uppercase">Token</th>
-                <th className="font-mono text-[9px] font-bold text-[var(--text-muted)] px-4 py-3 uppercase text-right">Priority</th>
+                <th className="font-mono text-[8px] font-bold text-[var(--text-muted)] px-2 py-2 uppercase">Address</th>
+                <th className="font-mono text-[8px] font-bold text-[var(--text-muted)] px-2 py-2 uppercase">Transfer</th>
+                <th className="font-mono text-[8px] font-bold text-[var(--text-muted)] px-2 py-2 uppercase">Token</th>
+                <th className="font-mono text-[8px] font-bold text-[var(--text-muted)] px-2 py-2 uppercase text-right">Priority</th>
               </tr>
             </thead>
             <tbody>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                <td className="font-mono text-[11px] px-4 py-3 text-white font-medium">0xWhale...1234088</td>
-                <td className="font-mono text-[11px] px-4 py-3 text-[var(--cyan)] font-semibold">+6 GRT</td>
-                <td className="font-mono text-[11px] px-4 py-3 text-white">MNT</td>
-                <td className="px-4 py-3 text-right">
-                  <span className="font-mono text-[10px] font-black bg-[rgba(255,59,92,0.15)] text-[var(--red)] border border-[rgba(255,59,92,0.3)] px-2 py-0.5 rounded">
+                <td className="font-mono text-[10px] px-2 py-1.5 text-white font-medium">0xWhale...088</td>
+                <td className="font-mono text-[10px] px-2 py-1.5 text-[var(--cyan)] font-semibold">+6 GRT</td>
+                <td className="font-mono text-[10px] px-2 py-1.5 text-white">MNT</td>
+                <td className="px-2 py-1.5 text-right">
+                  <span className="font-mono text-[9px] font-black bg-[rgba(255,59,92,0.15)] text-[var(--red)] border border-[rgba(255,59,92,0.3)] px-1.5 py-0.5 rounded">
                     HIGH
                   </span>
                 </td>
               </tr>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                <td className="font-mono text-[11px] px-4 py-3 text-white font-medium">0xWhale...1234022</td>
-                <td className="font-mono text-[11px] px-4 py-3 text-[var(--cyan)] font-semibold">+1 GRT</td>
-                <td className="font-mono text-[11px] px-4 py-3 text-white">AGNI</td>
-                <td className="px-4 py-3 text-right">
-                  <span className="font-mono text-[10px] font-black bg-[rgba(245,158,11,0.15)] text-[var(--amber)] border border-[rgba(245,158,11,0.3)] px-2 py-0.5 rounded">
+                <td className="font-mono text-[10px] px-2 py-1.5 text-white font-medium">0xWhale...022</td>
+                <td className="font-mono text-[10px] px-2 py-1.5 text-[var(--cyan)] font-semibold">+1 GRT</td>
+                <td className="font-mono text-[10px] px-2 py-1.5 text-white">AGNI</td>
+                <td className="px-2 py-1.5 text-right">
+                  <span className="font-mono text-[9px] font-black bg-[rgba(245,158,11,0.15)] text-[var(--amber)] border border-[rgba(245,158,11,0.3)] px-1.5 py-0.5 rounded">
                     MED
                   </span>
                 </td>
               </tr>
               <tr>
-                <td className="font-mono text-[11px] px-4 py-3 text-white font-medium">0xWhale...1234028</td>
-                <td className="font-mono text-[11px] px-4 py-3 text-[var(--cyan)] font-semibold">+5 GRT</td>
-                <td className="font-mono text-[11px] px-4 py-3 text-white">AGNI</td>
-                <td className="px-4 py-3 text-right">
-                  <span className="font-mono text-[10px] font-black bg-[rgba(59,130,246,0.15)] text-[var(--blue)] border border-[rgba(59,130,246,0.3)] px-2 py-0.5 rounded">
+                <td className="font-mono text-[10px] px-2 py-1.5 text-white font-medium">0xWhale...028</td>
+                <td className="font-mono text-[10px] px-2 py-1.5 text-[var(--cyan)] font-semibold">+5 GRT</td>
+                <td className="font-mono text-[10px] px-2 py-1.5 text-white">AGNI</td>
+                <td className="px-2 py-1.5 text-right">
+                  <span className="font-mono text-[9px] font-black bg-[rgba(59,130,246,0.15)] text-[var(--blue)] border border-[rgba(59,130,246,0.3)] px-1.5 py-0.5 rounded">
                     LOW
                   </span>
                 </td>

@@ -26,7 +26,7 @@ export default function ProfitableTrades({ trades }: { trades: Trade[] }) {
       </div>
 
       {/* Table header */}
-      <div className="grid grid-cols-[1.2fr_1fr_0.8fr_0.8fr] text-[10px] font-mono text-[var(--text-muted)] font-black px-5 py-1.5 border-b border-[rgba(255,255,255,0.02)] select-none shrink-0">
+      <div className="grid grid-cols-[1.2fr_1fr_0.8fr_0.8fr] text-[8.5px] font-mono text-[var(--text-muted)] font-black px-5 py-1.5 border-b border-[rgba(255,255,255,0.02)] select-none shrink-0">
         <span>ADDRESS</span>
         <span>PAIR</span>
         <span>SIZE</span>
@@ -51,7 +51,7 @@ export default function ProfitableTrades({ trades }: { trades: Trade[] }) {
           return (
             <div 
               key={t.id} 
-              className="grid grid-cols-[1.2fr_1fr_0.8fr_0.8fr] items-center text-[11.5px] font-mono px-5 py-0.5 text-slate-300 select-none"
+              className="grid grid-cols-[1.2fr_1fr_0.8fr_0.8fr] items-center text-[10px] font-mono px-5 py-0.5 text-slate-300 select-none"
             >
               <span className="truncate text-slate-400 font-bold">
                 {truncateAddr(t.tx_hash || '0xWhale' + t.id.toString())}

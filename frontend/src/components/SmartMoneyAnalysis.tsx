@@ -4,7 +4,7 @@ function Sparkline({ data, color, gradId }: { data: number[]; color: string; gra
   const min = Math.min(...data)
   const max = Math.max(...data)
   const range = max - min || 1
-  const w = 90, h = 22
+  const w = 75, h = 18
   const pts = data.map((v, i) => `${(i / (data.length - 1)) * w},${h - ((v - min) / range) * h}`).join(' ')
   const fillPts = `0,${h} ${pts} ${w},${h}`
 
@@ -48,8 +48,8 @@ export default function SmartMoneyAnalysis() {
         {/* BTC */}
         <div className="flex-1 flex items-center justify-between gap-1">
           <div className="flex flex-col font-mono">
-            <span className="text-[10.5px] text-[var(--text-muted)] font-black">BTC/USDT</span>
-            <span className="text-[12px] font-black text-white">${Math.round(btcData[btcData.length - 1] * 1000).toLocaleString()}</span>
+            <span className="text-[9.5px] text-[var(--text-muted)] font-black">BTC/USDT</span>
+            <span className="text-[10.5px] font-black text-white">${Math.round(btcData[btcData.length - 1] * 1000).toLocaleString()}</span>
           </div>
           <Sparkline data={btcData} color="#00F5FF" gradId="btc-spark-grad" />
         </div>
@@ -58,8 +58,8 @@ export default function SmartMoneyAnalysis() {
         {/* ETH */}
         <div className="flex-1 flex items-center justify-between gap-1">
           <div className="flex flex-col font-mono">
-            <span className="text-[10.5px] text-[var(--text-muted)] font-black">ETH/USDT</span>
-            <span className="text-[12px] font-black text-white">${Math.round(ethData[ethData.length - 1] * 100).toLocaleString()}</span>
+            <span className="text-[9.5px] text-[var(--text-muted)] font-black">ETH/USDT</span>
+            <span className="text-[10.5px] font-black text-white">${Math.round(ethData[ethData.length - 1] * 100).toLocaleString()}</span>
           </div>
           <Sparkline data={ethData} color="#7C3AED" gradId="eth-spark-grad" />
         </div>

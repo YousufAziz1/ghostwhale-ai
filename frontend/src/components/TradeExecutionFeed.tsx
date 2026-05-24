@@ -14,15 +14,15 @@ export default function TradeExecutionFeed() {
           TRADE EXECUTION FEED
         </span>
       </div>
-      <div className="flex-1 px-5 py-4 overflow-hidden flex flex-col justify-around font-mono text-[12px] font-semibold">
+      <div className="flex-1 px-5 py-4 overflow-hidden flex flex-col justify-around font-mono text-[10.5px] font-semibold">
         {feeds.map((f, idx) => (
           <div key={idx} className="flex justify-between items-center text-slate-300">
             <span>{f.time}</span>
             <span className="font-black flex items-center gap-1.5" style={{ color: 'var(--text-primary)' }}>
-              <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: f.color }} />
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: f.color }} />
               {f.pair}
             </span>
-            <span className="text-[10.5px] font-bold text-[var(--text-muted)]">{f.ago}</span>
+            <span className="text-[9.5px] font-bold text-[var(--text-muted)]">{f.ago}</span>
           </div>
         ))}
       </div>

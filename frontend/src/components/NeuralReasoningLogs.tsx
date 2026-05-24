@@ -32,7 +32,7 @@ export default function NeuralReasoningLogs() {
           NEURAL REASONING LOGS
         </span>
       </div>
-      <div className="flex-1 px-5 py-4 overflow-hidden flex flex-col justify-around font-mono text-[12px] font-semibold text-slate-305 select-none">
+      <div className="flex-1 px-5 py-4 overflow-hidden flex flex-col justify-around font-mono text-[10.5px] font-semibold text-slate-300 select-none">
         {logs.map((log, idx) => (
           <div key={idx} className="line-clamp-1 leading-normal">
             <span className="text-[var(--purple)] mr-1.5">•</span>
