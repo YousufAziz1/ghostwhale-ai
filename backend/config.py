@@ -51,12 +51,12 @@ TOKEN_SYMBOLS: dict[str, str] = {v.lower(): k for k, v in WATCHED_TOKENS.items()
 # ─── Mock Prices (USD) — used when live price fetch fails ──────────────────────
 # Updated periodically; not used for real trading decisions
 MOCK_PRICES_USD: dict[str, float] = {
-    "WMNT":  1.10,
-    "mETH":  3800.0,
+    "WMNT":  0.66,
+    "mETH":  2120.0,
     "USDT":  1.00,
-    "USDY":  1.05,
+    "USDY":  1.00,
     "USDC":  1.00,
-    "WETH":  3800.0,
+    "WETH":  2120.0,
 }
 
 # ─── Whale Detection Thresholds ───────────────────────────────────────────────

@@ -38,11 +38,11 @@ WALLETS = [
 TOKENS = ["mETH", "WMNT", "USDT", "USDC", "WETH"]
 
 MOCK_PRICES = {
-    "mETH": 3812.50,
-    "WMNT": 1.10,
+    "mETH": 2120.00,
+    "WMNT": 0.66,
     "USDT": 1.0,
     "USDC": 1.0,
-    "WETH": 3812.50,
+    "WETH": 2120.00,
 }
 
 ACTIONS = ["buy", "sell", "buy", "buy", "transfer", "lp_add", "lp_remove"]
@@ -252,18 +252,18 @@ def seed_trades(signal_ids: list[str]):
     """Seed settled trades with realistic P&L."""
     trade_outcomes = [
         # (signal_id_index, token, direction, entry, exit, size_usd, settled_minutes_ago)
-        (0, "mETH", "BUY",  3780.0, 3910.0, 8300,  2),   # +3.4% win
-        (1, "WMNT", "BUY",  1.08,   1.15,   7700,  3),    # +6.5% win
-        (2, "mETH", "SELL", 3820.0, 3740.0, 8900,  1.5),   # +2.1% win
-        (4, "WETH", "SELL", 3820.0, 3770.0, 7800,  1),   # +1.3% win
+        (0, "mETH", "BUY",  2100.0, 2170.0, 8300,  2),   # +3.3% win
+        (1, "WMNT", "BUY",  0.648,  0.690,  7700,  3),    # +6.5% win
+        (2, "mETH", "SELL", 2125.0, 2080.0, 8900,  1.5),   # +2.1% win
+        (4, "WETH", "SELL", 2125.0, 2097.0, 7800,  1),   # +1.3% win
     ]
 
     # Add some mixed results
     extra_outcomes = [
-        ("WMNT", "BUY",  1.05,  1.02,  6500, 5),   # -2.9% loss
-        ("mETH", "BUY",  3750.0, 3820.0, 7200, 6),  # +1.9% win
+        ("WMNT", "BUY",  0.63,   0.612,  6500, 5),   # -2.9% loss
+        ("mETH", "BUY",  2090.0, 2130.0, 7200, 6),  # +1.9% win
         ("USDC", "SELL", 1.001,  0.999, 5000, 4),   # +0.2% win
-        ("WETH", "BUY",  3800.0, 3760.0, 6800, 3.5),  # -1.1% loss
+        ("WETH", "BUY",  2110.0, 2087.0, 6800, 3.5),  # -1.1% loss
     ]
 
     trade_id_counter = []
