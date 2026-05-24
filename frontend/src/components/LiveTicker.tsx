@@ -49,11 +49,11 @@ function SparklineArea({ data, color, glowColor }: { data: number[]; color: stri
   const min = Math.min(...data)
   const max = Math.max(...data)
   const range = max - min || 1
-  const w = 110, h = 28
+  const w = 110, h = 36
 
   const points = data.map((v, i) => {
     const x = (i / (data.length - 1)) * w
-    const y = h - ((v - min) / range) * (h - 6) - 3
+    const y = h - ((v - min) / range) * (h - 8) - 4
     return { x, y }
   })
 
@@ -88,20 +88,20 @@ function TickerItem({ t }: { t: Ticker }) {
   const [base, quote] = t.symbol.split('/')
 
   return (
-    <div className="flex flex-col justify-between h-full pt-2.5 pb-0 w-1/5 min-w-[140px] border-r border-[rgba(0,245,255,0.18)] last:border-r-0 relative overflow-hidden group hover:bg-[rgba(0,245,255,0.02)] transition-colors duration-200">
-      {/* Top Symbol & Change Row - Padded internally to prevent overlapping with borders */}
-      <div className="flex items-center justify-between gap-2 z-10 w-full px-4">
-        <span className="font-body text-[11px] font-bold tracking-wide select-none uppercase">
+    <div className="h-full relative overflow-hidden border-r border-[rgba(0,245,255,0.18)] last:border-r-0 group hover:bg-[rgba(0,245,255,0.02)] transition-colors duration-200 select-none">
+      {/* Top Symbol & Change Row - Positioned absolutely at the top */}
+      <div className="absolute inset-x-0 top-0 pt-3 px-3.5 z-10 flex items-center justify-between pointer-events-none">
+        <span className="font-body text-[10.5px] font-bold tracking-wide select-none uppercase">
           <span className="text-[#FFFFFF]">{base}</span>
           <span className="text-[#64748B]">{quote ? `/${quote}` : ''}</span>
         </span>
-        <span className="font-body text-[11.5px] font-black select-none tracking-wide" style={{ color: config.textColor }}>
+        <span className="font-body text-[11px] font-black select-none tracking-wide" style={{ color: config.textColor }}>
           {isUp ? '+' : ''}{t.change.toFixed(1)}%
         </span>
       </div>
 
-      {/* Sparkline area filling bottom - Edge to Edge (No padding) */}
-      <div className="h-7 w-full mt-1 z-10 flex items-end overflow-hidden">
+      {/* Sparkline area - Positioned absolutely at the bottom, taking full width and taller height */}
+      <div className="absolute inset-x-0 bottom-0 h-10 z-0 flex items-end pointer-events-none overflow-hidden">
         <SparklineArea data={t.spark} color={config.sparkColor} glowColor={config.glowColor} />
       </div>
     </div>
@@ -159,7 +159,7 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
       </div>
 
       {/* Tickers container */}
-      <div className="hidden md:flex flex-1 items-center border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg h-14 overflow-hidden select-none">
+      <div className="hidden md:grid grid-cols-5 flex-1 border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg h-14 overflow-hidden select-none">
         {tickers.map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
       </div>
     </div>
