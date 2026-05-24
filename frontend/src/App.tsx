@@ -384,16 +384,15 @@ export default function App() {
               </div>
             </div>
 
-            {/* Cyberpunk Ghost Mode Button with chamfered corners */}
+            {/* Cyberpunk Ghost Mode Button with rounded corners */}
             <div
               style={{
-                clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%)',
                 background: !isDemoMode 
                   ? 'linear-gradient(135deg, #7C3AED 0%, #FF3B5C 100%)' 
                   : 'linear-gradient(135deg, #00F5FF 0%, #3B82F6 100%)',
                 padding: '1.5px'
               }}
-              className="relative shrink-0 transition-all duration-300 hover:shadow-[0_0_15px_rgba(124,58,237,0.3)] h-[40px]"
+              className="relative shrink-0 transition-all duration-300 hover:shadow-[0_0_15px_rgba(124,58,237,0.3)] h-[40px] rounded-lg overflow-hidden"
             >
               <motion.button
                 onClick={() => {
@@ -408,12 +407,11 @@ export default function App() {
                   }
                 }}
                 style={{
-                  clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 7.5px), calc(100% - 7.5px) 100%, 0 100%)',
                   background: !isDemoMode ? '#00F5FF' : '#FF3B5C',
                   color: !isDemoMode ? '#050816' : '#FFFFFF',
                   cursor: 'pointer'
                 }}
-                className="font-body px-4 h-full w-full flex items-center justify-center gap-1.5 select-none text-xs font-black tracking-wider leading-none"
+                className="font-body px-4 h-full w-full flex items-center justify-center gap-1.5 select-none text-xs font-black tracking-wider leading-none rounded-[6.5px]"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
