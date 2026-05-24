@@ -361,31 +361,37 @@ export default function App() {
       {/* ── Top Header (Full Width) ────────────────────────────────────── */}
       <header className="relative z-20 shrink-0 w-full border-b border-[var(--border)] bg-[rgba(8,11,26,0.85)] backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
         <div className="max-w-[1880px] mx-auto w-full px-4 lg:px-6 flex items-center justify-between h-16">
-          <div className="flex-1 min-w-0 flex items-center h-full">
-            <LiveTicker isConnected={isConnected} latestBlock={latestBlock} />
+          {/* Left / Center section */}
+          <div className="flex-1 min-w-0 flex items-center justify-between h-full pr-4">
+            <div className="flex-1 min-w-0 flex items-center h-full">
+              <LiveTicker isConnected={isConnected} latestBlock={latestBlock} />
+            </div>
+
+            {/* Telemetry Pills in the middle section to prevent line overlap */}
+            <div className="flex items-center gap-3 shrink-0 ml-4">
+              {/* RPC Latency Pill */}
+              <div 
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[rgba(16,185,129,0.35)] bg-[rgba(16,185,129,0.06)] font-mono text-[11px] font-black hover:bg-[rgba(16,185,129,0.12)] transition-colors duration-200 cursor-pointer"
+                style={{ color: 'var(--green)' }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--green)] animate-pulse" />
+                <span>LIVE {(Math.random() * 8 + 4).toFixed(0)}ms RPC</span>
+              </div>
+
+              {/* AI Confidence Pill */}
+              <div 
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[rgba(0,245,255,0.35)] bg-[rgba(0,245,255,0.06)] font-mono text-[11px] font-black text-[var(--cyan)] hover:bg-[rgba(0,245,255,0.12)] transition-colors duration-200 cursor-pointer"
+              >
+                <span>95% AI CONFIDENCE</span>
+              </div>
+            </div>
           </div>
 
           {/* Right header controls aligned to 302px width (right sidebar alignment) */}
           <div
-            className="flex items-center justify-end gap-4 shrink-0 h-full"
+            className="flex items-center justify-end shrink-0 h-full"
             style={{ borderLeft: '1px solid var(--border)', width: 302, paddingRight: 12, paddingLeft: 16 }}
           >
-            {/* RPC Latency Pill */}
-            <div 
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[rgba(16,185,129,0.35)] bg-[rgba(16,185,129,0.06)] font-mono text-[11px] font-black hover:bg-[rgba(16,185,129,0.12)] transition-colors duration-200 cursor-pointer"
-              style={{ color: 'var(--green)' }}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--green)] animate-pulse" />
-              <span>LIVE {(Math.random() * 8 + 4).toFixed(0)}ms RPC</span>
-            </div>
-
-            {/* AI Confidence Pill */}
-            <div 
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[rgba(0,245,255,0.35)] bg-[rgba(0,245,255,0.06)] font-mono text-[11px] font-black text-[var(--cyan)] hover:bg-[rgba(0,245,255,0.12)] transition-colors duration-200 cursor-pointer"
-            >
-              <span>95% AI CONFIDENCE</span>
-            </div>
-
             {/* Ghost Mode Button */}
             {!isDemoMode ? (
               <motion.button
@@ -433,10 +439,10 @@ export default function App() {
         </div>
       </header>
 
-      {/* ── Main Layout Wrapper ─────────────────────────────────────────── */}
-      <div className="relative z-10 flex-1 min-h-0 flex flex-col w-full lg:overflow-hidden">
+      {/* ── Main Layout Wrapper (Subtle margins matching original spacing) ── */}
+      <div className="relative z-10 flex-1 min-h-0 flex flex-col w-full lg:overflow-hidden max-w-[1880px] mx-auto px-4 lg:px-6">
         {/* ── Main 3-column grid ──────────────────────────────────────────── */}
-        <div className="flex-1 min-h-0 w-full max-w-[1880px] mx-auto grid grid-cols-1 lg:grid-cols-[272px_1fr_290px] gap-3 p-3 overflow-y-auto lg:overflow-hidden px-4 lg:px-6">
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[272px_1fr_290px] gap-3 p-3 overflow-y-auto lg:overflow-hidden">
           {/* ── LEFT: Agent stats ──────────────────────────────────────── */}
           <aside className="hud-panel flex flex-col rounded-xl bg-[var(--bg-surface)] panel-shadow-cyan panel-glare h-[600px] lg:h-full overflow-hidden">
             <span className="hud-corner hud-corner-tl" />
