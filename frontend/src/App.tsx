@@ -360,16 +360,16 @@ export default function App() {
 
       {/* ── Top Header (Full Width) ────────────────────────────────────── */}
       <header className="relative z-20 shrink-0 w-full border-b border-[var(--border)] bg-[rgba(8,11,26,0.85)] backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
-        <div className="max-w-[1880px] mx-auto w-full px-3 flex items-center justify-between h-[58px] gap-2">
+        <div className="max-w-[1880px] mx-auto w-full px-3 flex items-center justify-between h-[58px] gap-2.5">
           {/* Left / Center section */}
           <div className="flex-1 min-w-0 flex items-center h-full">
             <LiveTicker isConnected={isConnected} latestBlock={latestBlock} />
           </div>
 
           {/* Right header controls */}
-          <div className="flex items-center justify-end gap-2 shrink-0 h-full">
+          <div className="flex items-center justify-end gap-2.5 shrink-0 h-full">
             {/* Combined Telemetry Slot Card */}
-            <div className="hidden sm:flex flex-col justify-center px-2 py-1 border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg min-w-[115px] h-[42px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.08)] select-none">
+            <div className="hidden sm:flex flex-col justify-center px-2 py-1 border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg min-w-[120px] h-[40px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.08)] select-none">
               <div className="flex items-center gap-1 font-body text-[8px] font-bold text-[#A0AEC0] tracking-wider leading-none uppercase">
                 <span className="w-1 h-1 rounded-full bg-[var(--green)] animate-pulse shadow-[0_0_6px_var(--green)]" />
                 <span>LIVE 12ms RPC</span>
@@ -393,7 +393,7 @@ export default function App() {
                   : 'linear-gradient(135deg, #00F5FF 0%, #3B82F6 100%)',
                 padding: '1.5px'
               }}
-              className="relative shrink-0 transition-all duration-300 hover:shadow-[0_0_15px_rgba(124,58,237,0.3)] h-[42px]"
+              className="relative shrink-0 transition-all duration-300 hover:shadow-[0_0_15px_rgba(124,58,237,0.3)] h-[40px]"
             >
               <motion.button
                 onClick={() => {

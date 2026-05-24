@@ -88,9 +88,9 @@ function TickerItem({ t }: { t: Ticker }) {
   const [base, quote] = t.symbol.split('/')
 
   return (
-    <div className="h-[42px] relative overflow-hidden border-r border-[rgba(0,245,255,0.18)] last:border-r-0 group hover:bg-[rgba(0,245,255,0.02)] transition-colors duration-200 select-none">
+    <div className="flex-1 min-w-[120px] h-[40px] relative overflow-hidden border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg group hover:bg-[rgba(0,245,255,0.02)] transition-colors duration-200 select-none shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.08)]">
       {/* Vertically Centered Text Row */}
-      <div className="relative z-10 flex items-center justify-between w-full h-full px-2 py-1 pointer-events-none">
+      <div className="relative z-10 flex items-center justify-between w-full h-full px-2.5 py-1 pointer-events-none">
         <span className="font-body text-[10px] font-bold tracking-wide select-none uppercase leading-none">
           <span className="text-[#FFFFFF]">{base}</span>
           <span className="text-[#64748B]">{quote ? `/${quote}` : ''}</span>
@@ -149,17 +149,17 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
   }, [])
 
   return (
-    <div className="flex items-center gap-2 h-full w-full overflow-hidden animate-in">
+    <div className="flex items-center gap-2.5 h-full w-full overflow-hidden animate-in">
       {/* Logo Card */}
-      <div className="flex items-center gap-1.5 shrink-0 px-2 py-1 h-[42px] border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.08)] select-none">
+      <div className="flex items-center gap-1.5 shrink-0 px-2 py-1 h-[40px] border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.08)] select-none">
         <WhaleIcon />
         <span className="font-body text-[10px] font-black tracking-[0.12em] text-[var(--cyan)] drop-shadow-[0_0_6px_var(--cyan)] select-none leading-none">
           GHOSTWHALE
         </span>
       </div>
 
-      {/* Tickers container - max-w-[620px] prevents horizontal stretching */}
-      <div className="hidden md:grid grid-cols-5 flex-1 max-w-[620px] border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg h-[42px] overflow-hidden select-none">
+      {/* Tickers container - flex-1 stretches dynamically to fill the center space */}
+      <div className="hidden md:flex flex-1 items-center gap-2.5 overflow-hidden select-none">
         {tickers.map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
       </div>
     </div>
