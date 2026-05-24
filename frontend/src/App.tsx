@@ -408,7 +408,7 @@ export default function App() {
                   }
                 }}
                 style={{
-                  clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%)',
+                  clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 7.5px), calc(100% - 7.5px) 100%, 0 100%)',
                   background: !isDemoMode ? '#00F5FF' : '#FF3B5C',
                   color: !isDemoMode ? '#050816' : '#FFFFFF',
                   cursor: 'pointer'
