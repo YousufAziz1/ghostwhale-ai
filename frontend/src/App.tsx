@@ -456,34 +456,16 @@ export default function App() {
 
           {/* ── CENTER: Radar Scan + Whale Feed (Separate floating panels) ── */}
           <main className="flex-1 min-h-0 flex flex-col gap-5 h-[600px] lg:h-full overflow-hidden">
-            {/* Panel 1: Center Panel (Radar) */}
+            {/* Panel 1: Center Panel (Radar) — full height, perfectly circular */}
             <div className="shrink-0 hud-panel flex flex-col relative rounded-2xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '48%' }}>
               <span className={`hud-corner hud-corner-tl ${alertEvent ? 'hud-corner-alert' : ''}`} />
               <span className={`hud-corner hud-corner-tr ${alertEvent ? 'hud-corner-alert' : ''}`} />
               <span className={`hud-corner hud-corner-bl ${alertEvent ? 'hud-corner-alert' : ''}`} />
               <span className={`hud-corner hud-corner-br ${alertEvent ? 'hud-corner-alert' : ''}`} />
 
-              {/* Panel Header */}
-              <div className="px-4 py-2 border-b border-[var(--border-subtle)] bg-black/30 shrink-0 select-none">
-                <span className="font-orbitron text-[12px] font-black tracking-widest text-[#A78BFA]">
-                  CENTER PANEL
-                </span>
-              </div>
-
-              {/* Radar Orbit Area */}
-              <div className="flex-1 min-h-0 relative">
+              {/* Radar — fills full panel, centered */}
+              <div className="flex-1 min-h-0 flex items-center justify-center relative">
                 <AICore active={isDemoMode} whaleCount={state.whaleEvents.length} events={state.whaleEvents} />
-              </div>
-              
-              {/* Status Text Below Radar */}
-              <div className="shrink-0 flex flex-col items-center justify-center py-2.5 z-10 bg-black/10">
-                <div className="font-orbitron text-[13px] font-black tracking-[0.25em] text-[var(--cyan)] select-none">
-                  MONITORING MANTLE LIQUIDITY FLOWS
-                </div>
-                <div className="mt-0.5 flex items-center gap-1.5 font-mono text-[10px] font-bold text-[var(--text-muted)] tracking-wider select-none">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--cyan)] animate-pulse shadow-[0_0_8px_var(--cyan)]" />
-                  SYSTEM ACTIVE // SCANNING 246,000+ WALLET SIGNATURES
-                </div>
               </div>
             </div>
 

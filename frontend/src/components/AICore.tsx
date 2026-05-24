@@ -25,7 +25,7 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
   const canvasRef  = useRef<HTMLCanvasElement>(null)
   const svgRef     = useRef<SVGSVGElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const [dims, setDims]       = useState({ w: 400, h: 300 })
+  const [dims, setDims]       = useState({ w: 400, h: 400 })
   const [scanAngle, setScanAngle] = useState(0)
   const [locked, setLocked]   = useState(false)
   const [beams, setBeams]     = useState<Beam[]>([])
@@ -160,44 +160,46 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
     )
   })
 
+  // Use square dimensions: take the smaller axis so radar stays perfectly circular
+  const size = Math.min(dims.w, dims.h)
   const cx = dims.w / 2
   const cy = dims.h / 2
-  const maxR = Math.min(dims.w, dims.h) * 0.52
+  const maxR = size * 0.44
 
-  // Compute scan sector
+  // Compute scan sector (pure circle math — no ellipse distortion)
   const scanRad = (scanAngle * Math.PI) / 180
   const sx1 = cx + Math.cos(scanRad - 0.45) * maxR
   const sy1 = cy + Math.sin(scanRad - 0.45) * maxR
   const sx2 = cx + Math.cos(scanRad) * maxR
   const sy2 = cy + Math.sin(scanRad) * maxR
 
-  // Orbiting node positions
+  // Orbiting node positions — PERFECT CIRCLE (no y-squish)
   const nodePositions = useMemo(() => ORBIT_NODES.map(n => {
-    const r = Math.min(dims.w, dims.h) * n.radius
+    const r = size * n.radius
     const ang = n.phase + time * n.speed * 0.01
-    return { x: cx + Math.cos(ang) * r, y: cy + Math.sin(ang) * r * 0.45 }
-  }), [time, cx, cy, dims]) // eslint-disable-line
+    return { x: cx + Math.cos(ang) * r, y: cy + Math.sin(ang) * r }
+  }), [time, cx, cy, size]) // eslint-disable-line
 
   const accentColor = locked ? '#FF3B5C' : '#00F5FF'
   const coreR = Math.min(dims.w, dims.h) * 0.09
 
   return (
-    <div ref={containerRef} className="relative w-full h-full overflow-hidden rounded-xl">
-      {/* Particle canvas */}
+    <div ref={containerRef} className="relative w-full h-full overflow-hidden rounded-xl flex items-center justify-center">
+      {/* Particle canvas — full container size */}
       <canvas
         ref={canvasRef}
         width={dims.w}
         height={dims.h}
-        className="absolute inset-0"
+        className="absolute inset-0 w-full h-full"
         style={{ mixBlendMode: 'screen' }}
       />
 
-      {/* SVG: radar, rings, nodes, orb */}
+      {/* SVG: radar, rings, nodes, orb — perfectly centered circle */}
       <svg
         ref={svgRef}
         width={dims.w}
         height={dims.h}
-        className="absolute inset-0"
+        className="absolute inset-0 w-full h-full"
         viewBox={`0 0 ${dims.w} ${dims.h}`}
       >
         <defs>
@@ -216,37 +218,37 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
           </radialGradient>
         </defs>
 
-        {/* Ambient glow */}
-        <ellipse cx={cx} cy={cy} rx={maxR * 1.1} ry={maxR * 0.85}
+        {/* Ambient glow — PERFECT CIRCLE */}
+        <circle cx={cx} cy={cy} r={maxR * 1.15}
           fill="url(#ambientGlow)" />
 
-        {/* Grid rings */}
+        {/* Grid rings — PERFECT CIRCLES */}
         {[0.85, 0.65, 0.45, 0.25].map((f, i) => (
-          <ellipse key={i} cx={cx} cy={cy} rx={maxR * f} ry={maxR * f * 0.7}
+          <circle key={i} cx={cx} cy={cy} r={maxR * f}
             fill="none"
             stroke={locked ? 'rgba(255,59,92,0.1)' : 'rgba(0,245,255,0.07)'}
             strokeWidth="1" strokeDasharray="3 9" />
         ))}
 
-        {/* Outer ring */}
-        <ellipse cx={cx} cy={cy} rx={maxR} ry={maxR * 0.7}
+        {/* Outer ring — PERFECT CIRCLE */}
+        <circle cx={cx} cy={cy} r={maxR}
           fill="none"
           stroke={locked ? 'rgba(255,59,92,0.35)' : 'rgba(0,245,255,0.2)'}
           strokeWidth="1.5" strokeDasharray="8 5" />
 
-        {/* Rotating elliptical orbit path */}
+        {/* Rotating circular orbit paths */}
         <g style={{ transformOrigin: `${cx}px ${cy}px`, animation: 'orbitSpin 20s linear infinite' }}>
-          <ellipse cx={cx} cy={cy} rx={maxR * 0.65} ry={maxR * 0.22}
-            fill="none" stroke="rgba(0,245,255,0.15)" strokeWidth="1" />
+          <circle cx={cx} cy={cy} r={maxR * 0.65}
+            fill="none" stroke="rgba(0,245,255,0.12)" strokeWidth="1" strokeDasharray="4 8" />
         </g>
         <g style={{ transformOrigin: `${cx}px ${cy}px`, animation: 'orbitSpin 30s linear infinite reverse' }}>
-          <ellipse cx={cx} cy={cy} rx={maxR * 0.48} ry={maxR * 0.17}
-            fill="none" stroke="rgba(124,58,237,0.15)" strokeWidth="1" strokeDasharray="4 6" />
+          <circle cx={cx} cy={cy} r={maxR * 0.42}
+            fill="none" stroke="rgba(124,58,237,0.12)" strokeWidth="1" strokeDasharray="4 6" />
         </g>
 
-        {/* Radar scan sector */}
+        {/* Radar scan sector — PERFECT CIRCLE arc */}
         <path
-          d={`M ${cx} ${cy} L ${sx1} ${sy1} A ${maxR} ${maxR * 0.7} 0 0 1 ${sx2} ${sy2} Z`}
+          d={`M ${cx} ${cy} L ${sx1} ${sy1} A ${maxR} ${maxR} 0 0 1 ${sx2} ${sy2} Z`}
           fill="url(#scanSector)" opacity="0.6"
         />
 
@@ -403,10 +405,10 @@ export default function AICore({ active, whaleCount, events }: AICoreProps) {
           {locked ? '⚠ TARGET LOCK' : active ? 'AI SCANNING' : 'MONITORING'}
         </text>
 
-        {/* Corner target brackets */}
+        {/* Corner target brackets — aligned to circle boundary */}
         {([-1, 1] as const).flatMap(sx => ([-1, 1] as const).map(sy => {
           const bx = cx + sx * maxR * 0.92
-          const by = cy + sy * maxR * 0.68
+          const by = cy + sy * maxR * 0.92
           return (
             <g key={`${sx}${sy}`}>
               <line x1={bx} y1={by} x2={bx + sx * 14} y2={by}
