@@ -33,19 +33,19 @@ function TickerItem({ t }: { t: Ticker }) {
   const color = isUp ? 'var(--green)' : 'var(--red)'
   return (
     <div 
-      className="flex items-center gap-3 px-4.5 py-2 rounded-lg bg-[rgba(15,21,48,0.5)] border border-[rgba(0,245,255,0.22)] shrink-0 shadow-[0_0_12px_rgba(0,245,255,0.05),inset_0_1px_1px_rgba(255,255,255,0.05)] hover:border-[rgba(0,245,255,0.45)] hover:shadow-[0_0_20px_rgba(0,245,255,0.15)] transition-all duration-200"
-      style={{ minWidth: 185 }}
+      className="flex items-center gap-3 px-4 py-1.5 rounded-lg bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.15)] shrink-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.03),0_4px_12px_rgba(0,0,0,0.3)] hover:border-[rgba(0,245,255,0.4)] hover:shadow-[0_0_15px_rgba(0,245,255,0.12)] transition-all duration-200"
+      style={{ minWidth: 180 }}
     >
       <div className="flex-1 flex flex-col gap-0.5">
-        <div className="flex items-center justify-between">
-          <span className="font-mono text-[10.5px] font-bold tracking-wider text-[var(--text-muted)]">
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-mono text-[10px] font-bold tracking-wider text-[var(--text-muted)] select-none">
             {t.symbol}
           </span>
-          <span className="font-mono text-[10.5px] font-bold" style={{ color }}>
-            {isUp ? '+' : ''}{t.change.toFixed(1)}%
+          <span className="font-mono text-[10px] font-bold select-none" style={{ color }}>
+            {isUp ? '▲' : '▼'} {Math.abs(t.change).toFixed(1)}%
           </span>
         </div>
-        <span className="font-orbitron text-[13px] font-black text-white leading-tight">
+        <span className="font-orbitron text-[12px] font-black text-white leading-tight select-none">
           ${t.price.toLocaleString('en-US', { minimumFractionDigits: t.price < 1 ? 4 : 2, maximumFractionDigits: t.price < 1 ? 4 : 2 })}
         </span>
       </div>
@@ -77,22 +77,21 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
 
   return (
     <div
-      className="flex items-center h-16 w-full overflow-hidden animate-in"
-      style={{ background: 'var(--bg-surface)' }}
+      className="flex items-center h-full w-full overflow-hidden animate-in"
     >
-      {/* Left Logo branding */}
+      {/* Left Logo branding aligned to 284px width */}
       <div
-        className="flex items-center gap-2.5 px-5 shrink-0 h-full"
-        style={{ borderRight: '1px solid var(--border)', minWidth: 180 }}
+        className="flex items-center gap-3 shrink-0 h-full"
+        style={{ borderRight: '1px solid var(--border)', width: 284, paddingLeft: 12 }}
       >
-        <span className="text-2xl">🐋</span>
-        <span className="font-orbitron text-[16px] font-black tracking-widest text-gradient">
+        <span className="text-2xl drop-shadow-[0_0_10px_var(--cyan)] select-none">🐋</span>
+        <span className="font-orbitron text-[16px] font-black tracking-widest text-gradient select-none">
           GHOSTWHALE
         </span>
       </div>
 
       {/* Tickers list */}
-      <div className="flex flex-1 items-center gap-3 px-4 overflow-x-auto overflow-y-hidden py-1 feed-scroll scrollbar-none">
+      <div className="flex flex-1 items-center gap-3 px-6 overflow-x-auto overflow-y-hidden py-1 feed-scroll scrollbar-none">
         {tickers.map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
       </div>
     </div>

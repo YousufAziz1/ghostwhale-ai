@@ -338,7 +338,7 @@ export default function App() {
   const latestBlock = state.rpcStatus?.latest_block
 
   return (
-    <div className="relative min-h-screen lg:h-screen lg:overflow-hidden flex justify-center w-full" style={{ background: 'var(--bg-base)' }}>
+    <div className="relative min-h-screen lg:h-screen lg:overflow-hidden flex flex-col w-full" style={{ background: 'var(--bg-base)' }}>
       {/* ── Ambient layers ─────────────────────────────────────────────── */}
       <div className="bg-particles" />
       <div className="bg-grid" style={{ opacity: 0.6 }} />
@@ -358,23 +358,21 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* ── Layout ──────────────────────────────────────────────────────── */}
-      <div className="relative z-10 flex flex-col min-h-screen lg:h-screen lg:overflow-hidden max-w-[1760px] w-full px-4 lg:px-6">
-
-        {/* ── Top Header ─────────────────────────────────────────────────── */}
-        <div className="shrink-0 flex items-center w-full" style={{ borderBottom: '1px solid var(--border)' }}>
-          <div className="flex-1 min-w-0 flex items-center">
+      {/* ── Top Header (Full Width) ────────────────────────────────────── */}
+      <header className="relative z-20 shrink-0 w-full border-b border-[var(--border)] bg-[rgba(8,11,26,0.85)] backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
+        <div className="max-w-[1880px] mx-auto w-full px-4 lg:px-6 flex items-center justify-between h-16">
+          <div className="flex-1 min-w-0 flex items-center h-full">
             <LiveTicker isConnected={isConnected} latestBlock={latestBlock} />
           </div>
 
-          {/* Right header controls */}
+          {/* Right header controls aligned to 302px width (right sidebar alignment) */}
           <div
-            className="flex items-center gap-4 px-6 shrink-0 h-16"
-            style={{ borderLeft: '1px solid var(--border)' }}
+            className="flex items-center justify-end gap-4 shrink-0 h-full"
+            style={{ borderLeft: '1px solid var(--border)', width: 302, paddingRight: 12, paddingLeft: 16 }}
           >
             {/* RPC Latency Pill */}
             <div 
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[rgba(16,185,129,0.35)] bg-[rgba(16,185,129,0.06)] font-mono text-[11px] font-black"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[rgba(16,185,129,0.35)] bg-[rgba(16,185,129,0.06)] font-mono text-[11px] font-black hover:bg-[rgba(16,185,129,0.12)] transition-colors duration-200 cursor-pointer"
               style={{ color: 'var(--green)' }}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--green)] animate-pulse" />
@@ -383,7 +381,7 @@ export default function App() {
 
             {/* AI Confidence Pill */}
             <div 
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[rgba(0,245,255,0.35)] bg-[rgba(0,245,255,0.06)] font-mono text-[11px] font-black text-[var(--cyan)]"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[rgba(0,245,255,0.35)] bg-[rgba(0,245,255,0.06)] font-mono text-[11px] font-black text-[var(--cyan)] hover:bg-[rgba(0,245,255,0.12)] transition-colors duration-200 cursor-pointer"
             >
               <span>95% AI CONFIDENCE</span>
             </div>
@@ -433,9 +431,12 @@ export default function App() {
             )}
           </div>
         </div>
+      </header>
 
+      {/* ── Main Layout Wrapper ─────────────────────────────────────────── */}
+      <div className="relative z-10 flex-1 min-h-0 flex flex-col w-full lg:overflow-hidden">
         {/* ── Main 3-column grid ──────────────────────────────────────────── */}
-        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[272px_1fr_290px] gap-3 p-3 overflow-y-auto lg:overflow-hidden">
+        <div className="flex-1 min-h-0 w-full max-w-[1880px] mx-auto grid grid-cols-1 lg:grid-cols-[272px_1fr_290px] gap-3 p-3 overflow-y-auto lg:overflow-hidden px-4 lg:px-6">
           {/* ── LEFT: Agent stats ──────────────────────────────────────── */}
           <aside className="hud-panel flex flex-col rounded-xl bg-[var(--bg-surface)] panel-shadow-cyan panel-glare h-[600px] lg:h-full overflow-hidden">
             <span className="hud-corner hud-corner-tl" />
