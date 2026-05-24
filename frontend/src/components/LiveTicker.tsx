@@ -116,7 +116,7 @@ function TickerItem({ t }: { t: Ticker }) {
       </div>
 
       {/* Right Column: Inline Sparkline Chart */}
-      <div className="w-[45px] h-[22px] flex items-center pointer-events-none overflow-hidden shrink-0">
+      <div className="w-[50px] h-[32px] flex items-center pointer-events-none overflow-visible shrink-0">
         <SparklineArea data={t.spark} color={config.sparkColor} glowColor={config.glowColor} />
       </div>
     </div>
