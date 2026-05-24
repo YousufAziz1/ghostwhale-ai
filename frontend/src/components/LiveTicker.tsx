@@ -5,11 +5,11 @@ interface Ticker {
 }
 
 const SEED: Ticker[] = [
-  { symbol: 'BTC/USDT',  price: 68240,  change:  3.14, spark: [62,65,63,68,64,67,68] },
-  { symbol: 'ETH/USDT',  price: 3812,   change: -1.20, spark: [38,37,39,38,36,37,38] },
-  { symbol: 'MNT/USDT',  price: 1.08,    change:  5.80, spark: [0.95,1.0,0.98,1.05,1.02,1.06,1.08] },
-  { symbol: 'AGNI/USDT', price: 0.0412,  change:  5.20, spark: [0.036,0.038,0.04,0.039,0.041,0.042,0.041] },
-  { symbol: 'MOE/USDT',  price: 0.00823, change: -1.30, spark: [0.009,0.0085,0.0082,0.0083,0.0081,0.0082,0.0082] },
+  { symbol: 'BTC/USDT',  price: 68240,  change:  3.14, spark: [68120, 68250, 68180, 68320, 68210, 68290, 68240] },
+  { symbol: 'ETH/USDT',  price: 3812,   change: -1.20, spark: [3802, 3818, 3808, 3825, 3810, 3815, 3812] },
+  { symbol: 'MNT/USDT',  price: 1.08,    change:  5.80, spark: [1.02, 1.05, 1.03, 1.09, 1.06, 1.08, 1.08] },
+  { symbol: 'AGNI/USDT', price: 0.0412,  change:  5.20, spark: [0.038, 0.042, 0.039, 0.043, 0.040, 0.042, 0.041] },
+  { symbol: 'MOE/USDT',  price: 0.00823, change: -1.30, spark: [0.0080, 0.0084, 0.0081, 0.0085, 0.0082, 0.0083, 0.0082] },
 ]
 
 const TICKER_CONFIGS: Record<string, { sparkColor: string; textColor: string; glowColor: string }> = {
@@ -72,13 +72,13 @@ function TickerItem({ t }: { t: Ticker }) {
   const isUp = t.change >= 0
 
   return (
-    <div className="flex flex-col justify-between h-full px-4 py-1.5 flex-1 min-w-[120px] border-r border-[rgba(0,245,255,0.12)] last:border-r-0 relative overflow-hidden group hover:bg-[rgba(0,245,255,0.02)] transition-colors duration-200">
+    <div className="flex flex-col justify-between h-full px-5 py-2 w-1/5 border-r border-[rgba(0,245,255,0.18)] last:border-r-0 relative overflow-hidden group hover:bg-[rgba(0,245,255,0.02)] transition-colors duration-200">
       {/* Top Symbol & Change Row */}
-      <div className="flex items-center justify-between gap-2 z-10">
-        <span className="font-mono text-[9px] font-bold tracking-wider text-[#A0AEC0] select-none uppercase">
+      <div className="flex items-center justify-between gap-2 z-10 w-full">
+        <span className="font-mono text-[10.5px] font-bold tracking-wider text-[#A0AEC0] select-none uppercase">
           {t.symbol}
         </span>
-        <span className="font-mono text-[9px] font-black select-none tracking-wide" style={{ color: config.textColor }}>
+        <span className="font-mono text-[10.5px] font-black select-none tracking-wide" style={{ color: config.textColor }}>
           {isUp ? '+' : ''}{t.change.toFixed(1)}%
         </span>
       </div>
@@ -122,7 +122,7 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
   return (
     <div className="flex items-center gap-3 h-full w-full overflow-hidden animate-in">
       {/* Logo Card */}
-      <div className="flex items-center gap-3 shrink-0 px-4 h-11 border border-[rgba(0,245,255,0.18)] bg-[rgba(8,11,26,0.4)] rounded-lg shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.04)]">
+      <div className="flex items-center gap-3 shrink-0 px-4 h-12 border border-[rgba(0,245,255,0.18)] bg-[rgba(8,11,26,0.4)] rounded-lg shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.04)]">
         <WhaleIcon />
         <span className="font-orbitron text-[15.5px] font-black tracking-widest text-[var(--cyan)] drop-shadow-[0_0_6px_var(--cyan)] select-none">
           GHOSTWHALE
@@ -130,7 +130,7 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
       </div>
 
       {/* Tickers container */}
-      <div className="hidden md:flex flex-1 items-center border border-[rgba(0,245,255,0.18)] bg-[rgba(8,11,26,0.4)] rounded-lg h-11 overflow-hidden select-none">
+      <div className="hidden md:flex flex-1 items-center border border-[rgba(0,245,255,0.18)] bg-[rgba(8,11,26,0.4)] rounded-lg h-12 overflow-hidden select-none">
         {tickers.map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
       </div>
     </div>

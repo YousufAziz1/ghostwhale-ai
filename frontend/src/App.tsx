@@ -369,16 +369,16 @@ export default function App() {
           {/* Right header controls */}
           <div className="flex items-center justify-end gap-4 shrink-0 h-full">
             {/* Combined Telemetry Slot Card */}
-            <div className="hidden sm:flex flex-col justify-center px-4 py-1.5 border border-[rgba(0,245,255,0.18)] bg-[rgba(8,11,26,0.4)] rounded-lg min-w-[136px] h-11 shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.04)] select-none">
+            <div className="hidden sm:flex flex-col justify-center px-4 py-1.5 border border-[rgba(0,245,255,0.18)] bg-[rgba(8,11,26,0.4)] rounded-lg min-w-[136px] h-12 shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.04)] select-none">
               <div className="flex items-center gap-1.5 font-mono text-[9px] font-bold text-[#A0AEC0] tracking-wider leading-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-[var(--green)] animate-pulse shadow-[0_0_8px_var(--green)]" />
                 <span>LIVE 12ms RPC</span>
               </div>
-              <div className="flex items-baseline gap-1 mt-1 leading-none">
-                <span className="font-orbitron text-[15.5px] font-black text-[var(--cyan)] tracking-wide drop-shadow-[0_0_6px_var(--cyan)]">
+              <div className="flex flex-col mt-0.5 leading-none">
+                <span className="font-orbitron text-[15.5px] font-black text-[var(--cyan)] tracking-wide leading-none drop-shadow-[0_0_6px_var(--cyan)]">
                   95%
                 </span>
-                <span className="font-mono text-[8px] font-bold text-[#A0AEC0] tracking-wider uppercase">
+                <span className="font-mono text-[7.5px] font-bold text-[#A0AEC0] tracking-wider leading-none uppercase mt-0.5">
                   AI CONFIDENCE
                 </span>
               </div>
@@ -387,13 +387,13 @@ export default function App() {
             {/* Cyberpunk Ghost Mode Button with chamfered corners */}
             <div
               style={{
-                clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))',
+                clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))',
                 background: !isDemoMode 
                   ? 'linear-gradient(135deg, #7C3AED 0%, #FF3B5C 100%)' 
                   : 'linear-gradient(135deg, #00F5FF 0%, #3B82F6 100%)',
                 padding: '1.5px'
               }}
-              className="relative shrink-0 transition-all duration-300 hover:shadow-[0_0_20px_rgba(124,58,237,0.4)]"
+              className="relative shrink-0 transition-all duration-300 hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] h-12"
             >
               <motion.button
                 onClick={() => {
@@ -408,12 +408,12 @@ export default function App() {
                   }
                 }}
                 style={{
-                  clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))',
+                  clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))',
                   background: !isDemoMode ? '#00F5FF' : '#FF3B5C',
                   color: !isDemoMode ? '#050816' : '#FFFFFF',
                   cursor: 'pointer'
                 }}
-                className="font-orbitron text-[11px] font-black px-6 h-[41px] flex items-center justify-center gap-2 select-none"
+                className="font-orbitron text-[11.5px] font-black px-7 h-full w-full flex items-center justify-center gap-2 select-none"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
