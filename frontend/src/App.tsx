@@ -362,79 +362,71 @@ export default function App() {
       <header className="relative z-20 shrink-0 w-full border-b border-[var(--border)] bg-[rgba(8,11,26,0.85)] backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
         <div className="max-w-[1880px] mx-auto w-full px-4 lg:px-6 flex items-center justify-between h-16">
           {/* Left / Center section */}
-          <div className="flex-1 min-w-0 flex items-center justify-between h-full pr-4">
-            <div className="flex-1 min-w-0 flex items-center h-full">
-              <LiveTicker isConnected={isConnected} latestBlock={latestBlock} />
-            </div>
-
-            {/* Telemetry Pills in the middle section to prevent line overlap */}
-            <div className="hidden md:flex items-center gap-3 shrink-0 ml-4">
-              {/* RPC Latency Pill */}
-              <div 
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[rgba(16,185,129,0.35)] bg-[rgba(16,185,129,0.06)] font-mono text-[11px] font-black hover:bg-[rgba(16,185,129,0.12)] transition-colors duration-200 cursor-pointer"
-                style={{ color: 'var(--green)' }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--green)] animate-pulse" />
-                <span>LIVE {(Math.random() * 8 + 4).toFixed(0)}ms RPC</span>
-              </div>
-
-              {/* AI Confidence Pill */}
-              <div 
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[rgba(0,245,255,0.35)] bg-[rgba(0,245,255,0.06)] font-mono text-[11px] font-black text-[var(--cyan)] hover:bg-[rgba(0,245,255,0.12)] transition-colors duration-200 cursor-pointer"
-              >
-                <span>95% AI CONFIDENCE</span>
-              </div>
-            </div>
+          <div className="flex-1 min-w-0 flex items-center h-full">
+            <LiveTicker isConnected={isConnected} latestBlock={latestBlock} />
           </div>
 
-          {/* Right header controls aligned to 302px width (right sidebar alignment) */}
-          <div
-            className="flex items-center justify-end shrink-0 h-full w-auto lg:w-[302px]"
-            style={{ borderLeft: '1px solid var(--border)', paddingRight: 12, paddingLeft: 16 }}
-          >
-            {/* Ghost Mode Button */}
-            {!isDemoMode ? (
+          {/* Right header controls */}
+          <div className="flex items-center justify-end gap-4 shrink-0 h-full">
+            {/* Combined Telemetry Slot Card */}
+            <div className="hidden sm:flex flex-col justify-center px-4 py-1.5 border border-[rgba(0,245,255,0.18)] bg-[rgba(8,11,26,0.4)] rounded-lg min-w-[136px] h-11 shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.04)] select-none">
+              <div className="flex items-center gap-1.5 font-mono text-[9px] font-bold text-[#A0AEC0] tracking-wider leading-none">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--green)] animate-pulse shadow-[0_0_8px_var(--green)]" />
+                <span>LIVE 12ms RPC</span>
+              </div>
+              <div className="flex items-baseline gap-1 mt-1 leading-none">
+                <span className="font-orbitron text-[15.5px] font-black text-[var(--cyan)] tracking-wide drop-shadow-[0_0_6px_var(--cyan)]">
+                  95%
+                </span>
+                <span className="font-mono text-[8px] font-bold text-[#A0AEC0] tracking-wider uppercase">
+                  AI CONFIDENCE
+                </span>
+              </div>
+            </div>
+
+            {/* Cyberpunk Ghost Mode Button with chamfered corners */}
+            <div
+              style={{
+                clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))',
+                background: !isDemoMode 
+                  ? 'linear-gradient(135deg, #7C3AED 0%, #FF3B5C 100%)' 
+                  : 'linear-gradient(135deg, #00F5FF 0%, #3B82F6 100%)',
+                padding: '1.5px'
+              }}
+              className="relative shrink-0 transition-all duration-300 hover:shadow-[0_0_20px_rgba(124,58,237,0.4)]"
+            >
               <motion.button
                 onClick={() => {
-                  audio.init()
-                  audio.playAlarm()
-                  startDemo()
+                  if (!isDemoMode) {
+                    audio.init()
+                    audio.playAlarm()
+                    startDemo()
+                  } else {
+                    setIsDemoMode(false)
+                    audio.init()
+                    audio.playPing()
+                  }
                 }}
-                className="font-orbitron text-[12.5px] font-black px-7 py-3 rounded-lg shrink-0 flex items-center gap-2"
                 style={{
-                  background: 'linear-gradient(135deg, #00F5FF 0%, #00FFCC 100%)',
-                  color: '#050816',
-                  border: '2px solid rgba(0,245,255,1)',
-                  boxShadow: '0 0 25px rgba(0, 245, 255, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.8)',
+                  clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px))',
+                  background: !isDemoMode ? '#00F5FF' : '#FF3B5C',
+                  color: !isDemoMode ? '#050816' : '#FFFFFF',
                   cursor: 'pointer'
                 }}
-                whileHover={{ scale: 1.04, boxShadow: '0 0 35px rgba(0, 245, 255, 0.95)' }}
-                whileTap={{ scale: 0.96 }}
+                className="font-orbitron text-[11px] font-black px-6 h-[41px] flex items-center justify-center gap-2 select-none"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <span>ACTIVATE GHOST MODE</span>
+                {isDemoMode && (
+                  <motion.span 
+                    className="w-1.5 h-1.5 rounded-full bg-white"
+                    animate={{ scale: [1, 1.4, 1] }} 
+                    transition={{ duration: 0.8, repeat: Infinity }} 
+                  />
+                )}
+                <span>{!isDemoMode ? 'ACTIVATE GHOST MODE' : 'SIMULATION ACTIVE'}</span>
               </motion.button>
-            ) : (
-              <motion.button
-                onClick={() => {
-                  setIsDemoMode(false)
-                  audio.init()
-                  audio.playPing()
-                }}
-                className="font-orbitron text-[12.5px] font-black px-7 py-3 rounded-lg shrink-0 flex items-center gap-2 cursor-pointer"
-                style={{
-                  background: 'linear-gradient(135deg, #FF3B5C 0%, #E11D48 100%)',
-                  color: '#FFFFFF',
-                  border: '2px solid rgba(255,59,92,1)',
-                  boxShadow: '0 0 25px rgba(255, 59, 92, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.4)'
-                }}
-                whileHover={{ scale: 1.04, boxShadow: '0 0 35px rgba(255, 59, 92, 0.95)' }}
-                whileTap={{ scale: 0.96 }}
-              >
-                <motion.span className="w-1.5 h-1.5 rounded-full" style={{ background: '#FFFFFF' }}
-                  animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
-                <span>SIMULATION ACTIVE</span>
-              </motion.button>
-            )}
+            </div>
           </div>
         </div>
       </header>
