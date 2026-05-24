@@ -49,11 +49,11 @@ function SparklineArea({ data, color, glowColor }: { data: number[]; color: stri
   const min = Math.min(...data)
   const max = Math.max(...data)
   const range = max - min || 1
-  const w = 110, h = 36
+  const w = 110, h = 28
 
   const points = data.map((v, i) => {
     const x = (i / (data.length - 1)) * w
-    const y = h - ((v - min) / range) * (h - 8) - 4
+    const y = h - ((v - min) / range) * (h - 6) - 3
     return { x, y }
   })
 
@@ -66,13 +66,13 @@ function SparklineArea({ data, color, glowColor }: { data: number[]; color: stri
     <svg width="100%" height={h} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="overflow-visible">
       <defs>
         <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.28" />
+          <stop offset="0%" stopColor={color} stopOpacity="0.25" />
           <stop offset="100%" stopColor={color} stopOpacity="0.0" />
         </linearGradient>
       </defs>
       <path d={areaPath} fill={`url(#${gradId})`} />
-      <path d={linePath} fill="none" stroke={color} strokeWidth="1.5"
-        style={{ filter: `drop-shadow(0 0 4px ${glowColor})` }} strokeLinecap="round" strokeLinejoin="round" />
+      <path d={linePath} fill="none" stroke={color} strokeWidth="1.2"
+        style={{ filter: `drop-shadow(0 0 3px ${glowColor})` }} strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -88,20 +88,20 @@ function TickerItem({ t }: { t: Ticker }) {
   const [base, quote] = t.symbol.split('/')
 
   return (
-    <div className="h-full relative overflow-hidden border-r border-[rgba(0,245,255,0.18)] last:border-r-0 group hover:bg-[rgba(0,245,255,0.02)] transition-colors duration-200 select-none">
+    <div className="h-[42px] relative overflow-hidden border-r border-[rgba(0,245,255,0.18)] last:border-r-0 group hover:bg-[rgba(0,245,255,0.02)] transition-colors duration-200 select-none">
       {/* Top Symbol & Change Row - Positioned absolutely at the top */}
-      <div className="absolute inset-x-0 top-0 pt-3 px-3.5 z-10 flex items-center justify-between pointer-events-none">
-        <span className="font-body text-[10.5px] font-bold tracking-wide select-none uppercase">
+      <div className="absolute inset-x-0 top-0 pt-1.5 px-2.5 z-10 flex items-center justify-between pointer-events-none">
+        <span className="font-body text-[10px] font-bold tracking-wide select-none uppercase">
           <span className="text-[#FFFFFF]">{base}</span>
           <span className="text-[#64748B]">{quote ? `/${quote}` : ''}</span>
         </span>
-        <span className="font-body text-[11px] font-black select-none tracking-wide" style={{ color: config.textColor }}>
+        <span className="font-body text-[10px] font-black select-none tracking-wide" style={{ color: config.textColor }}>
           {isUp ? '+' : ''}{t.change.toFixed(1)}%
         </span>
       </div>
 
-      {/* Sparkline area - Positioned absolutely at the bottom, taking full width and taller height */}
-      <div className="absolute inset-x-0 bottom-0 h-10 z-0 flex items-end pointer-events-none overflow-hidden">
+      {/* Sparkline area - Positioned absolutely at the bottom, taking full width and h-[28px] height */}
+      <div className="absolute inset-x-0 bottom-0 h-[28px] z-0 flex items-end pointer-events-none overflow-hidden">
         <SparklineArea data={t.spark} color={config.sparkColor} glowColor={config.glowColor} />
       </div>
     </div>
@@ -109,7 +109,7 @@ function TickerItem({ t }: { t: Ticker }) {
 }
 
 const WhaleIcon = () => (
-  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-[0_0_6px_var(--cyan)] overflow-visible">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--cyan)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-[0_0_5px_var(--cyan)] overflow-visible">
     {/* Circle trail behind the whale */}
     <circle cx="12" cy="12" r="9" stroke="rgba(0, 245, 255, 0.25)" strokeDasharray="3 2" />
     
@@ -149,17 +149,17 @@ export default function LiveTicker({ isConnected, latestBlock }: { isConnected: 
   }, [])
 
   return (
-    <div className="flex items-center gap-3 h-full w-full overflow-hidden animate-in">
+    <div className="flex items-center gap-2 h-full w-full overflow-hidden animate-in">
       {/* Logo Card */}
-      <div className="flex items-center gap-3 shrink-0 px-4 h-14 border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.1)]">
+      <div className="flex items-center gap-1.5 shrink-0 px-2 h-[42px] border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.08)] select-none">
         <WhaleIcon />
-        <span className="font-body text-[17px] font-black tracking-[0.12em] text-[var(--cyan)] drop-shadow-[0_0_6px_var(--cyan)] select-none">
+        <span className="font-body text-[12px] font-black tracking-[0.1em] text-[var(--cyan)] drop-shadow-[0_0_6px_var(--cyan)] select-none">
           GHOSTWHALE
         </span>
       </div>
 
       {/* Tickers container */}
-      <div className="hidden md:grid grid-cols-5 flex-1 border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg h-14 overflow-hidden select-none">
+      <div className="hidden md:grid grid-cols-5 flex-1 border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg h-[42px] overflow-hidden select-none">
         {tickers.map((t, i) => <TickerItem key={`${t.symbol}-${i}`} t={t} />)}
       </div>
     </div>

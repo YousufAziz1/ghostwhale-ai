@@ -360,25 +360,25 @@ export default function App() {
 
       {/* ── Top Header (Full Width) ────────────────────────────────────── */}
       <header className="relative z-20 shrink-0 w-full border-b border-[var(--border)] bg-[rgba(8,11,26,0.85)] backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
-        <div className="max-w-[1880px] mx-auto w-full px-4 lg:px-6 flex items-center justify-between h-20">
+        <div className="max-w-[1880px] mx-auto w-full px-3 flex items-center justify-between h-[58px] gap-2">
           {/* Left / Center section */}
           <div className="flex-1 min-w-0 flex items-center h-full">
             <LiveTicker isConnected={isConnected} latestBlock={latestBlock} />
           </div>
 
           {/* Right header controls */}
-          <div className="flex items-center justify-end gap-4 shrink-0 h-full">
+          <div className="flex items-center justify-end gap-2 shrink-0 h-full">
             {/* Combined Telemetry Slot Card */}
-            <div className="hidden sm:flex flex-col justify-center px-4 py-2 border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg min-w-[136px] h-14 shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.1)] select-none">
-              <div className="flex items-center gap-1.5 font-body text-[9.5px] font-bold text-[#A0AEC0] tracking-wider leading-none uppercase">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--green)] animate-pulse shadow-[0_0_8px_var(--green)]" />
+            <div className="hidden sm:flex flex-col justify-center px-2.5 py-1 border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg min-w-[120px] h-[42px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.08)] select-none">
+              <div className="flex items-center gap-1 font-body text-[8px] font-bold text-[#A0AEC0] tracking-wider leading-none uppercase">
+                <span className="w-1 h-1 rounded-full bg-[var(--green)] animate-pulse shadow-[0_0_6px_var(--green)]" />
                 <span>LIVE 12ms RPC</span>
               </div>
-              <div className="flex flex-col mt-1 leading-none">
-                <span className="font-body text-[17px] font-black text-[var(--cyan)] tracking-wide leading-none drop-shadow-[0_0_6px_var(--cyan)]">
+              <div className="flex items-baseline gap-1 mt-0.5 leading-none">
+                <span className="font-body text-[13.5px] font-black text-[var(--cyan)] tracking-wide leading-none drop-shadow-[0_0_5px_var(--cyan)]">
                   95%
                 </span>
-                <span className="font-body text-[8px] font-black text-[#A0AEC0] tracking-[0.15em] leading-none uppercase mt-1">
+                <span className="font-body text-[7.5px] font-bold text-[#A0AEC0] tracking-wider leading-none uppercase">
                   AI CONFIDENCE
                 </span>
               </div>
@@ -387,13 +387,13 @@ export default function App() {
             {/* Cyberpunk Ghost Mode Button with chamfered corners */}
             <div
               style={{
-                clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)',
+                clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%)',
                 background: !isDemoMode 
                   ? 'linear-gradient(135deg, #7C3AED 0%, #FF3B5C 100%)' 
                   : 'linear-gradient(135deg, #00F5FF 0%, #3B82F6 100%)',
                 padding: '1.5px'
               }}
-              className="relative shrink-0 transition-all duration-300 hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] h-14"
+              className="relative shrink-0 transition-all duration-300 hover:shadow-[0_0_15px_rgba(124,58,237,0.3)] h-[42px]"
             >
               <motion.button
                 onClick={() => {
@@ -408,30 +408,23 @@ export default function App() {
                   }
                 }}
                 style={{
-                  clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%)',
+                  clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%)',
                   background: !isDemoMode ? '#00F5FF' : '#FF3B5C',
                   color: !isDemoMode ? '#050816' : '#FFFFFF',
                   cursor: 'pointer'
                 }}
-                className="font-body px-6 min-w-[150px] h-full w-full flex items-center justify-center gap-2 select-none"
+                className="font-body px-4 h-full w-full flex items-center justify-center gap-1.5 select-none text-[10.5px] font-black tracking-wider whitespace-nowrap"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
                 {isDemoMode && (
                   <motion.span 
-                    className="w-1.5 h-1.5 rounded-full bg-white shrink-0"
+                    className="w-1 h-1 rounded-full bg-white shrink-0"
                     animate={{ scale: [1, 1.4, 1] }} 
                     transition={{ duration: 0.8, repeat: Infinity }} 
                   />
                 )}
-                <div className="flex flex-col items-center justify-center text-center leading-none">
-                  <span className="font-body text-[11px] font-black tracking-widest uppercase">
-                    {!isDemoMode ? 'ACTIVATE' : 'SIMULATION'}
-                  </span>
-                  <span className="font-body text-[11px] font-black tracking-widest uppercase mt-0.5">
-                    {!isDemoMode ? 'GHOST MODE' : 'ACTIVE'}
-                  </span>
-                </div>
+                <span>{!isDemoMode ? 'ACTIVATE GHOST MODE' : 'SIMULATION ACTIVE'}</span>
               </motion.button>
             </div>
           </div>
