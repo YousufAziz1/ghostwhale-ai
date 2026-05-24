@@ -369,13 +369,13 @@ export default function App() {
           {/* Right header controls */}
           <div className="flex items-center justify-end gap-2 shrink-0 h-full">
             {/* Combined Telemetry Slot Card */}
-            <div className="hidden sm:flex flex-col justify-center px-2.5 py-1 border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg min-w-[120px] h-[42px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.08)] select-none">
+            <div className="hidden sm:flex flex-col justify-center px-2 py-1 border border-[rgba(0,245,255,0.25)] bg-[rgba(8,11,26,0.55)] rounded-lg min-w-[115px] h-[42px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_0_15px_rgba(0,245,255,0.08)] select-none">
               <div className="flex items-center gap-1 font-body text-[8px] font-bold text-[#A0AEC0] tracking-wider leading-none uppercase">
                 <span className="w-1 h-1 rounded-full bg-[var(--green)] animate-pulse shadow-[0_0_6px_var(--green)]" />
                 <span>LIVE 12ms RPC</span>
               </div>
               <div className="flex items-baseline gap-1 mt-0.5 leading-none">
-                <span className="font-body text-[13.5px] font-black text-[var(--cyan)] tracking-wide leading-none drop-shadow-[0_0_5px_var(--cyan)]">
+                <span className="font-body text-[12px] font-black text-[var(--cyan)] tracking-wide leading-none drop-shadow-[0_0_5px_var(--cyan)]">
                   95%
                 </span>
                 <span className="font-body text-[7.5px] font-bold text-[#A0AEC0] tracking-wider leading-none uppercase">
@@ -413,18 +413,25 @@ export default function App() {
                   color: !isDemoMode ? '#050816' : '#FFFFFF',
                   cursor: 'pointer'
                 }}
-                className="font-body px-4 h-full w-full flex items-center justify-center gap-1.5 select-none text-[10.5px] font-black tracking-wider whitespace-nowrap"
+                className="font-body px-4 h-full w-full flex items-center justify-center gap-1.5 select-none text-xs font-black tracking-wider leading-none"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
                 {isDemoMode && (
                   <motion.span 
-                    className="w-1 h-1 rounded-full bg-white shrink-0"
+                    className="w-1.5 h-1.5 rounded-full bg-white shrink-0"
                     animate={{ scale: [1, 1.4, 1] }} 
                     transition={{ duration: 0.8, repeat: Infinity }} 
                   />
                 )}
-                <span>{!isDemoMode ? 'ACTIVATE GHOST MODE' : 'SIMULATION ACTIVE'}</span>
+                <div className="flex flex-col items-center justify-center leading-none text-center">
+                  <span className="text-[9.5px] font-black tracking-wider uppercase">
+                    {!isDemoMode ? 'ACTIVATE' : 'SIMULATION'}
+                  </span>
+                  <span className="text-[10px] font-black tracking-wider uppercase mt-0.5">
+                    {!isDemoMode ? 'GHOST MODE' : 'ACTIVE'}
+                  </span>
+                </div>
               </motion.button>
             </div>
           </div>
