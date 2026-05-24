@@ -5,11 +5,36 @@ interface Ticker {
 }
 
 const SEED: Ticker[] = [
-  { symbol: 'BTC/USDT',  price: 68240,  change:  3.14, spark: [68120, 68250, 68180, 68320, 68210, 68290, 68240] },
-  { symbol: 'ETH/USDT',  price: 3812,   change: -1.20, spark: [3802, 3818, 3808, 3825, 3810, 3815, 3812] },
-  { symbol: 'MNT/USDT',  price: 1.08,    change:  5.80, spark: [1.02, 1.05, 1.03, 1.09, 1.06, 1.08, 1.08] },
-  { symbol: 'AGNI/USDT', price: 0.0412,  change:  5.20, spark: [0.038, 0.042, 0.039, 0.043, 0.040, 0.042, 0.041] },
-  { symbol: 'MOE/USDT',  price: 0.00823, change: -1.30, spark: [0.0080, 0.0084, 0.0081, 0.0085, 0.0082, 0.0083, 0.0082] },
+  { 
+    symbol: 'BTC/USDT',  
+    price: 68240,  
+    change: 3.14, 
+    spark: [68120, 68150, 68130, 68180, 68160, 68210, 68190, 68240, 68220, 68270, 68250, 68300, 68280, 68330, 68310, 68360, 68340, 68390, 68370, 68240] 
+  },
+  { 
+    symbol: 'ETH/USDT',  
+    price: 3812,   
+    change: -1.20, 
+    spark: [3802, 3810, 3805, 3815, 3812, 3820, 3818, 3825, 3822, 3830, 3828, 3835, 3832, 3840, 3838, 3845, 3842, 3850, 3848, 3812] 
+  },
+  { 
+    symbol: 'MNT/USDT',  
+    price: 1.08,    
+    change: 5.80, 
+    spark: [1.02, 1.04, 1.03, 1.05, 1.04, 1.06, 1.05, 1.07, 1.06, 1.08, 1.07, 1.09, 1.08, 1.10, 1.09, 1.11, 1.10, 1.12, 1.11, 1.08] 
+  },
+  { 
+    symbol: 'AGNI/USDT', 
+    price: 0.0412,  
+    change: 5.20, 
+    spark: [0.038, 0.040, 0.039, 0.041, 0.040, 0.042, 0.041, 0.043, 0.042, 0.044, 0.043, 0.045, 0.044, 0.046, 0.045, 0.047, 0.046, 0.048, 0.047, 0.041] 
+  },
+  { 
+    symbol: 'MOE/USDT',  
+    price: 0.00823, 
+    change: -1.30, 
+    spark: [0.0080, 0.0082, 0.0081, 0.0083, 0.0082, 0.0084, 0.0083, 0.0085, 0.0084, 0.0086, 0.0085, 0.0087, 0.0086, 0.0088, 0.0087, 0.0089, 0.0088, 0.0090, 0.0089, 0.0082] 
+  },
 ]
 
 const TICKER_CONFIGS: Record<string, { sparkColor: string; textColor: string; glowColor: string }> = {
@@ -32,18 +57,8 @@ function SparklineArea({ data, color, glowColor }: { data: number[]; color: stri
     return { x, y }
   })
 
-  // Generates cubic bezier smooth path
-  let linePath = `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`
-  for (let i = 0; i < points.length - 1; i++) {
-    const p0 = points[i]
-    const p1 = points[i + 1]
-    const cpX1 = p0.x + (p1.x - p0.x) / 2
-    const cpY1 = p0.y
-    const cpX2 = p1.x - (p1.x - p0.x) / 2
-    const cpY2 = p1.y
-    linePath += ` C ${cpX1.toFixed(1)} ${cpY1.toFixed(1)}, ${cpX2.toFixed(1)} ${cpY2.toFixed(1)}, ${p1.x.toFixed(1)} ${p1.y.toFixed(1)}`
-  }
-
+  // Generates sharp polyline paths (matching realistic crypto charts)
+  const linePath = 'M ' + points.map(p => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' L ')
   const areaPath = `${linePath} L ${w} ${h} L 0 ${h} Z`
   const gradId = `grad-${Math.random().toString(36).substr(2, 9)}`
 
@@ -72,13 +87,13 @@ function TickerItem({ t }: { t: Ticker }) {
   const isUp = t.change >= 0
 
   return (
-    <div className="flex flex-col justify-between h-full px-5 py-2 w-1/5 border-r border-[rgba(0,245,255,0.18)] last:border-r-0 relative overflow-hidden group hover:bg-[rgba(0,245,255,0.02)] transition-colors duration-200">
+    <div className="flex flex-col justify-between h-full px-5 py-2 w-1/5 min-w-[140px] border-r border-[rgba(0,245,255,0.18)] last:border-r-0 relative overflow-hidden group hover:bg-[rgba(0,245,255,0.02)] transition-colors duration-200">
       {/* Top Symbol & Change Row */}
       <div className="flex items-center justify-between gap-2 z-10 w-full">
-        <span className="font-mono text-[10.5px] font-bold tracking-wider text-[#A0AEC0] select-none uppercase">
+        <span className="font-body text-[11px] font-bold tracking-wide text-[#A0AEC0] select-none uppercase">
           {t.symbol}
         </span>
-        <span className="font-mono text-[10.5px] font-black select-none tracking-wide" style={{ color: config.textColor }}>
+        <span className="font-body text-[11px] font-black select-none tracking-wide" style={{ color: config.textColor }}>
           {isUp ? '+' : ''}{t.change.toFixed(1)}%
         </span>
       </div>
