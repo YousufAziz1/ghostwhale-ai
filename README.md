@@ -1,146 +1,135 @@
-# GhostWhale AI
+# GhostWhale AI: Autonomous Alpha Network
 
-> Autonomous AI trading agent for Mantle Network — Turing Test Hackathon 2026
-
-GhostWhale AI tracks large wallet movements on Mantle, scores them with a multi-factor AI engine, generates transparent trade signals with public reasoning, and executes (or mock-executes) trades on Merchant Moe — all displayed on a live cyberpunk dashboard with an ERC-8004 on-chain identity.
-
----
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Mantle Network                          │
-│   whale_tracker.py ──► signal_engine.py ──► trade_executor │
-│         │                    │                    │         │
-│         ▼                    ▼                    ▼         │
-│      database.py          telegram_bot         MockP&L      │
-│         │                                                   │
-│         └──────── main.py (FastAPI REST API) ───────────────┤
-│                              │                              │
-│               React Dashboard (Vite + Tailwind)            │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Key Components
-
-| File | Role |
-|---|---|
-| `backend/whale_tracker.py` | Polls Mantle RPC every 15s, detects ERC-20 Transfer events above $50K threshold |
-| `backend/signal_engine.py` | Scores wallets, analyses market context, generates BUY/SELL/HOLD signals with plain-English reasoning |
-| `backend/trade_executor.py` | MOCK mode: logs simulated trade, settles P&L after 30 min. REAL mode: Merchant Moe swap |
-| `backend/agent_identity.py` | ERC-8004 agent metadata merged with live DB stats |
-| `backend/database.py` | SQLite: whale_events, signals, trades, price_cache tables |
-| `backend/main.py` | FastAPI server: background scanner + REST API |
-| `contracts/AgentIdentity.sol` | ERC-8004 NFT with on-chain reputation, on-chain SVG token URI |
-| `frontend/src/App.tsx` | 3-column dashboard, polls backend, ambient cyberpunk styling |
+> **Institutional-Grade Multi-Agent Intelligence & On-Chain Audit Console on Mantle Network**  
+> Built for the **Mantle Turing Test Hackathon 2026**
 
 ---
 
-## Quick Start
+## 🌐 Live Contract Registry (Mantle Sepolia Testnet)
 
-### Backend
+All core components are deployed and verified on the Mantle Sepolia Network:
 
+| Contract | Address | Explorer Link |
+| :--- | :--- | :--- |
+| **AgentIdentity (ERC-8004)** | `0x51E2864C63E12D3EaE68874218C3558b4063c42B` | [Explorer Link](https://explorer.sepolia.mantle.xyz/address/0x51E2864C63E12D3EaE68874218C3558b4063c42B) |
+| **SignalRegistry** | `0xcDa86A272531e8640cD7F1a92c01839911B90bb0` | [Explorer Link](https://explorer.sepolia.mantle.xyz/address/0xcDa86A272531e8640cD7F1a92c01839911B90bb0) |
+| **AgentCouncil** | `0x09Bc4E0D864854c6aFB6eB9A9cdF58aC190D0dF9` | [Explorer Link](https://explorer.sepolia.mantle.xyz/address/0x09Bc4E0D864854c6aFB6eB9A9cdF58aC190D0dF9) |
+| **TradeHistory** | `0x201EBa5CC46D216Ce6DC03F6a759e8E766e956aE` | [Explorer Link](https://explorer.sepolia.mantle.xyz/address/0x201EBa5CC46D216Ce6DC03F6a759e8E766e956aE) |
+| **ReputationManager** | `0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8` | [Explorer Link](https://explorer.sepolia.mantle.xyz/address/0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8) |
+| **TransparencyLedger** | `0x5bE26527e817998A7206475496fDE1E68957c5A6` | [Explorer Link](https://explorer.sepolia.mantle.xyz/address/0x5bE26527e817998A7206475496fDE1E68957c5A6) |
+
+---
+
+## 🛠️ System Architecture
+
+GhostWhale AI runs an autonomous pipeline processing events from block generation down to frontend notifications and smart-contract state updates.
+
+```
++-----------------------------------------------------------------------------+
+|                               MANTLE BLOCKCHAIN                             |
+|                                                                             |
+|  [Whale Ingestion]                     [Consensus Auditing]                 |
+|  * Track whale swaps/transfers         * Store consensus hashes             |
+|  * Scan Merchant Moe LP events         * Update ERC-8004 Agent Reputation   |
++-------------------▲---------------------------------▲-----------------------+
+                    │ JSON-RPC                        │ w3.eth.send_raw_transaction
+                    │                                 │
++-------------------▼--------------------------------─┴────────────────-------+
+|                                BACKEND CORE                                 |
+|                                                                             |
+|  +-----------------------+      Debate      +----------------------------+  |
+|  |     Block Scanner     | ---------------> |    Multi-Agent Council     |  |
+|  | (whale_tracker.py &   |  (Transaction    | (WhaleHunter, LiquidityAI, |  |
+|  |  liquidity_scanner.py)|   Metadata)      | Momentum, RiskGuard, Macro)|  |
+|  +-----------------------+                  +-------------┬--------------+  |
+|                                                           │                 |
+|                                                           ▼ consensus results
+|  +-----------------------+   SSE Stream     +----------------------------+  |
+|  |  FastAPI Server (SSE)  | <--------------- |    Risk & Trade Engines    |  |
+|  | (main.py / /events)   |                  | (risk_engine / executor)   |  |
+|  +-----------┬-----------+                  +-------------┬--------------+  |
+|              │                                            │                 |
+|              │ Server-Sent Events                         ▼ sqlite / pg     |
+|              │                              +----------------------------+  |
+|              │                              |        Ecosystem DB        |  |
+|              │                              |       (ghostwhale.db)      |  |
+|              │                              +----------------------------+  |
++--------------┼--------------------------------------------------------------+
+               │
+               ▼ /api/events
++-----------------------------------------------------------------------------+
+|                             CYBERPUNK FRONTEND HUD                          |
+|                                                                             |
+|  * Rotating sonargrid (NetworkMap)          * Active debate details         |
+|  * Live transaction and LP scanner feeds    * ERC-8004 performance graph    |
++-----------------------------------------------------------------------------+
+```
+
+---
+
+## 💡 Core Features
+
+1. **Whale Tracker**: Scans Mantle blocks for large token movements exceeding `$50,000` (or native `MNT` movements) and computes wallet risk/activity scores.
+2. **Liquidity Scanner**: Watches pool events on Merchant Moe and Agni Finance, capturing LP additions (`lp_add`) and removals (`lp_remove`) to detect rug-pull signals or deep liquidity additions.
+3. **Multi-Agent Council**: Ingested transactions are submitted to **five specialized agents** who vote on market direction. The orchestrator computes a weighted consensus score to execute or skip a trade.
+4. **On-Chain Audit trails**: Integrates a custom suite of Solidity smart contracts deployed to Mantle Sepolia, enabling tamper-proof recording of agent voting patterns, trades, and reputation.
+5. **Dynamic SVG ERC-8004 NFT**: Binds the council state to an on-chain NFT badge that recalculates win rates and alters its SVG design as trades settle.
+6. **Cyberpunk HUD**: Futuristic React frontend built with vanilla HSL Huds, circular holograms, ambient alert systems, Threat Detection overlays, and Stealth Mode controls.
+
+---
+
+## 🚀 Quick Start
+
+Ensure you have Node.js 18+, Python 3.10+, and `pnpm` installed.
+
+### 1. Set Up Environment Variables
+Copy the example configuration:
 ```bash
-# 1. Install Python deps
+cp .env.example .env
+```
+*(By default, `MOCK_MODE=true` is set. This enables full paper trading and simulated contract integration out of the box without requiring private keys or gas).*
+
+### 2. Configure Python & Local Database
+```bash
+# Install core requirements
 pip install -r requirements.txt
 
-# 2. Copy env file
-cp .env.example .env
-# Edit .env — at minimum, MOCK_MODE=true (default)
+# Install Solidity compiler bindings
+pip install py-solc-x
 
-# 3. Run backend
-cd backend
-python main.py
-# → http://localhost:8000
-# → http://localhost:8000/docs (Swagger UI)
+# Initialize and seed database
+python backend/seed_demo.py
 ```
 
-### Frontend
+### 3. Deploy/Verify Smart Contracts
+To test compile and deploy the smart contracts (either in mock mode or using a testnet `PRIVATE_KEY`):
+```bash
+python scripts/deploy_all_contracts.py
+```
 
+### 4. Run Backend & Frontend Servers
+
+**Terminal 1: Start FastAPI Backend**
+```bash
+python backend/main.py
+```
+*(Runs on `http://localhost:8000`. You can inspect APIs at `/docs`)*
+
+**Terminal 2: Start React Frontend**
 ```bash
 cd frontend
-pnpm install    # already done
-pnpm dev        # → http://localhost:5173
+pnpm install
+pnpm dev
 ```
-
-### Deploy Agent NFT (optional, Mantle Testnet)
-
-```bash
-pip install py-solc-x
-# Set PRIVATE_KEY in .env (testnet wallet)
-python scripts/deploy_agent_nft.py
-# Contract address written to .env automatically
-```
+*(Runs on `http://localhost:5173`)*
 
 ---
 
-## API Endpoints
+## 📊 Documentation Index
 
-| Endpoint | Description |
-|---|---|
-| `GET /api/health` | RPC status + version |
-| `GET /api/signals?limit=20` | Recent AI trade signals with reasoning |
-| `GET /api/whale-events?limit=50` | Raw whale movements detected |
-| `GET /api/trades?limit=50` | Trade executions with P&L |
-| `GET /api/stats` | Agent performance: win rate, P&L, signal count |
-| `GET /api/pnl-timeseries` | Cumulative P&L for chart |
-| `GET /api/agent-identity` | ERC-8004 identity + reputation |
-
----
-
-## Signal Engine
-
-The AI scoring model uses a weighted confidence formula:
-
-```
-confidence = wallet_score  × 0.40
-           + volume_spike  × 0.25
-           + price_trend   × 0.20
-           + whale_cluster × 0.15
-```
-
-**Direction rules (in priority order):**
-1. `wallet_score > 0.70` AND `action == buy` AND `volume > 1.5×` → **BUY**
-2. `wallet_score > 0.70` AND `action == sell` AND `price_trend < -2%` → **SELL**
-3. `3+ whale buys` same token in 1h → **MOMENTUM BUY**
-4. `lp_remove` AND `price_trend < -1%` → **DUMP WARNING SELL**
-5. `volume > 2.5×` AND `price_trend > 0` → **BUY**
-6. Otherwise → **HOLD**
-
-All reasoning is generated as plain English and shown publicly on the dashboard. No black box.
-
----
-
-## ERC-8004 Agent Identity
-
-The `contracts/AgentIdentity.sol` contract:
-- Mints a unique NFT per AI agent
-- Stores `totalSignals`, `winningSignals`, `totalPnLBps` on-chain
-- Computes `reputationScore` (0–1000) from win rate + P&L
-- Serves a fully on-chain SVG token URI (no IPFS dependency)
-- Updated by the backend operator after each settled trade
-
----
-
-## Demo Script (Judges)
-
-1. **"GhostWhale AI is live on Mantle right now."**
-2. Show **WhaleFeed** — real whale movement appearing in real-time
-3. Show **SignalCard** — AI explains WHY it generated a BUY signal
-4. Show **Telegram** — alert arrives live on screen
-5. Show **DecisionLog** — every past decision is publicly visible, with P&L
-6. Show **AgentIdentity** — ERC-8004 NFT badge with live reputation score
-7. Show **PnL Chart** — mock P&L is positive and growing
-8. **"This is not a black box. GhostWhale shows every thought it has — on-chain, in real-time."**
-
----
-
-## Hackathon Tracks
-
-- ✅ **AI Trading & Strategy** — autonomous signal generation + execution on Mantle
-- ✅ **AI Alpha & Data** — on-chain whale intelligence + transparent decision log
-
----
-
-*GhostWhale AI — Built for Turing Test Hackathon 2026 | Mantle Network*
+For detailed specifications, review the separate guides:
+* **[System Architecture](file:///C:/Users/USER/./.gemini/antigravity/worktrees/ghostwhale-ai/debug-real-tx-tracking/ARCHITECTURE.md)**: Details on agents, database schema, and consensus calculations.
+* **[Deployment Manual](file:///C:/Users/USER/./.gemini/antigravity/worktrees/ghostwhale-ai/debug-real-tx-tracking/DEPLOYMENT.md)**: In-depth setup, dependency installation, and network configurations.
+* **[Judges Demo Guide](file:///C:/Users/USER/./.gemini/antigravity/worktrees/ghostwhale-ai/debug-real-tx-tracking/DEMO_SCRIPT.md)**: Walkthrough script for hackathon reviewers.
+* **[Pitch Deck Framework](file:///C:/Users/USER/./.gemini/antigravity/worktrees/ghostwhale-ai/debug-real-tx-tracking/PITCH_DECK.md)**: Project value proposition and market strategy slide copy.
+* **[Video Script](file:///C:/Users/USER/./.gemini/antigravity/worktrees/ghostwhale-ai/debug-real-tx-tracking/VIDEO_SCRIPT.md)**: Layout storyboard for the 3-minute project demo recording.

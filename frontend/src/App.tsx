@@ -15,8 +15,9 @@ import ProfitableTrades from '@/components/ProfitableTrades'
 import TxPopup from '@/components/TxPopup'
 import NeuralReasoningLogs from '@/components/NeuralReasoningLogs'
 import TradeExecutionFeed from '@/components/TradeExecutionFeed'
-import SmartMoneyAnalysis from '@/components/SmartMoneyAnalysis'
+import LiquidityScanner from '@/components/LiquidityScanner'
 import TxIntelligenceModal from '@/components/TxIntelligenceModal'
+import CouncilDebate from '@/components/CouncilDebate'
 
 // ── Seed demo data — UI is NEVER blank ─────────────────────────────────────
 const DEMO_TOKENS = ['mETH', 'WMNT', 'AGNI', 'MOE', 'USDY', 'USDC']
@@ -208,6 +209,9 @@ export default function App() {
   const fetchWhales = useCallback(async () => {
     try { const d = await api.whaleEvents(50); if (d.length > 0) setState(prev => ({...prev, whaleEvents: d})) } catch {}
   }, [])
+  const fetchSignals = useCallback(async () => {
+    try { const d = await api.signals(20); if (d.length > 0) setState(prev => ({...prev, signals: d})) } catch {}
+  }, [])
   const fetchTrades = useCallback(async () => {
     try { const d = await api.trades(50); if (d.length > 0) setState(prev => ({...prev, trades: d})) } catch {}
   }, [])
@@ -232,16 +236,98 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    fetchWhales(); fetchTrades(); fetchStats(); fetchIdentity(); fetchPnL(); fetchHealth()
+    fetchWhales(); fetchSignals(); fetchTrades(); fetchStats(); fetchIdentity(); fetchPnL(); fetchHealth()
   }, []) // eslint-disable-line
 
   useEffect(() => {
     const a = setInterval(fetchWhales, 15_000)
-    const b = setInterval(() => { fetchTrades(); fetchPnL() }, 30_000)
-    const c = setInterval(() => { fetchStats(); fetchIdentity() }, 30_000)
-    const d = setInterval(fetchHealth, 60_000)
-    return () => { clearInterval(a); clearInterval(b); clearInterval(c); clearInterval(d) }
-  }, [fetchWhales, fetchTrades, fetchPnL, fetchStats, fetchIdentity, fetchHealth])
+    const b = setInterval(fetchSignals, 15_000)
+    const c = setInterval(() => { fetchTrades(); fetchPnL() }, 30_000)
+    const d = setInterval(() => { fetchStats(); fetchIdentity() }, 30_000)
+    const e = setInterval(fetchHealth, 60_000)
+    return () => { clearInterval(a); clearInterval(b); clearInterval(c); clearInterval(d); clearInterval(e) }
+  }, [fetchWhales, fetchSignals, fetchTrades, fetchPnL, fetchStats, fetchIdentity, fetchHealth])
+
+  // ── Server-Sent Events (SSE) Listener for Real-Time HUD updates ───────────
+  useEffect(() => {
+    // Establish EventSource connection for streaming events
+    const sseUrl = `${api.defaults?.baseURL || 'http://localhost:8000'}/api/events`
+    console.log("Connecting to SSE stream at", sseUrl)
+    const source = new EventSource(sseUrl)
+    
+    source.addEventListener('whale_event', (e) => {
+      try {
+        const data = JSON.parse(e.data) as WhaleEvent
+        setState(prev => ({
+          ...prev,
+          whaleEvents: [data, ...prev.whaleEvents].slice(0, 60)
+        }))
+        triggerAlert(data)
+      } catch (err) {
+        console.error("Failed to parse SSE whale event:", err)
+      }
+    })
+    
+    source.addEventListener('signal', (e) => {
+      try {
+        const data = JSON.parse(e.data) as Signal
+        setState(prev => ({
+          ...prev,
+          signals: [data, ...prev.signals].slice(0, 20)
+        }))
+        // Play success sound for actionable consensus
+        if (data.direction !== 'HOLD') {
+          audio.playSuccess()
+        }
+      } catch (err) {
+        console.error("Failed to parse SSE signal event:", err)
+      }
+    })
+
+    source.addEventListener('trade', (e) => {
+      try {
+        const data = JSON.parse(e.data) as Trade
+        setState(prev => ({
+          ...prev,
+          trades: [data, ...prev.trades].slice(0, 60)
+        }))
+      } catch (err) {
+        console.error("Failed to parse SSE trade event:", err)
+      }
+    })
+
+    source.addEventListener('settled', (e) => {
+      try {
+        const data = JSON.parse(e.data) as Trade
+        setState(prev => {
+          const updatedTrades = prev.trades.map(t => t.signal_id === data.signal_id ? { ...t, ...data } : t)
+          const updatedPnL = [...prev.pnlSeries, {
+            timestamp: data.settled_at || new Date().toISOString(),
+            pnl_usd: data.pnl_usd ?? 0,
+            cumulative_pnl_usd: (prev.pnlSeries[prev.pnlSeries.length-1]?.cumulative_pnl_usd ?? 0) + (data.pnl_usd ?? 0),
+            token: data.token,
+            direction: data.direction
+          }].slice(-60)
+          return {
+            ...prev,
+            trades: updatedTrades,
+            pnlSeries: updatedPnL
+          }
+        })
+        fetchStats() // refresh stats totals
+      } catch (err) {
+        console.error("Failed to parse SSE settled event:", err)
+      }
+    })
+    
+    source.onerror = () => {
+      console.warn("SSE connection error. Retrying...")
+    }
+    
+    return () => {
+      source.close()
+    }
+  }, [fetchStats])
 
   // ── Trigger whale alert + flash ───────────────────────────────────────────
   const triggerAlert = useCallback((event: WhaleEvent) => {
@@ -458,18 +544,33 @@ export default function App() {
       <div className="relative z-10 flex-1 min-h-0 flex flex-col w-full lg:overflow-hidden max-w-[1880px] mx-auto px-4 py-4 lg:px-6 lg:py-5">
         {/* ── Main 3-column grid ──────────────────────────────────────────── */}
         <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[272px_1fr_290px] gap-5 p-5 overflow-y-auto lg:overflow-hidden">
-          {/* ── LEFT: Agent stats ──────────────────────────────────────── */}
-          <aside className="hud-panel flex flex-col rounded-2xl bg-[var(--bg-surface)] border border-[var(--border)] panel-shadow-cyan panel-glare h-[600px] lg:h-full overflow-hidden">
-            <span className="hud-corner hud-corner-tl" />
-            <span className="hud-corner hud-corner-tr" />
-            <span className="hud-corner hud-corner-bl" />
-            <span className="hud-corner hud-corner-br" />
-            <AgentStatsPanel
-              identity={state.identity}
-              stats={state.stats}
-              loading={false}
-              statusPhrase={statusPhrase}
-            />
+          {/* ── LEFT: Agent Stats & Council Debate ─────────────────────── */}
+          <aside className="flex flex-col gap-5 h-[600px] lg:h-full overflow-y-auto feed-scroll shrink-0 pr-1 select-none" style={{ width: 280 }}>
+            {/* 1. System Vital Statistics */}
+            <div className="shrink-0 hud-panel rounded-2xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '310px' }}>
+              <span className="hud-corner hud-corner-tl" />
+              <span className="hud-corner hud-corner-tr" />
+              <span className="hud-corner hud-corner-bl" />
+              <span className="hud-corner hud-corner-br" />
+              <AgentStatsPanel
+                identity={state.identity}
+                stats={state.stats}
+                loading={false}
+                statusPhrase={statusPhrase}
+              />
+            </div>
+
+            {/* 2. Council Debate (5 cores online) */}
+            <div className="flex-1 min-h-0 hud-panel rounded-2xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden">
+              <span className="hud-corner hud-corner-tl" />
+              <span className="hud-corner hud-corner-tr" />
+              <span className="hud-corner hud-corner-bl" />
+              <span className="hud-corner hud-corner-br" />
+              <CouncilDebate 
+                activeSignalId={state.signals[0]?.signal_id ?? null} 
+                activeVotes={state.signals[0]?.votes}
+              />
+            </div>
           </aside>
 
           {/* ── CENTER: Radar Scan + Whale Feed (Separate floating panels) ── */}
@@ -532,13 +633,13 @@ export default function App() {
               <TradeExecutionFeed />
             </div>
 
-            {/* 4. Smart Money Analysis */}
-            <div className="shrink-0 hud-panel rounded-2xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '110px' }}>
+            {/* 4. Liquidity Scanner */}
+            <div className="shrink-0 hud-panel rounded-2xl bg-[rgba(8,11,26,0.85)] border border-[var(--border)] panel-shadow-cyan overflow-hidden" style={{ height: '170px' }}>
               <span className="hud-corner hud-corner-tl" />
               <span className="hud-corner hud-corner-tr" />
               <span className="hud-corner hud-corner-bl" />
               <span className="hud-corner hud-corner-br" />
-              <SmartMoneyAnalysis />
+              <LiquidityScanner />
             </div>
 
             {/* 5. AI Signal Generation */}

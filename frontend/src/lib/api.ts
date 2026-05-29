@@ -22,6 +22,15 @@ export const api = {
   identity:      ()           => apiFetch<AgentIdentity>('/agent-identity'),
   pnlTimeseries: ()           => apiFetch<PnLPoint[]>('/pnl-timeseries'),
   health:        ()           => apiFetch<{ status: string; rpc: { connected: boolean; chain_id?: number; latest_block?: number } }>('/health'),
+  
+  // New Multi-Agent Council & Liquidity scanner endpoints
+  councilAgents:   ()           => apiFetch<any[]>('/council/agents'),
+  councilVotes:    (signalId: string) => apiFetch<any[]>(`/council/votes?signal_id=${signalId}`),
+  liquidityEvents: (limit = 30) => apiFetch<any[]>(`/liquidity-events?limit=${limit}`),
+
+  // Axios-like fallback compatibility
+  get:           <T>(path: string) => apiFetch<T>(path),
+  defaults:      { baseURL: BASE }
 }
 
 export function formatUSD(n: number): string {

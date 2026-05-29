@@ -43,6 +43,7 @@ export interface Signal {
   to_wallet?: string
   whale_amount_usd?: number
   whale_action?: string
+  votes?: any[]
 }
 
 export interface Trade {

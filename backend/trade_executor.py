@@ -226,6 +226,14 @@ async def run_mock_settler() -> None:
                         "[MOCK SETTLE] Trade#%d %s %s | P&L=$%.2f",
                         trade["id"], trade["direction"], trade["token"], pnl
                     )
+                    
+                    # Update Agent Reputation metrics
+                    from reputation_engine import evaluate_settled_trade_reputation
+                    await evaluate_settled_trade_reputation(settled)
+
+                    # Broadcast settlement to frontend
+                    from notification_engine import broadcast_event
+                    broadcast_event("settled", settled)
 
         except Exception as exc:
             logger.error("Mock settler error: %s", exc)
