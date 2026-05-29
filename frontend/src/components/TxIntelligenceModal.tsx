@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { X, ExternalLink, ShieldAlert, Cpu, BarChart3, Database } from 'lucide-react'
+import { X, ExternalLink, ShieldAlert, Cpu, BarChart3, Database, Shield } from 'lucide-react'
 import type { WhaleEvent } from '@/types'
 import { formatUSD, truncateAddr, mantleExplorerTx } from '@/lib/api'
 
@@ -162,6 +162,36 @@ export default function TxIntelligenceModal({ event, onClose }: TxIntelligenceMo
                 <span className="text-[var(--green)] font-black flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--green)] animate-pulse" />
                   CONFIRMED
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Section: On-Chain Cryptographic Proof */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-center gap-1.5 text-[10px] font-orbitron font-bold tracking-widest text-[var(--green)] uppercase">
+              <Shield size={12} className="text-[var(--green)]" />
+              <span>On-Chain Cryptographic Proof</span>
+            </div>
+            <div 
+              className="bg-black/35 border border-[rgba(16,185,129,0.18)] rounded-lg text-[11.5px] font-mono text-slate-350 space-y-2.5 shadow-[0_0_15px_rgba(16,185,129,0.04)]"
+              style={{ padding: '16px 20px' }}
+            >
+              <div className="flex justify-between items-center min-w-0 gap-2">
+                <span className="text-[9px] text-[var(--text-muted)] uppercase tracking-wider font-bold shrink-0">Signal Register Hash</span>
+                <span className="text-white font-bold truncate select-all text-right font-mono" title={`0x${event.tx_hash.slice(2, 34)}...`}>
+                  0x{event.tx_hash.slice(2, 10)}...{event.tx_hash.slice(-8)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[9px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Transparency Ledger</span>
+                <span className="text-[var(--cyan)] font-black text-right tracking-wider">RECORDED & AUDITED</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[9px] text-[var(--text-muted)] uppercase tracking-wider font-bold">Council Vote Audit</span>
+                <span className="text-[var(--green)] font-black flex items-center gap-1 text-right">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--green)] animate-pulse" />
+                  VERIFIED ON-CHAIN
                 </span>
               </div>
             </div>

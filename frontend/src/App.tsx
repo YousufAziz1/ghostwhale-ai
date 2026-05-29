@@ -457,33 +457,30 @@ export default function App() {
             {/* Combined Telemetry Slot Card */}
             <div 
               style={{
-                borderColor: !isDemoMode ? 'rgba(0,245,255,0.25)' : 'rgba(245,158,11,0.25)',
-                boxShadow: !isDemoMode ? 'inset 0 1px 1px rgba(255,255,255,0.03), 0 0 15px rgba(0,245,255,0.08)' : 'inset 0 1px 1px rgba(255,255,255,0.03), 0 0 15px rgba(245,158,11,0.08)'
+                borderColor: !isDemoMode ? '#10B981' : '#F59E0B',
+                boxShadow: !isDemoMode ? 'inset 0 1px 1px rgba(255,255,255,0.03), 0 0 15px rgba(16,185,129,0.1)' : 'inset 0 1px 1px rgba(255,255,255,0.03), 0 0 15px rgba(245,158,11,0.1)'
               }}
-              className="hidden sm:flex flex-col justify-center px-2 py-1 border bg-[rgba(8,11,26,0.55)] rounded-lg min-w-[130px] h-[40px] select-none"
+              className="hidden sm:flex flex-col justify-center px-3 py-1 border bg-[rgba(8,11,26,0.65)] rounded-lg min-w-[150px] h-[40px] select-none"
             >
-              <div className="flex items-center gap-1 font-body text-[8px] font-bold text-[#A0AEC0] tracking-wider leading-none uppercase">
+              <div className="flex items-center gap-1 font-mono text-[8.5px] font-black text-[#A0AEC0] tracking-wider leading-none uppercase">
                 {!isDemoMode ? (
                   <>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--green)] animate-pulse shadow-[0_0_6px_var(--green)]" />
-                    <span>MANTLE MAINNET</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse shadow-[0_0_6px_#10B981]" />
+                    <span>LIVE MODE</span>
                   </>
                 ) : (
                   <>
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse shadow-[0_0_6px_#f59e0b]" />
-                    <span>DEMO SANDBOX</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B] animate-pulse shadow-[0_0_6px_#F59E0B]" />
+                    <span>MOCK MODE</span>
                   </>
                 )}
               </div>
               <div className="flex items-baseline gap-1 mt-0.5 leading-none">
                 <span 
-                  style={{ color: !isDemoMode ? 'var(--cyan)' : '#f59e0b', textShadow: !isDemoMode ? '0 0 5px var(--cyan)' : '0 0 5px #f59e0b' }}
-                  className="font-body text-[12px] font-black tracking-wide leading-none"
+                  style={{ color: !isDemoMode ? '#10B981' : '#F59E0B', textShadow: !isDemoMode ? '0 0 5px #10B981' : '0 0 5px #F59E0B' }}
+                  className="font-orbitron text-[9.5px] font-black tracking-widest leading-none uppercase"
                 >
-                  {!isDemoMode ? 'LIVE FEED' : 'SIMULATED'}
-                </span>
-                <span className="font-body text-[7.5px] font-bold text-[#A0AEC0] tracking-wider leading-none uppercase">
-                  {!isDemoMode ? 'ON-CHAIN' : 'TELEMETRY'}
+                  {!isDemoMode ? 'MANTLE RPC ACTIVE' : 'DEMO SANDBOX'}
                 </span>
               </div>
             </div>
@@ -569,6 +566,8 @@ export default function App() {
               <CouncilDebate 
                 activeSignalId={state.signals[0]?.signal_id ?? null} 
                 activeVotes={state.signals[0]?.votes}
+                consensusDirection={state.signals[0]?.direction}
+                consensusConfidence={state.signals[0]?.confidence}
               />
             </div>
           </aside>

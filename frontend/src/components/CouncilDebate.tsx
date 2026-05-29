@@ -22,9 +22,11 @@ interface Vote {
 interface CouncilDebateProps {
   activeSignalId: string | null
   activeVotes?: Vote[]
+  consensusDirection?: 'BUY' | 'SELL' | 'HOLD'
+  consensusConfidence?: number
 }
 
-export default function CouncilDebate({ activeSignalId, activeVotes }: CouncilDebateProps) {
+export default function CouncilDebate({ activeSignalId, activeVotes, consensusDirection, consensusConfidence }: CouncilDebateProps) {
   const [agents, setAgents] = useState<Agent[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -102,6 +104,35 @@ export default function CouncilDebate({ activeSignalId, activeVotes }: CouncilDe
       </div>
 
       <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-3 feed-scroll">
+        {activeVotes && activeVotes.length > 0 && consensusDirection && (
+          <div className="p-3 border border-[rgba(0,245,255,0.18)] bg-[rgba(8,11,26,0.55)] rounded-xl flex flex-col gap-1.5 shadow-[0_0_12px_rgba(0,245,255,0.05)] select-none shrink-0">
+            <span className="font-orbitron text-[9px] font-black tracking-widest text-[var(--cyan)] uppercase">
+              CONSOLIDATED CONSENSUS VERDICT
+            </span>
+            <div className="flex items-center justify-between">
+              <span className={`text-[10px] font-black px-2 py-0.5 rounded border uppercase tracking-wider ${
+                consensusDirection === 'BUY' ? 'bg-[rgba(16,185,129,0.15)] text-[#10B981] border-[#10B981]' :
+                consensusDirection === 'SELL' ? 'bg-[rgba(239,68,68,0.15)] text-[#EF4444] border-[#EF4444]' :
+                'bg-[rgba(245,158,11,0.15)] text-[#F59E0B] border-[#F59E0B]'
+              }`}>
+                {consensusDirection}
+              </span>
+              <span className="font-orbitron text-xs font-black text-white">
+                {Math.round((consensusConfidence || 0) * 100)}% CONFIDENCE
+              </span>
+            </div>
+            <div className="w-full bg-slate-800 h-1 rounded overflow-hidden">
+              <div 
+                className={`h-full rounded ${
+                  consensusDirection === 'BUY' ? 'bg-[#10B981]' :
+                  consensusDirection === 'SELL' ? 'bg-[#EF4444]' :
+                  'bg-[#F59E0B]'
+                }`} 
+                style={{ width: `${(consensusConfidence || 0) * 100}%` }}
+              />
+            </div>
+          </div>
+        )}
         {loading ? (
           <div className="h-full flex items-center justify-center font-mono text-[11px] text-slate-500">
             CONNECTING COUNCIL CORES...

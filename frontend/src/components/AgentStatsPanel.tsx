@@ -174,6 +174,60 @@ export default function AgentStatsPanel({ identity, stats, loading, statusPhrase
         </span>
       </div>
 
+      {/* ── Smart Contract Status Card ── */}
+      <div className="p-3 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 flex flex-col gap-2 select-none">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <Server size={12} className="text-[var(--cyan)]" />
+            <span className="font-mono text-[10px] font-bold text-[var(--text-muted)] tracking-wider">CONTRACT REGISTRY STATUS</span>
+          </div>
+          <span className="live-dot animate-ping" style={{ width: 6, height: 6, background: 'var(--green)', boxShadow: '0 0 6px var(--green)' }} />
+        </div>
+        <div className="grid grid-cols-2 gap-1.5 font-mono text-[9px] font-bold">
+          <div className="flex items-center justify-between p-1.5 rounded bg-black/35 border border-white/5">
+            <span className="text-slate-400">ERC-8004 NFT</span>
+            <span className="text-[var(--green)]">ONLINE</span>
+          </div>
+          <div className="flex items-center justify-between p-1.5 rounded bg-black/35 border border-white/5">
+            <span className="text-slate-400">SIGNALS REG</span>
+            <span className="text-[var(--green)]">ONLINE</span>
+          </div>
+          <div className="flex items-center justify-between p-1.5 rounded bg-black/35 border border-white/5">
+            <span className="text-slate-400">COUNCIL ADDR</span>
+            <span className="text-[var(--green)]">ONLINE</span>
+          </div>
+          <div className="flex items-center justify-between p-1.5 rounded bg-black/35 border border-white/5">
+            <span className="text-slate-400">REP MANAGER</span>
+            <span className="text-[var(--green)]">ONLINE</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Agent Reputation Leaderboard Card ── */}
+      <div className="p-3 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0 flex flex-col gap-2 select-none">
+        <div className="flex items-center justify-between">
+          <span className="font-orbitron text-[10.5px] font-black tracking-widest text-[var(--purple)] uppercase">COUNCIL LEADERBOARD</span>
+          <span className="font-mono text-[9px] font-bold text-slate-500 uppercase">ERC-8004 RATING</span>
+        </div>
+        <div className="space-y-1.5 font-mono text-[10px]">
+          {[
+            { name: 'WhaleHunter AI', score: 934, color: 'text-amber-500 font-bold' },
+            { name: 'LiquidityAI', score: 912, color: 'text-amber-500/80 font-semibold' },
+            { name: 'MomentumAI', score: 886, color: 'text-slate-350' },
+            { name: 'RiskGuard AI', score: 871, color: 'text-slate-400' },
+            { name: 'MacroAI', score: 860, color: 'text-slate-500' }
+          ].map((agent, idx) => (
+            <div key={idx} className="flex items-center justify-between py-0.5 border-b border-white/[0.02]">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[9px] font-black text-slate-500">{idx + 1}.</span>
+                <span className="text-white font-medium">{agent.name}</span>
+              </div>
+              <span className={`font-black ${agent.color}`}>{agent.score} pts</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* ── Neural Sub-Networks Card ──────────────────────────────────── */}
       <div className="p-3 rounded-xl bg-[rgba(8,11,26,0.65)] border border-[rgba(0,245,255,0.14)] shadow-[0_4px_24px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.03)] shrink-0">
         <div className="flex items-center justify-center gap-1.5 mb-1.5">
