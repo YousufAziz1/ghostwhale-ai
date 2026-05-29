@@ -113,13 +113,72 @@ def init_db() -> None:
             )
         """)
 
+        # Multi-Agent Council - Member Registry
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS agents (
+                name             TEXT PRIMARY KEY,
+                role             TEXT NOT NULL,
+                description      TEXT NOT NULL,
+                reputation_score REAL NOT NULL DEFAULT 500.0,
+                risk_score       REAL NOT NULL DEFAULT 0.0,
+                active           INTEGER NOT NULL DEFAULT 1
+            )
+        """)
+
+        # Council Votes - Records individual agent opinions
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS votes (
+                id           INTEGER PRIMARY KEY AUTOINCREMENT,
+                signal_id    TEXT NOT NULL,
+                agent_name   TEXT NOT NULL,
+                direction    TEXT NOT NULL,
+                confidence   REAL NOT NULL,
+                reasoning    TEXT NOT NULL,
+                timestamp    TEXT NOT NULL,
+                FOREIGN KEY(signal_id) REFERENCES signals(signal_id),
+                FOREIGN KEY(agent_name) REFERENCES agents(name)
+            )
+        """)
+
+        # Agent Reputation History - Logs snapshots of agent score fluctuations
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS reputation_history (
+                id               INTEGER PRIMARY KEY AUTOINCREMENT,
+                agent_name       TEXT NOT NULL,
+                reputation_score REAL NOT NULL,
+                pnl_usd          REAL NOT NULL DEFAULT 0.0,
+                timestamp        TEXT NOT NULL,
+                FOREIGN KEY(agent_name) REFERENCES agents(name)
+            )
+        """)
+
+        # Liquidity Scan Events
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS liquidity_events (
+                id            INTEGER PRIMARY KEY AUTOINCREMENT,
+                tx_hash       TEXT    UNIQUE NOT NULL,
+                pool          TEXT    NOT NULL,
+                token0        TEXT    NOT NULL,
+                token1        TEXT    NOT NULL,
+                action        TEXT    NOT NULL,         -- lp_add / lp_remove
+                amount_usd    REAL    NOT NULL DEFAULT 0,
+                block_number  INTEGER NOT NULL,
+                timestamp     TEXT    NOT NULL
+            )
+        """)
+
         # Indexes for common query patterns
         c.execute("CREATE INDEX IF NOT EXISTS idx_signals_ts        ON signals(timestamp DESC)")
         c.execute("CREATE INDEX IF NOT EXISTS idx_signals_direction ON signals(direction)")
         c.execute("CREATE INDEX IF NOT EXISTS idx_trades_settled    ON trades(settled)")
         c.execute("CREATE INDEX IF NOT EXISTS idx_whale_token       ON whale_events(token)")
         c.execute("CREATE INDEX IF NOT EXISTS idx_whale_ts          ON whale_events(timestamp DESC)")
+        c.execute("CREATE INDEX IF NOT EXISTS idx_votes_sig         ON votes(signal_id)")
+        c.execute("CREATE INDEX IF NOT EXISTS idx_rep_agent         ON reputation_history(agent_name)")
+        c.execute("CREATE INDEX IF NOT EXISTS idx_liq_ts            ON liquidity_events(timestamp DESC)")
 
+    # Seed the 5 agents if the table is empty
+    _seed_agents_if_empty()
     logger.info("Database initialised at %s", DB_PATH)
 
 
@@ -417,3 +476,116 @@ def get_pnl_timeseries() -> list[dict]:
         d["cumulative_pnl_usd"] = round(cumulative, 2)
         result.append(d)
     return result
+
+
+# ─── Multi-Agent Council & Liquidity Helpers ─────────────────────────────────
+
+def _seed_agents_if_empty() -> None:
+    """Populates the 5 council agents if not already seeded."""
+    with get_conn() as conn:
+        count = conn.execute("SELECT COUNT(*) FROM agents").fetchone()[0]
+        if count == 0:
+            agents = [
+                ("WhaleHunter AI", "On-Chain Scanner", "Tracks large on-chain moves, transaction velocities, and whale clustering patterns."),
+                ("LiquidityAI", "Pool Analyst", "Monitors Merchant Moe and Agni Finance pool ratios, TVL depths, and token ratio shifts."),
+                ("MomentumAI", "Volume Strategist", "Identifies price momentum, daily moving averages, and volume spikes."),
+                ("RiskGuard AI", "Threat Detector", "Analyzes wash-trading flags, contract logic vulnerabilities, and wallet age risks."),
+                ("MacroAI", "Ecosystem Evaluator", "Monitors general market sentiment, gas price fluctuations, and ecosystem health.")
+            ]
+            conn.executemany("""
+                INSERT INTO agents (name, role, description, reputation_score, risk_score)
+                VALUES (?, ?, ?, 500.0, 0.0)
+            """, agents)
+            logger.info("Seeded 5 Council Agents into database")
+
+
+def get_agents() -> list[dict]:
+    """Retrieves all registered council agents and their stats."""
+    with get_conn() as conn:
+        rows = conn.execute("SELECT * FROM agents ORDER BY name ASC").fetchall()
+    return [dict(r) for r in rows]
+
+
+def update_agent_reputation(name: str, new_reputation: float, risk_score: float) -> None:
+    """Updates an agent's reputation and risk score in the database."""
+    with get_conn() as conn:
+        conn.execute("""
+            UPDATE agents
+            SET reputation_score = ?, risk_score = ?
+            WHERE name = ?
+        """, (new_reputation, risk_score, name))
+
+
+def save_vote(vote: dict) -> bool:
+    """Saves a council member's vote details."""
+    try:
+        with get_conn() as conn:
+            conn.execute("""
+                INSERT INTO votes (signal_id, agent_name, direction, confidence, reasoning, timestamp)
+                VALUES (:signal_id, :agent_name, :direction, :confidence, :reasoning, :timestamp)
+            """, vote)
+        return True
+    except Exception as e:
+        logger.error("Error saving council vote: %s", e)
+        return False
+
+
+def get_votes_for_signal(signal_id: str) -> list[dict]:
+    """Returns all votes cast by the council for a given signal."""
+    with get_conn() as conn:
+        rows = conn.execute("""
+            SELECT * FROM votes
+            WHERE signal_id = ?
+            ORDER BY agent_name ASC
+        """, (signal_id,)).fetchall()
+    return [dict(r) for r in rows]
+
+
+def save_liquidity_event(event: dict) -> bool:
+    """Inserts a liquidity add/remove event into the DB."""
+    try:
+        with get_conn() as conn:
+            conn.execute("""
+                INSERT OR IGNORE INTO liquidity_events
+                    (tx_hash, pool, token0, token1, action, amount_usd, block_number, timestamp)
+                VALUES
+                    (:tx_hash, :pool, :token0, :token1, :action, :amount_usd, :block_number, :timestamp)
+            """, event)
+            inserted = conn.execute("SELECT changes()").fetchone()[0]
+        return bool(inserted)
+    except Exception as e:
+        logger.error("Error saving liquidity event: %s", e)
+        return False
+
+
+def get_recent_liquidity_events(limit: int = 50) -> list[dict]:
+    """Returns the most recent liquidity scan events."""
+    with get_conn() as conn:
+        rows = conn.execute("""
+            SELECT * FROM liquidity_events
+            ORDER BY timestamp DESC
+            LIMIT ?
+        """, (limit,)).fetchall()
+    return [dict(r) for r in rows]
+
+
+def save_reputation_history(agent_name: str, score: float, pnl_usd: float) -> None:
+    """Records a snapshot of an agent's reputation state."""
+    with get_conn() as conn:
+        conn.execute("""
+            INSERT INTO reputation_history (agent_name, reputation_score, pnl_usd, timestamp)
+            VALUES (?, ?, ?, datetime('now'))
+        """, (agent_name, score, pnl_usd))
+
+
+def get_reputation_history(agent_name: str, limit: int = 50) -> list[dict]:
+    """Retrieves chronological reputation logs for a given agent."""
+    with get_conn() as conn:
+        rows = conn.execute("""
+            SELECT * FROM reputation_history
+            WHERE agent_name = ?
+            ORDER BY timestamp DESC
+            LIMIT ?
+        """, (agent_name, limit)).fetchall()
+    return [dict(r) for r in rows]
+

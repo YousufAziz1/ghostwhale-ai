@@ -65,7 +65,7 @@ ERC20_ABI = [
 ]
 
 # ERC-20 Transfer event topic (keccak256)
-TRANSFER_TOPIC = w3.keccak(text="Transfer(address,address,uint256)").hex()
+TRANSFER_TOPIC = "0x" + w3.keccak(text="Transfer(address,address,uint256)").hex()
 
 # DEX router addresses (lowercase) — used to classify buy/sell vs transfer
 DEX_ADDRESSES: set[str] = {

@@ -147,103 +147,107 @@ def _suggested_size(confidence: float, max_size: float = 10_000) -> float:
     return round(confidence * max_size, 0)
 
 
-def _build_reasoning(event, wallet_score, market_ctx, direction, confidence, signals_fired) -> str:
-    wallet_short = event.from_wallet[:6] + "…" + event.from_wallet[-4:]
-    smart_pct    = int(wallet_score * 100)
-    amount_str   = f"${event.amount_usd:,.0f}"
-    trend_pct    = market_ctx["price_trend_1h"]
-    vol_ratio    = market_ctx["volume_vs_avg"]
-    whale_cnt    = market_ctx["whale_count_1h"]
-    conf_pct     = int(confidence * 100)
-    action_str   = event.action.replace("_", " ").title()
-    explorer_link = f"{MANTLE_EXPLORER}/tx/{event.tx_hash}"
+async def generate_signal(event: WhaleEvent, wallet_score: float, market_ctx: dict) -> TradeSignal:
+    """
+    Core signal generation utilizing risk analysis and the 5-agent council debate.
+    """
+    from risk_engine import analyze_transaction_risk
+    from agent_council import hold_council_debate
+    from database import get_agents
 
-    trend_str = (
-        f"up {abs(trend_pct):.1f}%"   if trend_pct >  0.5 else
-        f"down {abs(trend_pct):.1f}%" if trend_pct < -0.5 else
-        "flat"
+    # Generate signal ID
+    signal_id = str(uuid.uuid4())
+
+    # 1. Fetch wallet history for risk evaluation
+    try:
+        from whale_tracker import get_wallet_history
+        history = await get_wallet_history(event.from_wallet, limit=20)
+    except Exception:
+        history = []
+
+    # 2. Risk analysis
+    risk_ctx = analyze_transaction_risk(
+        event.from_wallet,
+        event.to_wallet,
+        event.amount_usd,
+        event.token,
+        history
     )
 
-    lines = [
-        f"Wallet {wallet_short} (Smart Money Score: {smart_pct}%) executed a {action_str} of {amount_str} {event.token}.",
-        "",
-        f"Market context: {event.token} price is {trend_str} in the last hour. "
-        f"Volume is {vol_ratio:.1f}x above the 7-day average. "
-        f"{whale_cnt} other whale transaction(s) detected in the last 60 min.",
-        "",
-        "Pattern flags triggered:",
-    ]
-    for sig in signals_fired:
-        lines.append(f"  * {sig}")
-    lines += ["", f"Signal: {direction} — {conf_pct}% confidence.", f"On-chain: {explorer_link}"]
-    return "\n".join(lines)
+    # 3. Conduct multi-agent council debate
+    votes = await hold_council_debate(signal_id, event, market_ctx, risk_ctx)
 
+    # 4. Compute consensus
+    # Fetch agents reputation scores
+    try:
+        agents_list = get_agents()
+        agents_map = {a["name"]: a["reputation_score"] for a in agents_list}
+    except Exception:
+        agents_map = {}
 
-def generate_signal(event: WhaleEvent, wallet_score: float, market_ctx: dict) -> TradeSignal:
-    """Core signal generation with weighted confidence + direction rules."""
-    action      = event.action
-    vol_ratio   = market_ctx["volume_vs_avg"]
-    trend       = market_ctx["price_trend_1h"]
-    whale_count = market_ctx["whale_count_1h"]
+    val_sum = 0.0
+    weight_sum = 0.0
+    for v in votes:
+        direction_val = 1.0 if v["direction"] == "BUY" else -1.0 if v["direction"] == "SELL" else 0.0
+        rep_weight = agents_map.get(v["agent_name"], 500.0) / 1000.0  # scale 0.0 to 1.0
+        val_sum += direction_val * v["confidence"] * rep_weight
+        weight_sum += v["confidence"] * rep_weight
 
-    signals_fired: list[str] = []
-    direction = "HOLD"
+    weighted_consensus = val_sum / weight_sum if weight_sum > 0 else 0.0
 
-    if wallet_score > 0.70 and action == "buy" and vol_ratio > 1.5:
+    if weighted_consensus > 0.20:
         direction = "BUY"
-        signals_fired.append(f"Smart-money wallet (score {wallet_score:.0%}) buying with elevated volume ({vol_ratio:.1f}x)")
-    elif wallet_score > 0.70 and action == "sell" and trend < -2.0:
+    elif weighted_consensus < -0.20:
         direction = "SELL"
-        signals_fired.append(f"Smart-money wallet selling into a {abs(trend):.1f}% price decline")
-    elif whale_count >= 3 and action == "buy":
-        direction = "BUY"
-        signals_fired.append(f"Whale cluster: {whale_count} large buys in 60 min (momentum signal)")
-    elif action == "lp_remove" and trend < -1.0:
-        direction = "SELL"
-        signals_fired.append(f"LP removed with {abs(trend):.1f}% price decline — potential dump setup")
-    elif vol_ratio > 2.5 and trend > 0:
-        direction = "BUY"
-        signals_fired.append(f"Volume {vol_ratio:.1f}x above average with positive price momentum")
-
-    if not signals_fired:
-        signals_fired.append("No strong pattern detected — low-conviction movement")
-
-    # Confidence sub-scores
-    w_score = wallet_score
-    v_score = min((vol_ratio - 1.0) / 2.0, 1.0) if vol_ratio > 1.0 else 0.2
-    if direction == "BUY":
-        p_score = min(max((trend + 5) / 10, 0.0), 1.0)
-    elif direction == "SELL":
-        p_score = min(max((-trend + 5) / 10, 0.0), 1.0)
     else:
-        p_score = 0.3
-    c_score = min(whale_count / 5.0, 1.0)
-
-    confidence = round(min(max(
-        WEIGHT_WALLET_SCORE  * w_score +
-        WEIGHT_VOLUME_SPIKE  * v_score +
-        WEIGHT_PRICE_TREND   * p_score +
-        WEIGHT_WHALE_CLUSTER * c_score,
-        0.0
-    ), 1.0), 3)
-
-    if confidence < MIN_SIGNAL_CONFIDENCE and direction != "HOLD":
         direction = "HOLD"
-        signals_fired.append(f"Confidence {confidence:.0%} below threshold {MIN_SIGNAL_CONFIDENCE:.0%} — overriding to HOLD")
 
-    reasoning = _build_reasoning(event, wallet_score, market_ctx, direction, confidence, signals_fired)
-    urgency   = _urgency_from_confidence(confidence)
+    avg_confidence = sum(v["confidence"] for v in votes) / len(votes) if votes else 0.5
+
+    # Override direction if wash trading or severe risk detected
+    if risk_ctx.get("wash_trade_detected") and direction == "BUY":
+        direction = "HOLD"
+        reasoning_override = "Wash trading loop detected by RiskGuard AI. Signal overridden to HOLD."
+    else:
+        reasoning_override = None
+
+    # 5. Format detailed reasoning Markdown
+    reasoning_lines = [
+        f"**GhostWhale AI: Multi-Agent Council Verdict**",
+        f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+        f"Consensus Verdict: **{direction}** | Consensus Score: **{weighted_consensus:+.2f}** | Confidence: **{avg_confidence:.0%}**",
+        f"Ecosystem Risk Score: **{risk_ctx['risk_score']}%** | Trigger Size: **${event.amount_usd:,.2f}**",
+        ""
+    ]
+
+    if reasoning_override:
+        reasoning_lines.append(f"⚠️ **Override Notice:** {reasoning_override}\n")
+
+    reasoning_lines.append("**Agent Council Debate Logs:**")
+    for v in votes:
+        dir_emoji = "🟢 BUY" if v["direction"] == "BUY" else "🔴 SELL" if v["direction"] == "SELL" else "🟡 HOLD"
+        reasoning_lines.append(f"• **{v['agent_name']}** ({dir_emoji} - {v['confidence']:.0%}):")
+        reasoning_lines.append(f"  *\"{v['reasoning']}\"*")
+
+    reasoning = "\n".join(reasoning_lines)
+    urgency = _urgency_from_confidence(avg_confidence)
+
+    # Calculate scores for dataclass compatibility
+    w_score = next((v["confidence"] for v in votes if "Whale" in v["agent_name"]), 0.5)
+    v_score = next((v["confidence"] for v in votes if "Momentum" in v["agent_name"]), 0.5)
+    p_score = next((v["confidence"] for v in votes if "Liquidity" in v["agent_name"]), 0.5)
+    c_score = next((v["confidence"] for v in votes if "Risk" in v["agent_name"]), 0.5)
 
     return TradeSignal(
-        signal_id=str(uuid.uuid4()),
+        signal_id=signal_id,
         token=event.token,
         direction=direction,
-        confidence=confidence,
+        confidence=round(avg_confidence, 3),
         reasoning=reasoning,
         urgency=urgency,
         whale_event=event,
         timestamp=datetime.now(tz=timezone.utc),
-        suggested_size_usd=_suggested_size(confidence),
+        suggested_size_usd=_suggested_size(avg_confidence),
         wallet_score=w_score,
         volume_score=v_score,
         price_score=p_score,
@@ -260,8 +264,8 @@ def signal_to_dict(signal: TradeSignal) -> dict:
         "confidence":         signal.confidence,
         "reasoning":          signal.reasoning,
         "urgency":            signal.urgency,
-        "suggested_size_usd": signal.suggested_size_usd,
         "whale_event_tx":     signal.whale_event.tx_hash,
         "acted_on":           0,
         "timestamp":          signal.timestamp.isoformat(),
+        "suggested_size_usd": signal.suggested_size_usd,
     }

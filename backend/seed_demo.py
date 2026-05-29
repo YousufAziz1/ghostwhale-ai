@@ -167,6 +167,10 @@ def clear_db():
     """Wipe existing demo data so we can reseed cleanly."""
     with get_conn() as conn:
         conn.execute("DELETE FROM trades")
+        conn.execute("DELETE FROM votes")
+        conn.execute("DELETE FROM reputation_history")
+        conn.execute("DELETE FROM agents")
+        conn.execute("DELETE FROM liquidity_events")
         conn.execute("DELETE FROM signals")
         conn.execute("DELETE FROM whale_events")
         conn.execute("DELETE FROM price_cache")
@@ -205,7 +209,7 @@ def seed_whale_events() -> list[str]:
         amount = s["amount_usd"]
         price  = MOCK_PRICES[token]
         raw    = int(amount / price * 1e18)
-        ts     = minutes_ago(random.uniform(0.1, 5))
+        ts     = minutes_ago(random.uniform(0.1, 120))
 
         save_whale_event({
             "tx_hash":      tx,
@@ -230,7 +234,7 @@ def seed_signals(tx_hashes: list[str]) -> list[str]:
         if i >= len(tx_hashes): break
         sid = str(uuid.uuid4())
         signal_ids.append(sid)
-        ts  = minutes_ago(random.uniform(0.1, 4))
+        ts  = minutes_ago(random.uniform(0.1, 110))
 
         save_signal({
             "signal_id":          sid,
@@ -247,6 +251,69 @@ def seed_signals(tx_hashes: list[str]) -> list[str]:
 
     print(f"[SIGNAL] Seeded {len(signal_ids)} signals")
     return signal_ids
+
+def seed_votes(signal_ids: list[str]):
+    """Seed council votes for each signal."""
+    from database import save_vote
+    
+    agent_configs = [
+        ("WhaleHunter AI", ["BUY", "BUY", "SELL", "HOLD", "SELL"]),
+        ("LiquidityAI", ["BUY", "HOLD", "HOLD", "HOLD", "SELL"]),
+        ("MomentumAI", ["BUY", "BUY", "SELL", "HOLD", "SELL"]),
+        ("RiskGuard AI", ["BUY", "BUY", "SELL", "HOLD", "HOLD"]),
+        ("MacroAI", ["BUY", "HOLD", "HOLD", "HOLD", "HOLD"])
+    ]
+
+    reasonings = {
+        "WhaleHunter AI": "Large transaction volume displays strong smart money presence.",
+        "LiquidityAI": "Pool ratios remain stable, providing a strong cushion against slippage.",
+        "MomentumAI": "Ecosystem trends indicate local support levels holding.",
+        "RiskGuard AI": "Risk checks are clean. No recursive wallet transfers detected.",
+        "MacroAI": "Ecosystem gas fees remain nominal, displaying steady transaction activity."
+    }
+
+    for i, sid in enumerate(signal_ids):
+        ts = minutes_ago(random.uniform(0.1, 110))
+        for agent_name, votes_list in agent_configs:
+            vote_dir = votes_list[i % len(votes_list)]
+            save_vote({
+                "signal_id": sid,
+                "agent_name": agent_name,
+                "direction": vote_dir,
+                "confidence": round(random.uniform(0.60, 0.90), 2),
+                "reasoning": reasonings[agent_name],
+                "timestamp": ts
+            })
+    print(f"[VOTES] Seeded council votes for signals")
+
+def seed_liquidity_events():
+    """Seed sample LP Mint/Burn events."""
+    from database import save_liquidity_event
+    events = [
+        {
+            "tx_hash": fake_tx(),
+            "pool": "USDT-WMNT-Moe",
+            "token0": "USDT",
+            "token1": "WMNT",
+            "action": "lp_add",
+            "amount_usd": 125000.0,
+            "block_number": 94760120,
+            "timestamp": minutes_ago(15)
+        },
+        {
+            "tx_hash": fake_tx(),
+            "pool": "mETH-WMNT-Moe",
+            "token0": "mETH",
+            "token1": "WMNT",
+            "action": "lp_remove",
+            "amount_usd": 85000.0,
+            "block_number": 94760240,
+            "timestamp": minutes_ago(45)
+        }
+    ]
+    for e in events:
+        save_liquidity_event(e)
+    print(f"[LIQUIDITY] Seeded {len(events)} liquidity events")
 
 def seed_trades(signal_ids: list[str]):
     """Seed settled trades with realistic P&L."""
@@ -328,9 +395,12 @@ if __name__ == "__main__":
 
     init_db()
     clear_db()
+    init_db() # re-init empty tables and seed agents registry
     seed_prices()
     tx_hashes  = seed_whale_events()
     signal_ids = seed_signals(tx_hashes)
+    seed_votes(signal_ids)
+    seed_liquidity_events()
     seed_trades(signal_ids)
 
     # Print summary
